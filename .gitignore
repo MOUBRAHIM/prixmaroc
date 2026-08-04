@@ -1,0 +1,46 @@
+# ── Python ───────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+*.db
+
+# ── Secrets (NE JAMAIS COMMITER) ─────────────────────────
+.env
+.env.*
+!.env.example
+.env.production
+firebase-credentials.json
+*.pem
+*.key
+
+# ── Node / Expo / React Native ───────────────────────────
+node_modules/
+.expo/
+.expo-shared/
+dist/
+web-build/
+*.tsbuildinfo
+
+# ── Android / iOS build artifacts ────────────────────────
+mobile/android/build/
+mobile/android/app/build/
+mobile/android/.gradle/
+mobile/android/local.properties
+mobile/ios/build/
+mobile/ios/Pods/
+*.apk
+*.aab
+*.keystore
+
+# ── Divers ───────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+.idea/
+.vscode/
+
+# Sauvegarde de l'ancien depot mobile
+.git_backup_*/

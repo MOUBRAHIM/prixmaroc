@@ -1,0 +1,6 @@
+# Force LF pour les scripts exécutés sous Linux (Docker/Render).
+# Sans ça, Git sur Windows peut écrire des CRLF et casser le shebang.
+*.sh text eol=lf
+Dockerfile* text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf

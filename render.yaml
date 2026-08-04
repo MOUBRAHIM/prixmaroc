@@ -1,0 +1,32 @@
+# Blueprint Render — backend PrixMaroc
+#
+# Render lit ce fichier automatiquement ("Blueprint") et crée le service.
+# La base de données reste sur Neon (externe) : rien à provisionner ici.
+#
+# Les variables marquées sync:false doivent être saisies dans l'interface Render
+# (elles contiennent des secrets — on ne les met JAMAIS dans le dépôt).
+
+services:
+  - type: web
+    name: prixmaroc-api
+    runtime: docker
+    plan: free
+    region: frankfurt          # le plus proche du Maroc
+    dockerfilePath: ./backend/Dockerfile.prod
+    dockerContext: ./backend
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL      # chaîne Neon (postgresql://...)
+        sync: false
+      - key: SECRET_KEY        # clé JWT — générer une valeur aléatoire
+        sync: false
+      - key: ANTHROPIC_API_KEY # optionnel (modération IA du souk)
+        sync: false
+      - key: CORS_ORIGINS      # URL du site web, ex : https://prixmaroc.netlify.app
+        sync: false
+      - key: ENVIRONMENT
+        value: production
+      - key: DEBUG
+        value: "false"
+      - key: PYTHONUNBUFFERED
+        value: "1"

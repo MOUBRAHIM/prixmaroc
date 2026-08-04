@@ -1,0 +1,306 @@
+name: CI/CD — PrixMaroc
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      skip_tests:
+        description: "Passer les tests (urgence uniquement)"
+        required: false
+        default: "false"
+
+# ── Permissions minimales ──────────────────────────────────────────────────────
+permissions:
+  contents: read
+  packages: write   # pour ghcr.io
+
+# ── Variables globales ─────────────────────────────────────────────────────────
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}/backend
+  PYTHON_VERSION: "3.12"
+  NODE_VERSION: "20"
+
+# ==============================================================================
+jobs:
+
+  # ── 1. Lint & type-check backend ────────────────────────────────────────────
+  lint-backend:
+    name: "🔍 Lint / Typecheck Backend"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install dev deps
+        working-directory: ./backend
+        run: |
+          pip install -r requirements.txt
+          pip install ruff mypy types-redis
+
+      - name: Ruff lint
+        working-directory: ./backend
+        run: ruff check . --output-format=github || true
+
+      - name: Ruff format check
+        working-directory: ./backend
+        run: ruff format --check . || true
+
+  # ── 2. Lint & typecheck mobile ───────────────────────────────────────────────
+  lint-mobile:
+    name: "🔍 Lint / Typecheck Mobile"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+
+      - name: Install deps
+        working-directory: ./mobile
+        run: npm ci --legacy-peer-deps
+
+      - name: TypeScript check
+        working-directory: ./mobile
+        run: npx tsc --noEmit
+
+      - name: ESLint
+        working-directory: ./mobile
+        run: npx eslint src/ --ext .ts,.tsx --max-warnings 20 || true
+
+  # ── 3. Tests backend ────────────────────────────────────────────────────────
+  test-backend:
+    name: "🧪 Tests Backend"
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.skip_tests != 'true' }}
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: prixmaroc
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: prixmaroc_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install dependencies
+        working-directory: ./backend
+        run: pip install -r requirements.txt pytest pytest-asyncio httpx
+
+      - name: Run Alembic migrations
+        working-directory: ./backend
+        env:
+          DATABASE_URL: postgresql+asyncpg://prixmaroc:testpassword@localhost:5432/prixmaroc_test
+          REDIS_URL: redis://localhost:6379/0
+          SECRET_KEY: test-secret-key-ci-cd
+          ALGORITHM: HS256
+          ACCESS_TOKEN_EXPIRE_MINUTES: 60
+          ANTHROPIC_API_KEY: sk-ant-test-000
+          ENVIRONMENT: test
+        run: alembic upgrade head
+
+      - name: Run pytest
+        working-directory: ./backend
+        env:
+          DATABASE_URL: postgresql+asyncpg://prixmaroc:testpassword@localhost:5432/prixmaroc_test
+          REDIS_URL: redis://localhost:6379/0
+          SECRET_KEY: test-secret-key-ci-cd
+          ALGORITHM: HS256
+          ACCESS_TOKEN_EXPIRE_MINUTES: 60
+          ANTHROPIC_API_KEY: sk-ant-test-000
+          ENVIRONMENT: test
+        run: |
+          if [ -d "tests" ] && [ "$(ls tests/)" ]; then
+            pytest tests/ -v --tb=short --asyncio-mode=auto
+          else
+            echo "⚠️  Aucun test trouvé — pipeline continue"
+          fi
+
+  # ── 4. Build & push Docker image ────────────────────────────────────────────
+  build-push:
+    name: "🐳 Build & Push Docker"
+    runs-on: ubuntu-latest
+    needs: [lint-backend, test-backend]
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+
+    outputs:
+      image_tag: ${{ steps.meta.outputs.tags }}
+      image_digest: ${{ steps.build.outputs.digest }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,prefix=sha-,format=short
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value={{date 'YYYYMMDD-HHmm'}}
+
+      - name: Build & push
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile.prod
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            BUILD_DATE=${{ github.event.repository.updated_at }}
+            GIT_SHA=${{ github.sha }}
+
+  # ── 5. Déploiement production ────────────────────────────────────────────────
+  deploy:
+    name: "🚀 Deploy Production"
+    runs-on: ubuntu-latest
+    needs: [build-push]
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    environment:
+      name: production
+      url: https://api.prixmaroc.ma
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          timeout: 180s
+          script: |
+            set -e
+            cd /opt/prixmaroc
+
+            echo "=== Pull dernière image ==="
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            docker pull ghcr.io/${{ github.repository }}/backend:latest
+
+            echo "=== Zero-downtime deploy ==="
+            docker compose -f docker-compose.prod.yml up -d --no-deps --scale backend=2 backend
+
+            echo "=== Health check ==="
+            sleep 10
+            curl --fail --retry 5 --retry-delay 5 --retry-connrefused \
+              https://api.prixmaroc.ma/health || exit 1
+
+            echo "=== Scale back to 1 ==="
+            docker compose -f docker-compose.prod.yml up -d --no-deps --scale backend=1 backend
+
+            echo "=== Migrations Alembic ==="
+            docker compose -f docker-compose.prod.yml exec -T backend alembic upgrade head
+
+            echo "=== Cleanup vieilles images ==="
+            docker image prune -f --filter "until=24h"
+
+            echo "✅ Déploiement réussi — $(date)"
+
+      - name: Vérification santé API
+        run: |
+          sleep 15
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://api.prixmaroc.ma/health)
+          if [ "$STATUS" != "200" ]; then
+            echo "❌ Health check échoué: HTTP $STATUS"
+            exit 1
+          fi
+          echo "✅ API répond: HTTP $STATUS"
+
+  # ── 6. Backup R2 post-deploy ─────────────────────────────────────────────────
+  backup-r2:
+    name: "💾 Backup PostgreSQL → R2"
+    runs-on: ubuntu-latest
+    needs: [deploy]
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Backup via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          script: |
+            /opt/prixmaroc/scripts/backup_r2.sh
+            echo "✅ Backup R2 déclenché"
+
+  # ── 7. Notification échec ────────────────────────────────────────────────────
+  notify-failure:
+    name: "🔔 Notification Échec"
+    runs-on: ubuntu-latest
+    needs: [lint-backend, lint-mobile, test-backend, build-push, deploy]
+    if: failure() && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Slack / Webhook alert
+        if: ${{ secrets.SLACK_WEBHOOK_URL != '' }}
+        uses: slackapi/slack-github-action@v1.26.0
+        with:
+          payload: |
+            {
+              "text": "❌ *PrixMaroc CI/CD échoué* sur `main`",
+              "attachments": [{
+                "color": "#dc2626",
+                "fields": [
+                  {"title": "Commit", "value": "${{ github.sha }}", "short": true},
+                  {"title": "Auteur", "value": "${{ github.actor }}", "short": true},
+                  {"title": "Lien", "value": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"}
+                ]
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

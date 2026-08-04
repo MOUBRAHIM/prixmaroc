@@ -1,0 +1,70 @@
+name: Backup PostgreSQL → R2
+
+on:
+  schedule:
+    # Backup quotidien à 2h du matin (UTC = 3h Casablanca)
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: "Raison du backup manuel"
+        required: false
+        default: "Backup manuel déclenché manuellement"
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    name: "💾 Backup DB → Cloudflare R2"
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lancer backup via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          timeout: 25m
+          script: |
+            set -e
+            echo "=== Backup PrixMaroc — $(date) ==="
+            echo "Raison: ${{ github.event.inputs.reason || 'Backup planifié quotidien' }}"
+
+            chmod +x /opt/prixmaroc/scripts/backup_r2.sh
+            /opt/prixmaroc/scripts/backup_r2.sh
+
+            echo "=== Backup terminé ==="
+
+      - name: Notification succès
+        if: success() && ${{ secrets.SLACK_WEBHOOK_URL != '' }}
+        uses: slackapi/slack-github-action@v1.26.0
+        with:
+          payload: |
+            {
+              "text": "✅ *Backup PrixMaroc réussi* — $(date '+%Y-%m-%d %H:%M')"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+      - name: Notification échec
+        if: failure()
+        uses: slackapi/slack-github-action@v1.26.0
+        with:
+          payload: |
+            {
+              "text": "❌ *Backup PrixMaroc ÉCHOUÉ* — $(date '+%Y-%m-%d %H:%M')",
+              "attachments": [{
+                "color": "#dc2626",
+                "text": "Vérifier: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

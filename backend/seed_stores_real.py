@@ -1,0 +1,373 @@
+#!/usr/bin/env python3
+"""
+Seed 32 magasins réels du Maroc avec coordonnées GPS précises.
+Usage: python seed_stores_real.py
+"""
+import asyncio
+import sys
+import os
+sys.path.insert(0, os.path.dirname(__file__))
+
+from sqlalchemy import select
+from app.db import AsyncSessionLocal
+from app.models.store import Store
+
+
+STORES = [
+    # ── Marjane ───────────────────────────────────────────────────────────────
+    {"name": "Marjane Casablanca Aïn Sebaâ", "slug": "marjane-casa-ain-sebaa",
+     "city": "Casablanca", "region": "Grand Casablanca",
+     "address": "Route d'Aïn Sebaâ, Casablanca",
+     "latitude": 33.6065, "longitude": -7.5302,
+     "website": "https://www.marjane.ma"},
+    {"name": "Marjane Casablanca Hay Hassani", "slug": "marjane-casa-hay-hassani",
+     "city": "Casablanca", "region": "Grand Casablanca",
+     "address": "Bd Zerktouni, Hay Hassani, Casablanca",
+     "latitude": 33.5596, "longitude": -7.6572,
+     "website": "https://www.marjane.ma"},
+    {"name": "Marjane Rabat Hay Riad", "slug": "marjane-rabat-hay-riad",
+     "city": "Rabat", "region": "Rabat-Salé-Kénitra",
+     "address": "Hay Riad, Rabat",
+     "latitude": 33.9546, "longitude": -6.8614,
+     "website": "https://www.marjane.ma"},
+    {"name": "Marjane Marrakech", "slug": "marjane-marrakech",
+     "city": "Marrakech", "region": "Marrakech-Safi",
+     "address": "Route de Casablanca, Marrakech",
+     "latitude": 31.6430, "longitude": -8.0282,
+     "website": "https://www.marjane.ma"},
+    {"name": "Marjane Fès", "slug": "marjane-fes",
+     "city": "Fès", "region": "Fès-Meknès",
+     "address": "Route d'Immouzer, Fès",
+     "latitude": 33.9988, "longitude": -4.9998,
+     "website": "https://www.marjane.ma"},
+    {"name": "Marjane Tanger", "slug": "marjane-tanger",
+     "city": "Tanger", "region": "Tanger-Tétouan-Al Hoceïma",
+     "address": "Route de Tétouan, Tanger",
+     "latitude": 35.7506, "longitude": -5.8340,
+     "website": "https://www.marjane.ma"},
+    {"name": "Marjane Agadir", "slug": "marjane-agadir",
+     "city": "Agadir", "region": "Souss-Massa",
+     "address": "Av. du Prince Héritier, Agadir",
+     "latitude": 30.4237, "longitude": -9.5986,
+     "website": "https://www.marjane.ma"},
+    {"name": "Marjane Meknès", "slug": "marjane-meknes",
+     "city": "Meknès", "region": "Fès-Meknès",
+     "address": "Route de Fès, Meknès",
+     "latitude": 33.8879, "longitude": -5.5470,
+     "website": "https://www.marjane.ma"},
+    {"name": "Marjane Oujda", "slug": "marjane-oujda",
+     "city": "Oujda", "region": "Oriental",
+     "address": "Route de Nador, Oujda",
+     "latitude": 34.6793, "longitude": -1.9116,
+     "website": "https://www.marjane.ma"},
+
+    # ── Carrefour ─────────────────────────────────────────────────────────────
+    {"name": "Carrefour Morocco Mall Casablanca", "slug": "carrefour-morocco-mall",
+     "city": "Casablanca", "region": "Grand Casablanca",
+     "address": "Morocco Mall, Bd de la Corniche, Casablanca",
+     "latitude": 33.5965, "longitude": -7.6654,
+     "website": "https://www.carrefour.ma"},
+    {"name": "Carrefour Twin Center Casablanca", "slug": "carrefour-twin-center",
+     "city": "Casablanca", "region": "Grand Casablanca",
+     "address": "Twin Center, Angle Bd Zerktouni et Al Massira, Casablanca",
+     "latitude": 33.5782, "longitude": -7.6256,
+     "website": "https://www.carrefour.ma"},
+    {"name": "Carrefour Rabat Hay Riad", "slug": "carrefour-rabat-hay-riad",
+     "city": "Rabat", "region": "Rabat-Salé-Kénitra",
+     "address": "Hay Riad, Rabat",
+     "latitude": 33.9620, "longitude": -6.8710,
+     "website": "https://www.carrefour.ma"},
+    {"name": "Carrefour Marrakech Menara Mall", "slug": "carrefour-marrakech-menara",
+     "city": "Marrakech", "region": "Marrakech-Safi",
+     "address": "Menara Mall, Route de Casablanca, Marrakech",
+     "latitude": 31.6261, "longitude": -8.0503,
+     "website": "https://www.carrefour.ma"},
+    {"name": "Carrefour Fès", "slug": "carrefour-fes",
+     "city": "Fès", "region": "Fès-Meknès",
+     "address": "Route de Sefrou, Fès",
+     "latitude": 33.9808, "longitude": -4.9782,
+     "website": "https://www.carrefour.ma"},
+    {"name": "Carrefour Tanger City Mall", "slug": "carrefour-tanger-city",
+     "city": "Tanger", "region": "Tanger-Tétouan-Al Hoceïma",
+     "address": "City Mall, Route de Martil, Tanger",
+     "latitude": 35.7687, "longitude": -5.8148,
+     "website": "https://www.carrefour.ma"},
+    {"name": "Carrefour Agadir", "slug": "carrefour-agadir",
+     "city": "Agadir", "region": "Souss-Massa",
+     "address": "Souss Mall, Agadir",
+     "latitude": 30.4155, "longitude": -9.5947,
+     "website": "https://www.carrefour.ma"},
+    {"name": "Carrefour Oujda", "slug": "carrefour-oujda",
+     "city": "Oujda", "region": "Oriental",
+     "address": "Centre Commercial Al Qods, Oujda",
+     "latitude": 34.6832, "longitude": -1.9065,
+     "website": "https://www.carrefour.ma"},
+
+    # ── Label'Vie ─────────────────────────────────────────────────────────────
+    {"name": "Label'Vie Casablanca Bd d'Anfa", "slug": "labelvie-casa-anfa",
+     "city": "Casablanca", "region": "Grand Casablanca",
+     "address": "Bd d'Anfa, Casablanca",
+     "latitude": 33.5870, "longitude": -7.6398,
+     "website": "https://www.labelvie.ma"},
+    {"name": "Label'Vie Rabat Agdal", "slug": "labelvie-rabat-agdal",
+     "city": "Rabat", "region": "Rabat-Salé-Kénitra",
+     "address": "Av. Ibn Sina, Agdal, Rabat",
+     "latitude": 33.9960, "longitude": -6.8504,
+     "website": "https://www.labelvie.ma"},
+    {"name": "Label'Vie Marrakech Guéliz", "slug": "labelvie-marrakech-gueliz",
+     "city": "Marrakech", "region": "Marrakech-Safi",
+     "address": "Bd Mohammed Zerktouni, Guéliz, Marrakech",
+     "latitude": 31.6325, "longitude": -7.9993,
+     "website": "https://www.labelvie.ma"},
+    {"name": "Label'Vie Agadir", "slug": "labelvie-agadir",
+     "city": "Agadir", "region": "Souss-Massa",
+     "address": "Av. du Prince Moulay Abdallah, Agadir",
+     "latitude": 30.4202, "longitude": -9.5985,
+     "website": "https://www.labelvie.ma"},
+    {"name": "Label'Vie Salé", "slug": "labelvie-sale",
+     "city": "Salé", "region": "Rabat-Salé-Kénitra",
+     "address": "Route de Kénitra, Salé",
+     "latitude": 34.0413, "longitude": -6.8170,
+     "website": "https://www.labelvie.ma"},
+
+    # ── BIM ───────────────────────────────────────────────────────────────────
+    {"name": "BIM Casablanca Hay Mohammadi", "slug": "bim-casa-hay-mohammadi",
+     "city": "Casablanca", "region": "Grand Casablanca",
+     "address": "Hay Mohammadi, Casablanca",
+     "latitude": 33.5928, "longitude": -7.5816,
+     "website": "https://www.bim.com.tr"},
+    {"name": "BIM Casablanca Maârif", "slug": "bim-casa-maarif",
+     "city": "Casablanca", "region": "Grand Casablanca",
+     "address": "Quartier Maârif, Casablanca",
+     "latitude": 33.5753, "longitude": -7.6283,
+     "website": "https://www.bim.com.tr"},
+    {"name": "BIM Rabat Hassan", "slug": "bim-rabat-hassan",
+     "city": "Rabat", "region": "Rabat-Salé-Kénitra",
+     "address": "Quartier Hassan, Rabat",
+     "latitude": 34.0190, "longitude": -6.8434,
+     "website": "https://www.bim.com.tr"},
+    {"name": "BIM Marrakech Daoudiate", "slug": "bim-marrakech-daoudiate",
+     "city": "Marrakech", "region": "Marrakech-Safi",
+     "address": "Quartier Daoudiate, Marrakech",
+     "latitude": 31.6561, "longitude": -8.0011,
+     "website": "https://www.bim.com.tr"},
+    {"name": "BIM Fès Narjiss", "slug": "bim-fes-narjiss",
+     "city": "Fès", "region": "Fès-Meknès",
+     "address": "Quartier Narjiss, Fès",
+     "latitude": 33.9741, "longitude": -4.9847,
+     "website": "https://www.bim.com.tr"},
+
+    # ── Atacadão ──────────────────────────────────────────────────────────────
+    {"name": "Atacadão Casablanca", "slug": "atacadao-casa",
+     "city": "Casablanca", "region": "Grand Casablanca",
+     "address": "Route de Berrechid, Casablanca",
+     "latitude": 33.5221, "longitude": -7.5934,
+     "website": "https://www.atacadao.ma"},
+    {"name": "Atacadão Rabat", "slug": "atacadao-rabat",
+     "city": "Rabat", "region": "Rabat-Salé-Kénitra",
+     "address": "Route de Casablanca, Rabat",
+     "latitude": 33.9701, "longitude": -6.8893,
+     "website": "https://www.atacadao.ma"},
+    {"name": "Atacadão Marrakech", "slug": "atacadao-marrakech",
+     "city": "Marrakech", "region": "Marrakech-Safi",
+     "address": "Route de l'Aéroport, Marrakech",
+     "latitude": 31.6119, "longitude": -8.0364,
+     "website": "https://www.atacadao.ma"},
+
+    # ── Acima ─────────────────────────────────────────────────────────────────
+    {"name": "Acima Casablanca Ain Chock", "slug": "acima-casa-ain-chock",
+     "city": "Casablanca", "region": "Grand Casablanca",
+     "address": "Ain Chock, Casablanca",
+     "latitude": 33.5408, "longitude": -7.6302,
+     "website": "https://www.acima.ma"},
+    {"name": "Acima Rabat Hay Ryad", "slug": "acima-rabat-hay-ryad",
+     "city": "Rabat", "region": "Rabat-Salé-Kénitra",
+     "address": "Hay Ryad, Rabat",
+     "latitude": 33.9573, "longitude": -6.8680,
+     "website": "https://www.acima.ma"},
+    {"name": "Acima Tanger", "slug": "acima-tanger",
+     "city": "Tanger", "region": "Tanger-Tétouan-Al Hoceïma",
+     "address": "Centre Ville, Tanger",
+     "latitude": 35.7595, "longitude": -5.8340,
+     "website": "https://www.acima.ma"},
+
+    # ── Bouznika (33.39°N, 7.16°W) ────────────────────────────────────────────
+    {"name": "BIM Bouznika Centre", "slug": "bim-bouznika-centre",
+     "city": "Bouznika", "region": "Casablanca-Settat",
+     "address": "Avenue Mohammed V, Bouznika",
+     "latitude": 33.3923, "longitude": -7.1622,
+     "website": "https://www.bim.com.tr"},
+    {"name": "BIM Bouznika Hay Al Amal", "slug": "bim-bouznika-hay-amal",
+     "city": "Bouznika", "region": "Casablanca-Settat",
+     "address": "Hay Al Amal, Bouznika",
+     "latitude": 33.3850, "longitude": -7.1548,
+     "website": "https://www.bim.com.tr"},
+    {"name": "Label'Vie Bouznika", "slug": "labelvie-bouznika",
+     "city": "Bouznika", "region": "Casablanca-Settat",
+     "address": "Route Nationale 1, Bouznika",
+     "latitude": 33.3957, "longitude": -7.1689,
+     "website": "https://www.labelvie.ma"},
+
+    # ── Mohammedia (33.69°N, 7.38°W — 25 km de Casa) ─────────────────────────
+    {"name": "Marjane Mohammedia", "slug": "marjane-mohammedia",
+     "city": "Mohammedia", "region": "Casablanca-Settat",
+     "address": "Route de Casablanca, Mohammedia",
+     "latitude": 33.6847, "longitude": -7.3872,
+     "website": "https://www.marjane.ma"},
+    {"name": "Carrefour Market Mohammedia", "slug": "carrefour-mohammedia",
+     "city": "Mohammedia", "region": "Casablanca-Settat",
+     "address": "Bd Hassan II, Mohammedia",
+     "latitude": 33.6891, "longitude": -7.3834,
+     "website": "https://www.carrefour.ma"},
+    {"name": "BIM Mohammedia Centre", "slug": "bim-mohammedia-centre",
+     "city": "Mohammedia", "region": "Casablanca-Settat",
+     "address": "Hay Farah, Mohammedia",
+     "latitude": 33.6812, "longitude": -7.3901,
+     "website": "https://www.bim.com.tr"},
+    {"name": "Label'Vie Mohammedia", "slug": "labelvie-mohammedia",
+     "city": "Mohammedia", "region": "Casablanca-Settat",
+     "address": "Av. des FAR, Mohammedia",
+     "latitude": 33.6870, "longitude": -7.3815,
+     "website": "https://www.labelvie.ma"},
+    {"name": "Acima Mohammedia", "slug": "acima-mohammedia",
+     "city": "Mohammedia", "region": "Casablanca-Settat",
+     "address": "Quartier Industriel, Mohammedia",
+     "latitude": 33.6789, "longitude": -7.3956,
+     "website": "https://www.acima.ma"},
+
+    # ── Benslimane (33.62°N, 7.13°W — 40 km de Casa) ────────────────────────
+    {"name": "BIM Benslimane", "slug": "bim-benslimane",
+     "city": "Benslimane", "region": "Casablanca-Settat",
+     "address": "Avenue Mohammed VI, Benslimane",
+     "latitude": 33.6157, "longitude": -7.1299,
+     "website": "https://www.bim.com.tr"},
+    {"name": "Label'Vie Benslimane", "slug": "labelvie-benslimane",
+     "city": "Benslimane", "region": "Casablanca-Settat",
+     "address": "Hay Al Massira, Benslimane",
+     "latitude": 33.6194, "longitude": -7.1256,
+     "website": "https://www.labelvie.ma"},
+
+    # ── Settat (33.00°N, 7.62°W — 70 km de Casa) ────────────────────────────
+    {"name": "Marjane Settat", "slug": "marjane-settat",
+     "city": "Settat", "region": "Casablanca-Settat",
+     "address": "Route de Casablanca, Settat",
+     "latitude": 32.9998, "longitude": -7.6189,
+     "website": "https://www.marjane.ma"},
+    {"name": "BIM Settat Centre", "slug": "bim-settat-centre",
+     "city": "Settat", "region": "Casablanca-Settat",
+     "address": "Av. Hassan II, Settat",
+     "latitude": 32.9985, "longitude": -7.6162,
+     "website": "https://www.bim.com.tr"},
+    {"name": "Label'Vie Settat", "slug": "labelvie-settat",
+     "city": "Settat", "region": "Casablanca-Settat",
+     "address": "Bd Mohammed V, Settat",
+     "latitude": 33.0014, "longitude": -7.6225,
+     "website": "https://www.labelvie.ma"},
+    {"name": "Atacadão Settat", "slug": "atacadao-settat",
+     "city": "Settat", "region": "Casablanca-Settat",
+     "address": "Zone Industrielle, Settat",
+     "latitude": 32.9923, "longitude": -7.6078,
+     "website": "https://www.atacadao.ma"},
+
+    # ── Berrechid (33.27°N, 7.59°W — 30 km de Casa) ─────────────────────────
+    {"name": "BIM Berrechid", "slug": "bim-berrechid",
+     "city": "Berrechid", "region": "Casablanca-Settat",
+     "address": "Av. Mohammed V, Berrechid",
+     "latitude": 33.2654, "longitude": -7.5887,
+     "website": "https://www.bim.com.tr"},
+    {"name": "Label'Vie Berrechid", "slug": "labelvie-berrechid",
+     "city": "Berrechid", "region": "Casablanca-Settat",
+     "address": "Route de Casablanca, Berrechid",
+     "latitude": 33.2701, "longitude": -7.5923,
+     "website": "https://www.labelvie.ma"},
+
+    # ── Temara (33.93°N, 6.92°W — juste au sud de Rabat) ────────────────────
+    {"name": "BIM Temara Centre", "slug": "bim-temara-centre",
+     "city": "Temara", "region": "Rabat-Salé-Kénitra",
+     "address": "Av. Hassan II, Temara",
+     "latitude": 33.9253, "longitude": -6.9157,
+     "website": "https://www.bim.com.tr"},
+    {"name": "Label'Vie Temara", "slug": "labelvie-temara",
+     "city": "Temara", "region": "Rabat-Salé-Kénitra",
+     "address": "Bd Mohammed VI, Temara",
+     "latitude": 33.9287, "longitude": -6.9132,
+     "website": "https://www.labelvie.ma"},
+    {"name": "Acima Temara", "slug": "acima-temara",
+     "city": "Temara", "region": "Rabat-Salé-Kénitra",
+     "address": "Hay Al Fath, Temara",
+     "latitude": 33.9212, "longitude": -6.9098,
+     "website": "https://www.acima.ma"},
+
+    # ── El Jadida (33.24°N, 8.50°W — 100 km de Casa) ─────────────────────────
+    {"name": "Marjane El Jadida", "slug": "marjane-el-jadida",
+     "city": "El Jadida", "region": "Casablanca-Settat",
+     "address": "Route de Casablanca, El Jadida",
+     "latitude": 33.2350, "longitude": -8.5005,
+     "website": "https://www.marjane.ma"},
+    {"name": "BIM El Jadida", "slug": "bim-el-jadida",
+     "city": "El Jadida", "region": "Casablanca-Settat",
+     "address": "Bd Mohammed V, El Jadida",
+     "latitude": 33.2383, "longitude": -8.5027,
+     "website": "https://www.bim.com.tr"},
+
+    # ── Kénitra (34.26°N, 6.58°W — au nord de Rabat) ─────────────────────────
+    {"name": "Marjane Kénitra", "slug": "marjane-kenitra",
+     "city": "Kénitra", "region": "Rabat-Salé-Kénitra",
+     "address": "Route de Rabat, Kénitra",
+     "latitude": 34.2587, "longitude": -6.5833,
+     "website": "https://www.marjane.ma"},
+    {"name": "Carrefour Kénitra", "slug": "carrefour-kenitra",
+     "city": "Kénitra", "region": "Rabat-Salé-Kénitra",
+     "address": "Avenue Hassan II, Kénitra",
+     "latitude": 34.2612, "longitude": -6.5798,
+     "website": "https://www.carrefour.ma"},
+    {"name": "BIM Kénitra", "slug": "bim-kenitra",
+     "city": "Kénitra", "region": "Rabat-Salé-Kénitra",
+     "address": "Quartier Al Menzeh, Kénitra",
+     "latitude": 34.2551, "longitude": -6.5871,
+     "website": "https://www.bim.com.tr"},
+
+    # ── Laayoune (27.15°N, 13.20°W — Grand Sud) ──────────────────────────────
+    {"name": "BIM Laayoune", "slug": "bim-laayoune",
+     "city": "Laayoune", "region": "Laâyoune-Sakia El Hamra",
+     "address": "Avenue de la Mecque, Laayoune",
+     "latitude": 27.1536, "longitude": -13.2033,
+     "website": "https://www.bim.com.tr"},
+
+    # ── Tétouan (35.57°N, 5.37°W) ─────────────────────────────────────────────
+    {"name": "Marjane Tétouan", "slug": "marjane-tetouan",
+     "city": "Tétouan", "region": "Tanger-Tétouan-Al Hoceïma",
+     "address": "Route de Martil, Tétouan",
+     "latitude": 35.5712, "longitude": -5.3711,
+     "website": "https://www.marjane.ma"},
+    {"name": "BIM Tétouan", "slug": "bim-tetouan",
+     "city": "Tétouan", "region": "Tanger-Tétouan-Al Hoceïma",
+     "address": "Quartier Sania, Tétouan",
+     "latitude": 35.5689, "longitude": -5.3748,
+     "website": "https://www.bim.com.tr"},
+]
+
+
+async def seed():
+    async with AsyncSessionLocal() as db:
+        added = 0
+        updated = 0
+        for s in STORES:
+            existing = await db.execute(select(Store).where(Store.slug == s["slug"]))
+            store = existing.scalar_one_or_none()
+            if store:
+                for k, v in s.items():
+                    setattr(store, k, v)
+                store.is_active = True
+                store.scraping_enabled = True
+                updated += 1
+            else:
+                store = Store(**s, is_active=True, scraping_enabled=True)
+                db.add(store)
+                added += 1
+        await db.commit()
+        print(f"✅ Seed magasins terminé : {added} ajoutés, {updated} mis à jour ({len(STORES)} total)")
+
+
+if __name__ == "__main__":
+    asyncio.run(seed())

@@ -1,0 +1,69 @@
+{
+  "expo": {
+    "name": "PrixMaroc",
+    "slug": "prixmaroc",
+    "owner": "mahoub",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#16a34a"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "ma.prixmaroc.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "PrixMaroc utilise la caméra pour scanner vos tickets de caisse.",
+        "NSLocationWhenInUseUsageDescription": "PrixMaroc utilise votre localisation pour trouver les magasins à proximité.",
+        "NSLocationAlwaysUsageDescription": "PrixMaroc utilise votre localisation pour les alertes de prix."
+      }
+    },
+    "android": {
+      "versionCode": 2,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#16a34a"
+      },
+      "package": "ma.prixmaroc.app",
+      "permissions": [
+        "CAMERA",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "PrixMaroc a besoin d'accéder à la caméra pour scanner vos tickets."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "PrixMaroc utilise votre localisation pour trouver les magasins proches."
+        }
+      ],
+      "expo-secure-store"
+    ],
+    "extra": {
+      "apiUrl": "http://localhost:8000",
+      "eas": {
+        "projectId": "9e588f34-650f-4314-9b3c-bb01ff121cdd"
+      }
+    }
+  }
+}

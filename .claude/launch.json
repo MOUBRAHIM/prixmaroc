@@ -1,0 +1,36 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "backend",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "run_local.py"
+      ],
+      "port": 8000,
+      "cwd": "C:/Users/HP 840 G7/Desktop/PrixMaroc/backend"
+    },
+    {
+      "name": "web",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "expo",
+        "start",
+        "--web",
+        "--port",
+        "8081"
+      ],
+      "port": 8081,
+      "cwd": "C:/Users/HP 840 G7/Desktop/PrixMaroc/mobile"
+    },
+    {
+      "name": "PrixMaroc — Stack complète (Docker)",
+      "runtimeExecutable": "docker-compose",
+      "runtimeArgs": [
+        "up"
+      ],
+      "port": 8000,
+      "cwd": "C:/Users/HP 840 G7/Desktop/prixmaroc"
+    }
+  ]
+}
