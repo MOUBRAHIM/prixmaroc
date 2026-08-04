@@ -44,3 +44,6 @@ npm-debug.log*
 
 # Sauvegarde de l'ancien depot mobile
 .git_backup_*/
+
+# Binaires lourds (tunnel dev)
+*.exe
