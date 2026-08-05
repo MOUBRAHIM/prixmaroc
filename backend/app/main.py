@@ -30,11 +30,19 @@ from app.services.scheduler import startup_scheduler, shutdown_scheduler
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup
-    startup_scheduler()
+    # Startup — le scheduler (scraping/notifications) ne doit JAMAIS empêcher
+    # l'API de démarrer : sur un hébergement contraint (peu de RAM, pas de
+    # timezone système, pas de Redis) il peut échouer, l'API reste utile.
+    try:
+        startup_scheduler()
+    except Exception as exc:  # noqa: BLE001
+        print(f"[startup] Scheduler non démarré ({exc}) — l'API continue", flush=True)
     yield
     # Shutdown
-    shutdown_scheduler()
+    try:
+        shutdown_scheduler()
+    except Exception:  # noqa: BLE001
+        pass
 
 
 app = FastAPI(
