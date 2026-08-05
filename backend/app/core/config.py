@@ -37,7 +37,10 @@ class Settings(BaseSettings):
     # CORS — champ str (et non list) pour éviter le parsing JSON auto de
     # pydantic-settings qui plante sur "*". On accepte : "*", une liste JSON
     # ["..."], ou des valeurs séparées par virgules. Voir cors_origins_list.
-    CORS_ORIGINS: str = "http://localhost:3000,http://localhost:5173"
+    # Défaut permissif : l'app web est publique et l'authentification se fait
+    # par jeton Bearer (aucun cookie), donc "*" est sans risque de CSRF.
+    # Pour restreindre : définir CORS_ORIGINS="https://mon-site.ma" côté hébergeur.
+    CORS_ORIGINS: str = "*"
     CORS_ALLOW_ALL: bool = False  # True si CORS_ORIGINS contient "*"
 
     @property
