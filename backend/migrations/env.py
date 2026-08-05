@@ -15,6 +15,10 @@ if config.config_file_name is not None:
 
 database_url = os.getenv("DATABASE_URL", config.get_main_option("sqlalchemy.url"))
 
+# Tolère les tabulations/espaces/guillemets ajoutés par un copier-coller.
+if database_url:
+    database_url = database_url.strip().strip('"').strip("'").strip()
+
 if database_url:
     if database_url.startswith("postgresql+asyncpg://"):
         database_url = database_url.replace("postgresql+asyncpg://", "postgresql+psycopg://", 1)

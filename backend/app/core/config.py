@@ -54,8 +54,10 @@ class Settings(BaseSettings):
         return [o.strip() for o in s.split(",") if o.strip()]
 
     def model_post_init(self, __context):  # type: ignore[override]
-        # Railway fournit postgresql:// → on convertit en postgresql+asyncpg://
-        db_url = self.DATABASE_URL
+        # Nettoyage : un copier-coller depuis un tableau/navigateur peut ajouter
+        # une tabulation, un espace ou des guillemets autour de l'URL, ce qui
+        # rend l'URL impossible à parser par SQLAlchemy.
+        db_url = (self.DATABASE_URL or "").strip().strip('"').strip("'").strip()
         # Railway fournit postgresql:// → psycopg3 async pour SQLAlchemy
         if db_url.startswith("postgresql://") or db_url.startswith("postgres://"):
             db_url = db_url.replace("postgresql://", "postgresql+psycopg://", 1)
