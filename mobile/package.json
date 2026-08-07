@@ -9,7 +9,8 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "eslint . --ext .ts,.tsx",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "build:web": "expo export --platform web && node scripts/fix-web-fonts.mjs dist"
   },
   "dependencies": {
     "@expo/metro-runtime": "~6.1.2",
