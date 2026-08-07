@@ -107,8 +107,8 @@ function NotifToggle({
       <Switch
         value={value}
         onValueChange={onToggle}
-        trackColor={{ false: '#e2e8f0', true: `${C.primary}80` }}
-        thumbColor={value ? C.primary : '#f1f5f9'}
+        trackColor={{ false: '#E2E9DF', true: `${C.primary}80` }}
+        thumbColor={value ? C.primary : '#E9F0E6'}
       />
     </View>
   );
@@ -279,11 +279,11 @@ const ParametresScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#f8fafc' },
+  safeArea: { flex: 1, backgroundColor: '#F2F6F0' },
   content: { padding: 16, paddingBottom: 40 },
   section: { marginBottom: 16 },
   sectionTitle: {
-    fontSize: 13, fontWeight: '700', color: '#94a3b8',
+    fontSize: 13, fontWeight: '700', color: '#8A9A92',
     textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 8,
   },
   card: {
@@ -292,36 +292,36 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.06, shadowRadius: 4, elevation: 2, gap: 12,
   },
   optGroup: { gap: 8 },
-  optLabel: { fontSize: 14, fontWeight: '600', color: '#0f172a' },
+  optLabel: { fontSize: 14, fontWeight: '600', color: '#0B2019' },
   optRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   optBtn: {
     flexDirection: 'row', alignItems: 'center', gap: 5,
     paddingHorizontal: 12, paddingVertical: 8,
-    borderRadius: 10, borderWidth: 1.5, borderColor: '#e2e8f0',
-    backgroundColor: '#f8fafc',
+    borderRadius: 10, borderWidth: 1.5, borderColor: '#E2E9DF',
+    backgroundColor: '#F2F6F0',
   },
-  optBtnActive: { borderColor: C.primary, backgroundColor: '#f0fdf4' },
+  optBtnActive: { borderColor: C.primary, backgroundColor: '#EEF6F1' },
   optIcon: { fontSize: 15 },
-  optBtnText: { fontSize: 13, fontWeight: '600', color: '#64748b' },
+  optBtnText: { fontSize: 13, fontWeight: '600', color: '#4A5B53' },
   optBtnTextActive: { color: C.primary },
   rayonRow: { flexDirection: 'row', gap: 6 },
   rayonBtn: {
     flex: 1, alignItems: 'center', paddingVertical: 8,
-    borderRadius: 10, borderWidth: 1.5, borderColor: '#e2e8f0',
-    backgroundColor: '#f8fafc',
+    borderRadius: 10, borderWidth: 1.5, borderColor: '#E2E9DF',
+    backgroundColor: '#F2F6F0',
   },
-  rayonBtnActive: { borderColor: C.primary, backgroundColor: '#f0fdf4' },
-  rayonBtnText: { fontSize: 12, fontWeight: '700', color: '#64748b' },
+  rayonBtnActive: { borderColor: C.primary, backgroundColor: '#EEF6F1' },
+  rayonBtnText: { fontSize: 12, fontWeight: '700', color: '#4A5B53' },
   rayonBtnTextActive: { color: C.primary },
   notifRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   notifIconWrap: {
     width: 40, height: 40, borderRadius: 10,
-    backgroundColor: '#f0fdf4', alignItems: 'center', justifyContent: 'center',
+    backgroundColor: '#EEF6F1', alignItems: 'center', justifyContent: 'center',
   },
   notifInfo: { flex: 1 },
-  notifLabel: { fontSize: 15, fontWeight: '600', color: '#0f172a' },
-  notifDesc: { fontSize: 12, color: '#94a3b8', marginTop: 2 },
-  divider: { height: 1, backgroundColor: '#f1f5f9' },
+  notifLabel: { fontSize: 15, fontWeight: '600', color: '#0B2019' },
+  notifDesc: { fontSize: 12, color: '#8A9A92', marginTop: 2 },
+  divider: { height: 1, backgroundColor: '#E9F0E6' },
   rtlHint: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -339,7 +339,7 @@ const styles = StyleSheet.create({
     shadowColor: C.primary, shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3, shadowRadius: 8, elevation: 6,
   },
-  saveBtnDone: { backgroundColor: '#22c55e' },
+  saveBtnDone: { backgroundColor: '#1E6B4F' },
   saveBtnText: { color: '#fff', fontWeight: '800', fontSize: 16 },
 });
 

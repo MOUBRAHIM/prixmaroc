@@ -88,7 +88,7 @@ const ListItemRow: React.FC<{
               onPress={() => onQtyChange(-1)}
               hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
             >
-              <Ionicons name="remove" size={14} color="#64748b" />
+              <Ionicons name="remove" size={14} color="#4A5B53" />
             </TouchableOpacity>
             <Text style={styles.qtyText}>{item.quantity}</Text>
             <TouchableOpacity
@@ -96,7 +96,7 @@ const ListItemRow: React.FC<{
               onPress={() => onQtyChange(1)}
               hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
             >
-              <Ionicons name="add" size={14} color="#64748b" />
+              <Ionicons name="add" size={14} color="#4A5B53" />
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.trashBtn}
@@ -108,7 +108,7 @@ const ListItemRow: React.FC<{
           </>
         ) : (
           item.quantity > 1 && (
-            <Text style={[styles.qtyShop, item.is_checked && { color: '#cbd5e1' }]}>
+            <Text style={[styles.qtyShop, item.is_checked && { color: '#C9D5C4' }]}>
               × {item.quantity}
             </Text>
           )
@@ -148,7 +148,7 @@ const AddItemModal: React.FC<{
           <TextInput
             style={modal.input}
             placeholder="Ex : Lait, Pain, Huile d'olive…"
-            placeholderTextColor="#9ca3af"
+            placeholderTextColor="#8A9A92"
             value={name}
             onChangeText={setName}
             autoFocus
@@ -197,20 +197,20 @@ const modal = StyleSheet.create({
     padding: 24,
     paddingBottom: 44,
   },
-  title: { fontSize: 20, fontWeight: '800', color: '#0f172a', marginBottom: 20 },
-  label: { fontSize: 13, fontWeight: '600', color: '#64748b', marginBottom: 6 },
+  title: { fontSize: 20, fontWeight: '800', color: '#0B2019', marginBottom: 20 },
+  label: { fontSize: 13, fontWeight: '600', color: '#4A5B53', marginBottom: 6 },
   input: {
-    backgroundColor: '#f1f5f9',
+    backgroundColor: '#E9F0E6',
     borderRadius: 10,
     padding: 12,
     fontSize: 15,
-    color: '#0f172a',
+    color: '#0B2019',
     marginBottom: 16,
   },
   qtyRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f1f5f9',
+    backgroundColor: '#E9F0E6',
     borderRadius: 10,
     marginBottom: 20,
   },
@@ -220,17 +220,17 @@ const modal = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20,
     fontWeight: '800',
-    color: '#0f172a',
+    color: '#0B2019',
   },
   actions: { flexDirection: 'row', gap: 12 },
   cancelBtn: {
     flex: 1,
     paddingVertical: 14,
     borderRadius: 12,
-    backgroundColor: '#f1f5f9',
+    backgroundColor: '#E9F0E6',
     alignItems: 'center',
   },
-  cancelText: { color: '#64748b', fontWeight: '700', fontSize: 15 },
+  cancelText: { color: '#4A5B53', fontWeight: '700', fontSize: 15 },
   submitBtn: {
     flex: 2,
     paddingVertical: 14,
@@ -316,7 +316,7 @@ const OptimizeModal: React.FC<{
           <ScrollView style={{ maxHeight: 320 }} showsVerticalScrollIndicator={false}>
             {groups.length === 0 ? (
               <View style={opt.empty}>
-                <Ionicons name="information-circle-outline" size={32} color="#94a3b8" />
+                <Ionicons name="information-circle-outline" size={32} color="#8A9A92" />
                 <Text style={opt.emptyText}>
                   Aucun article avec prix disponible
                 </Text>
@@ -377,17 +377,17 @@ const opt = StyleSheet.create({
     gap: 12,
   },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  title: { fontSize: 20, fontWeight: '800', color: '#0f172a' },
-  subtitle: { fontSize: 13, color: '#64748b', marginTop: -4 },
+  title: { fontSize: 20, fontWeight: '800', color: '#0B2019' },
+  subtitle: { fontSize: 13, color: '#4A5B53', marginTop: -4 },
   empty: { alignItems: 'center', paddingVertical: 24, gap: 8 },
-  emptyText: { fontSize: 14, color: '#94a3b8', textAlign: 'center' },
+  emptyText: { fontSize: 14, color: '#8A9A92', textAlign: 'center' },
   group: {
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#F2F6F0',
     borderRadius: 12,
     padding: 12,
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: '#e2e8f0',
+    borderColor: '#E2E9DF',
   },
   groupHeader: {
     flexDirection: 'row',
@@ -396,24 +396,24 @@ const opt = StyleSheet.create({
     marginBottom: 8,
     paddingBottom: 8,
     borderBottomWidth: 1,
-    borderBottomColor: '#e2e8f0',
+    borderBottomColor: '#E2E9DF',
   },
-  groupName: { flex: 1, fontSize: 15, fontWeight: '700', color: '#0f172a' },
+  groupName: { flex: 1, fontSize: 15, fontWeight: '700', color: '#0B2019' },
   groupTotal: { fontSize: 15, fontWeight: '800', color: C.primary },
   itemRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 3 },
   itemName: { flex: 1, fontSize: 13, color: '#374151' },
-  itemPrice: { fontSize: 13, fontWeight: '600', color: '#475569', marginLeft: 8 },
+  itemPrice: { fontSize: 13, fontWeight: '600', color: '#3C4F47', marginLeft: 8 },
   totalRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#f0fdf4',
+    backgroundColor: '#EEF6F1',
     borderRadius: 10,
     padding: 12,
     borderWidth: 1,
-    borderColor: '#bbf7d0',
+    borderColor: '#A7D1BA',
   },
-  totalLabel: { fontSize: 15, fontWeight: '700', color: '#0f172a' },
+  totalLabel: { fontSize: 15, fontWeight: '700', color: '#0B2019' },
   totalValue: { fontSize: 18, fontWeight: '900', color: C.primary },
   routeBtn: {
     flexDirection: 'row',
@@ -428,10 +428,10 @@ const opt = StyleSheet.create({
   closeBtn: {
     paddingVertical: 12,
     borderRadius: 12,
-    backgroundColor: '#f1f5f9',
+    backgroundColor: '#E9F0E6',
     alignItems: 'center',
   },
-  closeBtnText: { color: '#64748b', fontWeight: '700', fontSize: 15 },
+  closeBtnText: { color: '#4A5B53', fontWeight: '700', fontSize: 15 },
 });
 
 // ─── Écran principal ────────────────────────────────────────────────────────────
@@ -602,7 +602,7 @@ const DetailListeScreen: React.FC<Props> = ({ route }) => {
         {/* Indicateur offline */}
         {isError && offlineData ? (
           <View style={styles.offlinePill}>
-            <Ionicons name="cloud-offline-outline" size={13} color="#f59e0b" />
+            <Ionicons name="cloud-offline-outline" size={13} color="#E8A020" />
             <Text style={styles.offlineText}>Hors ligne</Text>
           </View>
         ) : (
@@ -635,7 +635,7 @@ const DetailListeScreen: React.FC<Props> = ({ route }) => {
             <Ionicons
               name={shopMode ? 'cart' : 'cart-outline'}
               size={19}
-              color={shopMode ? '#fff' : '#64748b'}
+              color={shopMode ? '#fff' : '#4A5B53'}
             />
             <Text style={[styles.actionBtnText, shopMode && { color: '#fff' }]}>
               {shopMode ? 'ON' : 'Courses'}
@@ -765,7 +765,7 @@ const DetailListeScreen: React.FC<Props> = ({ route }) => {
 // ─── Styles ─────────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#f8fafc' },
+  safeArea: { flex: 1, backgroundColor: '#F2F6F0' },
 
   /* Barre d'actions */
   actionBar: {
@@ -776,7 +776,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#e2e8f0',
+    borderBottomColor: '#E2E9DF',
     gap: 8,
   },
   actionBarRight: { flexDirection: 'row', gap: 8 },
@@ -788,14 +788,14 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
     borderRadius: 10,
     borderWidth: 1.5,
-    borderColor: '#e2e8f0',
+    borderColor: '#E2E9DF',
     backgroundColor: '#fff',
   },
   actionBtnActive: {
     backgroundColor: C.primary,
     borderColor: C.primary,
   },
-  actionBtnText: { fontSize: 13, fontWeight: '600', color: '#64748b' },
+  actionBtnText: { fontSize: 13, fontWeight: '600', color: '#4A5B53' },
   offlinePill: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -815,17 +815,17 @@ const styles = StyleSheet.create({
     padding: 12,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#e2e8f0',
+    borderBottomColor: '#E2E9DF',
   },
   progressInfo: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },
-  progressText: { fontSize: 13, color: '#64748b', fontWeight: '600' },
+  progressText: { fontSize: 13, color: '#4A5B53', fontWeight: '600' },
   remainingTotal: { fontSize: 13, color: C.primary, fontWeight: '700' },
-  progressTrack: { height: 6, backgroundColor: '#e2e8f0', borderRadius: 3, overflow: 'hidden' },
+  progressTrack: { height: 6, backgroundColor: '#E2E9DF', borderRadius: 3, overflow: 'hidden' },
   progressFill: { height: 6, backgroundColor: C.primary, borderRadius: 3 },
 
   /* États */
   centered: { flex: 1, alignItems: 'center', paddingTop: 80, gap: 12 },
-  loadingText: { color: '#64748b', fontSize: 15 },
+  loadingText: { color: '#4A5B53', fontSize: 15 },
   errorText: { color: '#ef4444', fontSize: 15, fontWeight: '600' },
   retryBtn: {
     backgroundColor: C.primary,
@@ -850,7 +850,7 @@ const styles = StyleSheet.create({
     elevation: 2,
     overflow: 'hidden',
   },
-  itemRowChecked: { backgroundColor: '#f8fafc', opacity: 0.72 },
+  itemRowChecked: { backgroundColor: '#F2F6F0', opacity: 0.72 },
   itemMain: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -869,11 +869,11 @@ const styles = StyleSheet.create({
   },
   checkboxChecked: { backgroundColor: C.primary, borderColor: C.primary },
   itemInfo: { flex: 1 },
-  itemName: { fontSize: 15, fontWeight: '600', color: '#0f172a', marginBottom: 2 },
-  itemNameChecked: { textDecorationLine: 'line-through', color: '#94a3b8' },
-  itemNote: { fontSize: 12, color: '#64748b', fontStyle: 'italic' },
+  itemName: { fontSize: 15, fontWeight: '600', color: '#0B2019', marginBottom: 2 },
+  itemNameChecked: { textDecorationLine: 'line-through', color: '#8A9A92' },
+  itemNote: { fontSize: 12, color: '#4A5B53', fontStyle: 'italic' },
   itemPrice: { fontSize: 14, fontWeight: '700', color: C.primary, marginLeft: 8 },
-  itemPriceChecked: { color: '#94a3b8' },
+  itemPriceChecked: { color: '#8A9A92' },
 
   /* Contrôles (qty + trash) */
   itemControls: {
@@ -888,20 +888,20 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 8,
-    backgroundColor: '#f1f5f9',
+    backgroundColor: '#E9F0E6',
     alignItems: 'center',
     justifyContent: 'center',
   },
   qtyText: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#0f172a',
+    color: '#0B2019',
     minWidth: 22,
     textAlign: 'center',
   },
   qtyShop: {
     fontSize: 13,
-    color: '#64748b',
+    color: '#4A5B53',
     fontWeight: '600',
     marginLeft: 4,
   },
@@ -922,13 +922,13 @@ const styles = StyleSheet.create({
     marginVertical: 14,
     gap: 8,
   },
-  separatorLine: { flex: 1, height: 1, backgroundColor: '#e2e8f0' },
-  separatorText: { fontSize: 13, fontWeight: '700', color: '#22c55e' },
+  separatorLine: { flex: 1, height: 1, backgroundColor: '#E2E9DF' },
+  separatorText: { fontSize: 13, fontWeight: '700', color: '#1E6B4F' },
 
   /* Vide */
   emptyState: { alignItems: 'center', paddingTop: 60, paddingHorizontal: 40, gap: 12 },
   emptyTitle: { fontSize: 20, fontWeight: '700', color: '#374151' },
-  emptySubtitle: { fontSize: 14, color: '#9ca3af', textAlign: 'center', lineHeight: 20 },
+  emptySubtitle: { fontSize: 14, color: '#8A9A92', textAlign: 'center', lineHeight: 20 },
 
   /* FAB */
   fab: { position: 'absolute', bottom: 24, right: 20 },

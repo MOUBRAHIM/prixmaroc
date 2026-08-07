@@ -44,17 +44,17 @@ const NutriScoreBadge: React.FC<{ score: string }> = ({ score }) => {
       <View style={nutri.badges}>
         {grades.map((g) => {
           const active = g === score.toUpperCase();
-          const color = NUTRISCORE_COLORS[g] ?? '#94a3b8';
+          const color = NUTRISCORE_COLORS[g] ?? '#8A9A92';
           return (
             <View
               key={g}
               style={[
                 nutri.badge,
-                { backgroundColor: active ? color : '#e2e8f0' },
+                { backgroundColor: active ? color : '#E2E9DF' },
                 active && nutri.badgeActive,
               ]}
             >
-              <Text style={[nutri.badgeText, { color: active ? '#fff' : '#94a3b8' }]}>{g}</Text>
+              <Text style={[nutri.badgeText, { color: active ? '#fff' : '#8A9A92' }]}>{g}</Text>
             </View>
           );
         })}
@@ -112,7 +112,7 @@ const NutritionSection: React.FC<NutritionSectionProps> = ({
           <Ionicons name="nutrition-outline" size={20} color={C.primary} />
           <Text style={nutri.headerTitle}>Infos nutritionnelles</Text>
           {nutriscore && (
-            <View style={[nutri.miniScore, { backgroundColor: NUTRISCORE_COLORS[nutriscore.toUpperCase()] ?? '#94a3b8' }]}>
+            <View style={[nutri.miniScore, { backgroundColor: NUTRISCORE_COLORS[nutriscore.toUpperCase()] ?? '#8A9A92' }]}>
               <Text style={nutri.miniScoreText}>{nutriscore.toUpperCase()}</Text>
             </View>
           )}
@@ -120,7 +120,7 @@ const NutritionSection: React.FC<NutritionSectionProps> = ({
         <Ionicons
           name={expanded ? 'chevron-up' : 'chevron-down'}
           size={18}
-          color="#94a3b8"
+          color="#8A9A92"
         />
       </TouchableOpacity>
 
@@ -141,13 +141,13 @@ const NutritionSection: React.FC<NutritionSectionProps> = ({
             <NutriBar label="Protéines" value={proteins} unit="g" max={30} color="#3b82f6" />
           )}
           {lipids != null && (
-            <NutriBar label="Lipides" value={lipids} unit="g" max={40} color="#f59e0b" />
+            <NutriBar label="Lipides" value={lipids} unit="g" max={40} color="#E8A020" />
           )}
           {carbs != null && (
             <NutriBar label="Glucides" value={carbs} unit="g" max={80} color="#8b5cf6" />
           )}
           {fibers != null && (
-            <NutriBar label="Fibres" value={fibers} unit="g" max={15} color="#22c55e" />
+            <NutriBar label="Fibres" value={fibers} unit="g" max={15} color="#1E6B4F" />
           )}
         </View>
       )}
@@ -162,7 +162,7 @@ const nutri = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#e2e8f0',
+    borderColor: '#E2E9DF',
     overflow: 'hidden',
   },
   header: {
@@ -172,7 +172,7 @@ const nutri = StyleSheet.create({
     padding: 14,
   },
   headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  headerTitle: { fontSize: 15, fontWeight: '700', color: '#0f172a' },
+  headerTitle: { fontSize: 15, fontWeight: '700', color: '#0B2019' },
   miniScore: {
     width: 22,
     height: 22,
@@ -182,19 +182,19 @@ const nutri = StyleSheet.create({
   },
   miniScoreText: { fontSize: 12, fontWeight: '900', color: '#fff' },
   body: { paddingHorizontal: 14, paddingBottom: 14, gap: 10 },
-  per100g: { fontSize: 11, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 },
+  per100g: { fontSize: 11, color: '#8A9A92', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 },
   caloriesRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#F2F6F0',
     borderRadius: 8,
     padding: 10,
   },
   caloriesLabel: { fontSize: 14, fontWeight: '600', color: '#374151' },
-  caloriesValue: { fontSize: 18, fontWeight: '800', color: '#dc2626' },
+  caloriesValue: { fontSize: 18, fontWeight: '800', color: '#C1272D' },
   barRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  barLabel: { width: 72, fontSize: 12, fontWeight: '600', color: '#475569' },
-  barTrack: { flex: 1, height: 8, backgroundColor: '#f1f5f9', borderRadius: 4, overflow: 'hidden' },
+  barLabel: { width: 72, fontSize: 12, fontWeight: '600', color: '#3C4F47' },
+  barTrack: { flex: 1, height: 8, backgroundColor: '#E9F0E6', borderRadius: 4, overflow: 'hidden' },
   barFill: { height: 8, borderRadius: 4 },
   barValue: { width: 48, fontSize: 12, fontWeight: '700', color: '#374151', textAlign: 'right' },
   label: { fontSize: 13, fontWeight: '700', color: '#374151', marginBottom: 8 },
@@ -256,7 +256,7 @@ function SparklineChart({ points, minPrice, maxPrice }: SparklineChartProps) {
         y1={avgY}
         x2={SPARK_W - SPARK_PAD_X}
         y2={avgY}
-        stroke="#e2e8f0"
+        stroke="#E2E9DF"
         strokeWidth="1"
         strokeDasharray="4,3"
       />
@@ -276,8 +276,8 @@ function SparklineChart({ points, minPrice, maxPrice }: SparklineChartProps) {
       {/* Dernier point mis en avant */}
       <Circle cx={lastPt.x} cy={lastPt.y} r={4} fill={C.primary} stroke="#fff" strokeWidth="1.5" />
       {/* Labels dates */}
-      <SvgText x={SPARK_PAD_X} y={SPARK_H - 2} fontSize={9} fill="#94a3b8">{firstDate}</SvgText>
-      <SvgText x={SPARK_W - SPARK_PAD_X} y={SPARK_H - 2} fontSize={9} fill="#94a3b8" textAnchor="end">{lastDate}</SvgText>
+      <SvgText x={SPARK_PAD_X} y={SPARK_H - 2} fontSize={9} fill="#8A9A92">{firstDate}</SvgText>
+      <SvgText x={SPARK_W - SPARK_PAD_X} y={SPARK_H - 2} fontSize={9} fill="#8A9A92" textAnchor="end">{lastDate}</SvgText>
       {/* Label dernier prix */}
       <SvgText
         x={Math.min(lastPt.x + 6, SPARK_W - 36)}
@@ -324,8 +324,8 @@ const PriceSparklineSection: React.FC<PriceSparklineProps> = ({ productId }) => 
       <View style={spark.header}>
         <Ionicons name="trending-up-outline" size={16} color={C.primary} />
         <Text style={spark.title}>Évolution 30 jours</Text>
-        <View style={[spark.variationBadge, { backgroundColor: variation > 5 ? '#fef2f2' : '#f0fdf4' }]}>
-          <Text style={[spark.variationText, { color: variation > 5 ? '#dc2626' : '#16a34a' }]}>
+        <View style={[spark.variationBadge, { backgroundColor: variation > 5 ? '#fef2f2' : '#EEF6F1' }]}>
+          <Text style={[spark.variationText, { color: variation > 5 ? '#C1272D' : '#0F4C3A' }]}>
             {variation > 0 ? '+' : ''}{variation.toFixed(1)}%
           </Text>
         </View>
@@ -368,11 +368,11 @@ const spark = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#e2e8f0',
+    borderColor: '#E2E9DF',
     padding: 14,
   },
   header: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 12 },
-  title: { flex: 1, fontSize: 14, fontWeight: '700', color: '#0f172a' },
+  title: { flex: 1, fontSize: 14, fontWeight: '700', color: '#0B2019' },
   variationBadge: {
     borderRadius: 6,
     paddingHorizontal: 7,
@@ -383,9 +383,9 @@ const spark = StyleSheet.create({
   legend: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 10, marginTop: 8 },
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   legendDot: { width: 8, height: 8, borderRadius: 4 },
-  legendDash: { width: 16, height: 2, backgroundColor: '#e2e8f0' },
-  legendLabel: { fontSize: 11, color: '#64748b' },
-  minMax: { fontSize: 11, color: '#94a3b8', marginLeft: 'auto' as any },
+  legendDash: { width: 16, height: 2, backgroundColor: '#E2E9DF' },
+  legendLabel: { fontSize: 11, color: '#4A5B53' },
+  minMax: { fontSize: 11, color: '#8A9A92', marginLeft: 'auto' as any },
 });
 
 // ── Carte magasin / prix ──────────────────────────────────────────────────────
@@ -617,14 +617,14 @@ const ProduitDetailScreen: React.FC<Props> = ({ route, navigation }) => {
 // ── Styles ────────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#f8fafc' },
+  safeArea: { flex: 1, backgroundColor: '#F2F6F0' },
   scroll: { flex: 1 },
   scrollContent: { paddingBottom: 32 },
   loadingContainer: { flex: 1, alignItems: 'center', paddingTop: 80, gap: 12 },
-  loadingText: { color: '#64748b', fontSize: 15 },
+  loadingText: { color: '#4A5B53', fontSize: 15 },
   errorContainer: { flex: 1, alignItems: 'center', paddingTop: 80, gap: 12, paddingHorizontal: 32 },
   errorTitle: { fontSize: 16, fontWeight: '700', color: '#ef4444' },
-  errorMsg: { fontSize: 13, color: '#64748b', textAlign: 'center' },
+  errorMsg: { fontSize: 13, color: '#4A5B53', textAlign: 'center' },
   retryBtn: {
     backgroundColor: C.primary,
     borderRadius: 10,
@@ -640,41 +640,41 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingBottom: 24,
     borderBottomWidth: 1,
-    borderBottomColor: '#e2e8f0',
+    borderBottomColor: '#E2E9DF',
     gap: 16,
   },
   productImage: {
     width: 96,
     height: 96,
     borderRadius: 16,
-    backgroundColor: '#f1f5f9',
+    backgroundColor: '#E9F0E6',
     borderWidth: 1,
-    borderColor: '#e2e8f0',
+    borderColor: '#E2E9DF',
   },
   productImagePlaceholder: {
     width: 96,
     height: 96,
     borderRadius: 16,
-    backgroundColor: '#f1f5f9',
+    backgroundColor: '#E9F0E6',
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: '#e2e8f0',
+    borderColor: '#E2E9DF',
   },
   productMeta: { flex: 1 },
-  productName: { fontSize: 18, fontWeight: '800', color: '#0f172a', marginBottom: 4, lineHeight: 24 },
-  productBrand: { fontSize: 14, color: '#64748b', marginBottom: 2, fontWeight: '500' },
-  productUnit: { fontSize: 12, color: '#94a3b8', marginBottom: 8 },
+  productName: { fontSize: 18, fontWeight: '800', color: '#0B2019', marginBottom: 4, lineHeight: 24 },
+  productBrand: { fontSize: 14, color: '#4A5B53', marginBottom: 2, fontWeight: '500' },
+  productUnit: { fontSize: 12, color: '#8A9A92', marginBottom: 8 },
   categoryBadge: {
     alignSelf: 'flex-start',
-    backgroundColor: '#f0fdf4',
+    backgroundColor: '#EEF6F1',
     borderRadius: 20,
     paddingHorizontal: 10,
     paddingVertical: 3,
     borderWidth: 1,
-    borderColor: '#bbf7d0',
+    borderColor: '#A7D1BA',
   },
-  categoryText: { fontSize: 11, color: '#16a34a', fontWeight: '700', letterSpacing: 0.2 },
+  categoryText: { fontSize: 11, color: '#0F4C3A', fontWeight: '700', letterSpacing: 0.2 },
   pricesSummary: {
     flexDirection: 'row',
     backgroundColor: '#ffffff',
@@ -690,12 +690,12 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 3,
     borderWidth: 1,
-    borderColor: '#e2e8f0',
+    borderColor: '#E2E9DF',
   },
   priceStat: { flex: 1, alignItems: 'center', paddingVertical: 14 },
-  priceStatLabel: { fontSize: 11, color: '#94a3b8', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.7, fontWeight: '600' },
-  priceStatValue: { fontSize: 15, fontWeight: '800', color: '#0f172a' },
-  priceDivider: { width: 1, backgroundColor: '#e2e8f0', marginVertical: 12 },
+  priceStatLabel: { fontSize: 11, color: '#8A9A92', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.7, fontWeight: '600' },
+  priceStatValue: { fontSize: 15, fontWeight: '800', color: '#0B2019' },
+  priceDivider: { width: 1, backgroundColor: '#E2E9DF', marginVertical: 12 },
   actionsRow: {
     flexDirection: 'row',
     paddingHorizontal: 16,
@@ -708,9 +708,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: '#f0fdf4',
+    backgroundColor: '#EEF6F1',
     borderWidth: 1.5,
-    borderColor: '#bbf7d0',
+    borderColor: '#A7D1BA',
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 12,
@@ -719,7 +719,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#64748b',
+    color: '#4A5B53',
     marginHorizontal: 16,
     marginTop: 16,
     marginBottom: 8,
@@ -738,13 +738,13 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 3,
     borderWidth: 1,
-    borderColor: '#e2e8f0',
+    borderColor: '#E2E9DF',
   },
   storeCardBest: {
     borderColor: C.primary,
     borderWidth: 2,
-    backgroundColor: '#f0fdf4',
-    shadowColor: '#16a34a',
+    backgroundColor: '#EEF6F1',
+    shadowColor: '#0F4C3A',
     shadowOpacity: 0.15,
     shadowRadius: 12,
     elevation: 5,
@@ -763,14 +763,14 @@ const styles = StyleSheet.create({
   bestBadgeText: { color: '#ffffff', fontSize: 11, fontWeight: '700', letterSpacing: 0.3 },
   storeCardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   storeInfo: { flex: 1 },
-  storeName: { fontSize: 15, fontWeight: '700', color: '#0f172a' },
-  storeCity: { fontSize: 12, color: '#64748b', marginTop: 3 },
-  storeSource: { fontSize: 11, color: '#94a3b8', marginTop: 2, textTransform: 'capitalize' },
+  storeName: { fontSize: 15, fontWeight: '700', color: '#0B2019' },
+  storeCity: { fontSize: 12, color: '#4A5B53', marginTop: 3 },
+  storeSource: { fontSize: 11, color: '#8A9A92', marginTop: 2, textTransform: 'capitalize' },
   priceBox: { alignItems: 'flex-end' },
-  regularPrice: { fontSize: 20, fontWeight: '800', color: '#0f172a' },
+  regularPrice: { fontSize: 20, fontWeight: '800', color: '#0B2019' },
   bestPrice: { color: C.primary },
-  promoPrice: { fontSize: 20, fontWeight: '800', color: '#dc2626' },
-  regularPriceStrike: { fontSize: 13, color: '#94a3b8', textDecorationLine: 'line-through' },
+  promoPrice: { fontSize: 20, fontWeight: '800', color: '#C1272D' },
+  regularPriceStrike: { fontSize: 13, color: '#8A9A92', textDecorationLine: 'line-through' },
   promoBadge: {
     backgroundColor: '#fef2f2',
     borderRadius: 8,
@@ -780,23 +780,23 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#fecaca',
   },
-  promoBadgeText: { color: '#dc2626', fontSize: 11, fontWeight: '700' },
+  promoBadgeText: { color: '#C1272D', fontSize: 11, fontWeight: '700' },
   noPricesContainer: { alignItems: 'center', paddingVertical: 40, gap: 12 },
-  noPricesText: { color: '#94a3b8', fontSize: 14 },
+  noPricesText: { color: '#8A9A92', fontSize: 14 },
   descriptionCard: {
     marginHorizontal: 16,
     backgroundColor: '#ffffff',
     borderRadius: 14,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#e2e8f0',
+    borderColor: '#E2E9DF',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 4,
     elevation: 1,
   },
-  descriptionText: { fontSize: 14, color: '#475569', lineHeight: 22 },
+  descriptionText: { fontSize: 14, color: '#3C4F47', lineHeight: 22 },
 });
 
 export default ProduitDetailScreen;

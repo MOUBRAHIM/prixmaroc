@@ -220,10 +220,10 @@ function MainTabs() {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarActiveTintColor: C.primary,
-        tabBarInactiveTintColor: '#9ca3af',
+        tabBarInactiveTintColor: '#8A9A92',
         tabBarStyle: {
           backgroundColor: '#ffffff',
-          borderTopColor: '#f1f5f9',
+          borderTopColor: '#E9F0E6',
           borderTopWidth: 1,
           height: Platform.OS === 'ios' ? 90 : 68,
           paddingBottom: Platform.OS === 'ios' ? 26 : 10,

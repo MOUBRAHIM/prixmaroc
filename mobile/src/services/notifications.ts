@@ -88,7 +88,7 @@ export async function registerForPushNotifications(): Promise<string | null> {
         name: 'PrixMaroc',
         importance: Notifications.AndroidImportance.HIGH,
         vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#16a34a',
+        lightColor: '#0F4C3A',
         description: 'Alertes prix et listes de courses',
       });
     }

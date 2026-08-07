@@ -76,7 +76,7 @@ const FilterModal: React.FC<{
           <TextInput
             style={fm.input}
             placeholder="Ex : Danone, Nestlé, Lesieur…"
-            placeholderTextColor="#9ca3af"
+            placeholderTextColor="#8A9A92"
             value={local.brand}
             onChangeText={(v) => setLocal((f) => ({ ...f, brand: v }))}
             autoCorrect={false}
@@ -106,7 +106,7 @@ const FilterModal: React.FC<{
             <Ionicons
               name={local.promoOnly ? 'checkmark-circle' : 'ellipse-outline'}
               size={22}
-              color={local.promoOnly ? C.primary : '#94a3b8'}
+              color={local.promoOnly ? C.primary : '#8A9A92'}
             />
             <Text style={[fm.promoToggleText, local.promoOnly && { color: C.primary }]}>
               Promotions uniquement
@@ -139,32 +139,32 @@ const fm = StyleSheet.create({
     gap: 12,
   },
   sheetHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 },
-  sheetTitle: { fontSize: 20, fontWeight: '800', color: '#0f172a' },
-  label: { fontSize: 13, fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: 0.5 },
+  sheetTitle: { fontSize: 20, fontWeight: '800', color: '#0B2019' },
+  label: { fontSize: 13, fontWeight: '700', color: '#4A5B53', textTransform: 'uppercase', letterSpacing: 0.5 },
   input: {
-    backgroundColor: '#f1f5f9', borderRadius: 10, padding: 12,
-    fontSize: 15, color: '#0f172a',
+    backgroundColor: '#E9F0E6', borderRadius: 10, padding: 12,
+    fontSize: 15, color: '#0B2019',
   },
   budgetRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   budgetBtn: {
     paddingHorizontal: 12, paddingVertical: 8, borderRadius: 10,
-    borderWidth: 1.5, borderColor: '#e2e8f0', backgroundColor: '#f8fafc',
+    borderWidth: 1.5, borderColor: '#E2E9DF', backgroundColor: '#F2F6F0',
   },
-  budgetBtnActive: { borderColor: C.primary, backgroundColor: '#f0fdf4' },
-  budgetText: { fontSize: 13, fontWeight: '600', color: '#64748b' },
+  budgetBtnActive: { borderColor: C.primary, backgroundColor: '#EEF6F1' },
+  budgetText: { fontSize: 13, fontWeight: '600', color: '#4A5B53' },
   budgetTextActive: { color: C.primary },
   promoToggle: {
     flexDirection: 'row', alignItems: 'center', gap: 10,
-    padding: 12, borderRadius: 10, borderWidth: 1.5, borderColor: '#e2e8f0',
+    padding: 12, borderRadius: 10, borderWidth: 1.5, borderColor: '#E2E9DF',
   },
-  promoToggleActive: { borderColor: C.primary, backgroundColor: '#f0fdf4' },
-  promoToggleText: { fontSize: 14, fontWeight: '600', color: '#64748b' },
+  promoToggleActive: { borderColor: C.primary, backgroundColor: '#EEF6F1' },
+  promoToggleText: { fontSize: 14, fontWeight: '600', color: '#4A5B53' },
   actions: { flexDirection: 'row', gap: 12, marginTop: 8 },
   resetBtn: {
     flex: 1, paddingVertical: 14, borderRadius: 12,
-    backgroundColor: '#f1f5f9', alignItems: 'center',
+    backgroundColor: '#E9F0E6', alignItems: 'center',
   },
-  resetText: { color: '#64748b', fontWeight: '700', fontSize: 15 },
+  resetText: { color: '#4A5B53', fontWeight: '700', fontSize: 15 },
   applyBtn: {
     flex: 2, paddingVertical: 14, borderRadius: 12,
     backgroundColor: C.primary, alignItems: 'center',
@@ -179,7 +179,7 @@ const ImageWithFallback: React.FC<{ uri: string }> = ({ uri }) => {
   if (errored) {
     return (
       <View style={styles.productImagePlaceholder}>
-        <Ionicons name="image-outline" size={22} color="#cbd5e1" />
+        <Ionicons name="image-outline" size={22} color="#C9D5C4" />
         <Text style={styles.productImagePlaceholderText}>Photo{'\n'}à venir</Text>
       </View>
     );
@@ -323,12 +323,12 @@ const RechercheScreen: React.FC<Props> = ({ navigation }) => {
           {isLoading ? (
             <ActivityIndicator size="small" color={C.primary} style={{ marginRight: 8 }} />
           ) : (
-            <Ionicons name="search-outline" size={18} color="#9ca3af" style={{ marginRight: 8 }} />
+            <Ionicons name="search-outline" size={18} color="#8A9A92" style={{ marginRight: 8 }} />
           )}
           <TextInput
             style={styles.searchInput}
             placeholder="Tapez un produit ou une marque…"
-            placeholderTextColor="#9ca3af"
+            placeholderTextColor="#8A9A92"
             value={query}
             onChangeText={setQuery}
             onSubmitEditing={handleSearch}
@@ -338,7 +338,7 @@ const RechercheScreen: React.FC<Props> = ({ navigation }) => {
           />
           {query.length > 0 && (
             <TouchableOpacity onPress={clearSearch} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-              <Ionicons name="close-circle" size={18} color="#9ca3af" />
+              <Ionicons name="close-circle" size={18} color="#8A9A92" />
             </TouchableOpacity>
           )}
         </View>
@@ -350,7 +350,7 @@ const RechercheScreen: React.FC<Props> = ({ navigation }) => {
           <Ionicons
             name="options-outline"
             size={20}
-            color={hasActiveFilters ? '#15803d' : 'rgba(255,255,255,0.9)'}
+            color={hasActiveFilters ? '#0C3F30' : 'rgba(255,255,255,0.9)'}
           />
           {activeCount > 0 && (
             <View style={styles.filterBadge}>
@@ -478,14 +478,14 @@ const RechercheScreen: React.FC<Props> = ({ navigation }) => {
 // ── Styles ────────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#f1f5f9' },
+  safeArea: { flex: 1, backgroundColor: '#E9F0E6' },
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingTop: 14,
     paddingBottom: 14,
-    backgroundColor: '#15803d',
+    backgroundColor: '#0C3F30',
     gap: 8,
   },
   searchInputWrap: {
@@ -502,7 +502,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
-  searchInput: { flex: 1, fontSize: 15, color: '#0f172a' },
+  searchInput: { flex: 1, fontSize: 15, color: '#0B2019' },
   filterBtn: {
     width: 42,
     height: 42,
@@ -520,7 +520,7 @@ const styles = StyleSheet.create({
     width: 18,
     height: 18,
     borderRadius: 9,
-    backgroundColor: '#dc2626',
+    backgroundColor: '#C1272D',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -530,18 +530,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: '#f0fdf4',
+    backgroundColor: '#EEF6F1',
     borderRadius: 20,
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderWidth: 1,
-    borderColor: '#bbf7d0',
+    borderColor: '#A7D1BA',
   },
   chipText: { fontSize: 12, fontWeight: '600', color: C.primary },
   listContent: { paddingVertical: 10, paddingHorizontal: 14 },
   resultsHeader: {
     fontSize: 13,
-    color: '#64748b',
+    color: '#4A5B53',
     marginBottom: 10,
     marginTop: 2,
     fontWeight: '500',
@@ -550,25 +550,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#ffffff',
-    borderRadius: 16,
+    borderRadius: 20,
     padding: 14,
     marginBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.07,
-    shadowRadius: 8,
-    elevation: 3,
+    shadowColor: '#0B2019',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.06,
+    shadowRadius: 14,
+    elevation: 2,
   },
   productImageWrap: {
     width: 68,
     height: 68,
     borderRadius: 12,
-    overflow: 'hidden',
-    backgroundColor: '#f1f5f9',
+    // pas d'overflow:hidden — la pastille promo déborde volontairement
+    backgroundColor: '#E9F0E6',
     marginRight: 14,
     position: 'relative',
     borderWidth: 1,
-    borderColor: '#e2e8f0',
+    borderColor: '#E2E9DF',
   },
   productImage: { width: 68, height: 68 },
   productImagePlaceholder: {
@@ -576,48 +576,51 @@ const styles = StyleSheet.create({
     height: 68,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#F2F6F0',
     gap: 2,
   },
   productImagePlaceholderText: {
     fontSize: 9,
-    color: '#cbd5e1',
+    color: '#C9D5C4',
     textAlign: 'center',
     lineHeight: 12,
     fontWeight: '500',
   },
+  // Pastille arrondie posée sur la vignette, plutôt qu'un bandeau plein
   promoBadge: {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: '#dc2626',
+    top: -5,
+    right: -5,
+    backgroundColor: '#C1272D',
+    borderRadius: 999,
+    paddingHorizontal: 7,
     paddingVertical: 2,
-    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#ffffff',
   },
-  promoBadgeText: { color: '#ffffff', fontSize: 9, fontWeight: '700', letterSpacing: 0.3 },
+  promoBadgeText: { color: '#ffffff', fontSize: 9, fontWeight: '800', letterSpacing: 0.3 },
   productInfo: { flex: 1 },
-  productName: { fontSize: 14, fontWeight: '700', color: '#0f172a', marginBottom: 3, lineHeight: 19 },
-  productBrand: { fontSize: 12, color: '#64748b', marginBottom: 2 },
-  productUnit: { fontSize: 11, color: '#94a3b8', marginBottom: 6 },
+  productName: { fontSize: 14, fontWeight: '700', color: '#0B2019', marginBottom: 3, lineHeight: 19 },
+  productBrand: { fontSize: 12, color: '#4A5B53', marginBottom: 2 },
+  productUnit: { fontSize: 11, color: '#8A9A92', marginBottom: 6 },
   priceRow: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 6 },
-  priceFrom: { fontSize: 13, color: '#475569' },
+  priceFrom: { fontSize: 13, color: '#3C4F47' },
   priceValue: { fontWeight: '800', color: C.primary, fontSize: 15 },
-  priceUnavailable: { fontSize: 12, color: '#94a3b8', fontStyle: 'italic' },
+  priceUnavailable: { fontSize: 12, color: '#8A9A92', fontStyle: 'italic' },
   storeCount: {
-    fontSize: 11, color: '#64748b', fontWeight: '600',
-    backgroundColor: '#f1f5f9', borderRadius: 8, paddingHorizontal: 7, paddingVertical: 2,
+    fontSize: 11, color: '#4A5B53', fontWeight: '600',
+    backgroundColor: '#E9F0E6', borderRadius: 8, paddingHorizontal: 7, paddingVertical: 2,
   },
   productActions: { alignItems: 'center', gap: 10, marginLeft: 6 },
   historiqueBtn: {
     width: 34,
     height: 34,
     borderRadius: 10,
-    backgroundColor: '#f0fdf4',
+    backgroundColor: '#EEF6F1',
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: '#bbf7d0',
+    borderColor: '#A7D1BA',
   },
   emptyState: {
     flex: 1,
@@ -628,7 +631,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   emptyTitle: { fontSize: 20, fontWeight: '700', color: '#374151', marginTop: 16, marginBottom: 6 },
-  emptySubtitle: { fontSize: 14, color: '#9ca3af', textAlign: 'center', lineHeight: 22 },
+  emptySubtitle: { fontSize: 14, color: '#8A9A92', textAlign: 'center', lineHeight: 22 },
   resetFiltersBtn: {
     backgroundColor: C.primary,
     borderRadius: 12,
@@ -638,7 +641,7 @@ const styles = StyleSheet.create({
   },
   resetFiltersBtnText: { color: '#fff', fontWeight: '700', fontSize: 14 },
   loadingContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12 },
-  loadingText: { color: '#64748b', fontSize: 15 },
+  loadingText: { color: '#4A5B53', fontSize: 15 },
   errorContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12 },
   errorText: { color: '#ef4444', fontSize: 15, fontWeight: '600' },
   retryBtn: {

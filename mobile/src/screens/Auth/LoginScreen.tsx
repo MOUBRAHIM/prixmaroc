@@ -74,7 +74,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <View style={styles.root}>
-      <StatusBar barStyle="light-content" backgroundColor="#15803d" />
+      <StatusBar barStyle="light-content" backgroundColor="#0C3F30" />
 
       {/* ── Green background layers ─────────────────────────────────────── */}
       <View style={styles.bgTop} />
@@ -222,7 +222,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
                     value={urlInput}
                     onChangeText={setUrlInput}
                     placeholder="https://xxx.trycloudflare.com"
-                    placeholderTextColor="#9ca3af"
+                    placeholderTextColor="#8A9A92"
                     autoCapitalize="none"
                     autoCorrect={false}
                     keyboardType="url"
@@ -263,12 +263,12 @@ const styles = StyleSheet.create({
   // Background layers to simulate a green gradient
   bgTop: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: '#15803d',
+    backgroundColor: '#0C3F30',
     bottom: '45%',
   },
   bgBottom: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: '#f0fdf4',
+    backgroundColor: '#EEF6F1',
     top: '55%',
   },
 
@@ -332,7 +332,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 22,
     fontWeight: '800',
-    color: '#0f172a',
+    color: '#0B2019',
     marginBottom: 22,
     letterSpacing: -0.3,
   },
@@ -368,16 +368,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1.5,
-    borderColor: '#e2e8f0',
+    borderColor: '#E2E9DF',
     borderRadius: 14,
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#F2F6F0',
     paddingHorizontal: 14,
     paddingVertical: 4,
     gap: 8,
   },
   inputWrapFocused: {
-    borderColor: '#16a34a',
-    backgroundColor: '#f0fdf4',
+    borderColor: '#0F4C3A',
+    backgroundColor: '#EEF6F1',
   },
   inputWrapError: {
     borderColor: '#fca5a5',
@@ -391,30 +391,30 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
-    color: '#0f172a',
+    color: '#0B2019',
     paddingVertical: 13,
   },
 
   // Button
   button: {
-    backgroundColor: '#16a34a',
+    backgroundColor: '#0F4C3A',
     borderRadius: 14,
     paddingVertical: 16,
     alignItems: 'center',
     marginTop: 6,
-    shadowColor: '#16a34a',
+    shadowColor: '#0F4C3A',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.35,
     shadowRadius: 10,
     elevation: 6,
   },
   buttonDisabled: {
-    backgroundColor: '#4ade80',
+    backgroundColor: '#3D8F6E',
     shadowOpacity: 0.1,
     elevation: 2,
   },
   buttonInactive: {
-    backgroundColor: '#86efac',
+    backgroundColor: '#6FB294',
     shadowOpacity: 0.08,
     elevation: 1,
   },
@@ -433,11 +433,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   registerText: {
-    color: '#64748b',
+    color: '#4A5B53',
     fontSize: 15,
   },
   registerLink: {
-    color: '#16a34a',
+    color: '#0F4C3A',
     fontSize: 15,
     fontWeight: '700',
   },
@@ -448,7 +448,7 @@ const styles = StyleSheet.create({
     marginTop: 28,
   },
   tagline: {
-    color: '#64748b',
+    color: '#4A5B53',
     fontSize: 13,
     textAlign: 'center',
     lineHeight: 18,
@@ -478,7 +478,7 @@ const styles = StyleSheet.create({
   },
   guestBtnText: {
     fontSize: 14,
-    color: '#15803d',
+    color: '#0C3F30',
     fontWeight: '600',
   },
 
@@ -499,23 +499,23 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#0f172a',
+    color: '#0B2019',
     marginBottom: 6,
   },
   modalHint: {
     fontSize: 13,
-    color: '#64748b',
+    color: '#4A5B53',
     marginBottom: 16,
     lineHeight: 18,
   },
   modalInput: {
     borderWidth: 1.5,
-    borderColor: '#e2e8f0',
+    borderColor: '#E2E9DF',
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 14,
-    color: '#0f172a',
+    color: '#0B2019',
     marginBottom: 20,
   },
   modalActions: {
@@ -527,15 +527,15 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 12,
     borderWidth: 1.5,
-    borderColor: '#e2e8f0',
+    borderColor: '#E2E9DF',
     alignItems: 'center',
   },
-  modalCancelText: { fontSize: 15, color: '#64748b', fontWeight: '600' },
+  modalCancelText: { fontSize: 15, color: '#4A5B53', fontWeight: '600' },
   modalSave: {
     flex: 1,
     paddingVertical: 12,
     borderRadius: 12,
-    backgroundColor: '#15803d',
+    backgroundColor: '#0C3F30',
     alignItems: 'center',
   },
   modalSaveText: { fontSize: 15, color: '#fff', fontWeight: '700' },

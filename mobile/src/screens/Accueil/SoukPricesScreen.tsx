@@ -64,11 +64,11 @@ const PriceRow: React.FC<{ p: SoukPrice; onVote: (id: number, v: 1 | -1) => void
     </View>
     <View style={styles.votes}>
       <TouchableOpacity disabled={voting} onPress={() => onVote(p.id, 1)} style={styles.voteBtn} hitSlop={8}>
-        <Ionicons name={p.my_vote === 1 ? 'thumbs-up' : 'thumbs-up-outline'} size={18} color={p.my_vote === 1 ? C.primary : '#94a3b8'} />
+        <Ionicons name={p.my_vote === 1 ? 'thumbs-up' : 'thumbs-up-outline'} size={18} color={p.my_vote === 1 ? C.primary : '#8A9A92'} />
         <Text style={[styles.voteNum, p.my_vote === 1 && { color: C.primary }]}>{p.upvotes}</Text>
       </TouchableOpacity>
       <TouchableOpacity disabled={voting} onPress={() => onVote(p.id, -1)} style={styles.voteBtn} hitSlop={8}>
-        <Ionicons name={p.my_vote === -1 ? 'thumbs-down' : 'thumbs-down-outline'} size={18} color={p.my_vote === -1 ? '#ef4444' : '#94a3b8'} />
+        <Ionicons name={p.my_vote === -1 ? 'thumbs-down' : 'thumbs-down-outline'} size={18} color={p.my_vote === -1 ? '#ef4444' : '#8A9A92'} />
         <Text style={[styles.voteNum, p.my_vote === -1 && { color: '#ef4444' }]}>{p.downvotes}</Text>
       </TouchableOpacity>
     </View>
@@ -128,7 +128,7 @@ const SoukPricesScreen: React.FC = () => {
             value={city}
             onChangeText={setCity}
             placeholder="Ville (ex : Casablanca)"
-            placeholderTextColor="#9ca3af"
+            placeholderTextColor="#8A9A92"
           />
         </View>
 
@@ -240,7 +240,7 @@ const SubmitModal: React.FC<{ visible: boolean; defaultCity: string; onClose: ()
         <View style={styles.sheet}>
           <View style={styles.sheetHeader}>
             <Text style={styles.sheetTitle}>Proposer un prix</Text>
-            <TouchableOpacity onPress={onClose} hitSlop={8}><Ionicons name="close" size={24} color="#64748b" /></TouchableOpacity>
+            <TouchableOpacity onPress={onClose} hitSlop={8}><Ionicons name="close" size={24} color="#4A5B53" /></TouchableOpacity>
           </View>
           <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingBottom: 20 }}>
             {/* Catégorie */}
@@ -258,7 +258,7 @@ const SubmitModal: React.FC<{ visible: boolean; defaultCity: string; onClose: ()
             {/* Produit + suggestions */}
             <Text style={styles.label}>Produit</Text>
             <TextInput style={styles.input} value={itemName} onChangeText={setItemName}
-              placeholder="Ex : Tomates, Sardines…" placeholderTextColor="#9ca3af" />
+              placeholder="Ex : Tomates, Sardines…" placeholderTextColor="#8A9A92" />
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.sugRow}>
               {suggestions.map((s) => (
                 <TouchableOpacity key={s} style={styles.sugChip} onPress={() => setItemName(s)}>
@@ -271,7 +271,7 @@ const SubmitModal: React.FC<{ visible: boolean; defaultCity: string; onClose: ()
             <Text style={styles.label}>Prix</Text>
             <View style={styles.priceRow}>
               <TextInput style={[styles.input, { flex: 1, marginBottom: 0 }]} value={price} onChangeText={setPrice}
-                placeholder="0" placeholderTextColor="#9ca3af" keyboardType="decimal-pad" />
+                placeholder="0" placeholderTextColor="#8A9A92" keyboardType="decimal-pad" />
               <Text style={styles.madLabel}>MAD /</Text>
               <View style={styles.unitRow}>
                 {UNITS.map((u) => (
@@ -285,11 +285,11 @@ const SubmitModal: React.FC<{ visible: boolean; defaultCity: string; onClose: ()
             {/* Quartier / souk */}
             <Text style={styles.label}>Quartier / souk <Text style={styles.optional}>(optionnel)</Text></Text>
             <TextInput style={styles.input} value={neighborhood} onChangeText={setNeighborhood}
-              placeholder="Ex : Souk Derb Ghallef" placeholderTextColor="#9ca3af" />
+              placeholder="Ex : Souk Derb Ghallef" placeholderTextColor="#8A9A92" />
 
             <Text style={styles.label}>Note <Text style={styles.optional}>(optionnel)</Text></Text>
             <TextInput style={[styles.input, { height: 64 }]} value={note} onChangeText={setNote}
-              placeholder="Qualité, marchand…" placeholderTextColor="#9ca3af" multiline />
+              placeholder="Qualité, marchand…" placeholderTextColor="#8A9A92" multiline />
 
             <TouchableOpacity style={[styles.submitBtn, mut.isPending && { opacity: 0.6 }]} onPress={submit} disabled={mut.isPending}>
               {mut.isPending ? <ActivityIndicator color="#fff" /> : (
@@ -304,64 +304,64 @@ const SubmitModal: React.FC<{ visible: boolean; defaultCity: string; onClose: ()
 };
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: '#f1f5f9' },
+  root: { flex: 1, backgroundColor: '#E9F0E6' },
   content: { padding: 16 },
-  intro: { backgroundColor: '#f0fdf4', borderRadius: 14, padding: 14, marginBottom: 14, borderWidth: 1, borderColor: '#bbf7d0' },
-  introTitle: { fontSize: 17, fontWeight: '800', color: '#0f172a', marginBottom: 4 },
-  introText: { fontSize: 13, color: '#166534', lineHeight: 18 },
-  cityBox: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: '#fff', borderRadius: 12, borderWidth: 1, borderColor: '#e2e8f0', paddingHorizontal: 12, marginBottom: 12 },
-  cityInput: { flex: 1, paddingVertical: 12, fontSize: 15, color: '#0f172a' },
+  intro: { backgroundColor: '#EEF6F1', borderRadius: 14, padding: 14, marginBottom: 14, borderWidth: 1, borderColor: '#A7D1BA' },
+  introTitle: { fontSize: 17, fontWeight: '800', color: '#0B2019', marginBottom: 4 },
+  introText: { fontSize: 13, color: '#093126', lineHeight: 18 },
+  cityBox: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: '#fff', borderRadius: 12, borderWidth: 1, borderColor: '#E2E9DF', paddingHorizontal: 12, marginBottom: 12 },
+  cityInput: { flex: 1, paddingVertical: 12, fontSize: 15, color: '#0B2019' },
   catRow: { gap: 8, paddingBottom: 4, paddingRight: 8 },
-  catChip: { flexDirection: 'row', alignItems: 'center', gap: 5, backgroundColor: '#fff', borderRadius: 20, paddingHorizontal: 12, paddingVertical: 8, borderWidth: 1, borderColor: '#e2e8f0' },
+  catChip: { flexDirection: 'row', alignItems: 'center', gap: 5, backgroundColor: '#fff', borderRadius: 20, paddingHorizontal: 12, paddingVertical: 8, borderWidth: 1, borderColor: '#E2E9DF' },
   catChipActive: { backgroundColor: C.primary, borderColor: C.primary },
   catChipIcon: { fontSize: 14 },
-  catChipLabel: { fontSize: 13, fontWeight: '700', color: '#475569' },
-  sectionTitle: { fontSize: 15, fontWeight: '800', color: '#0f172a', marginTop: 18, marginBottom: 10 },
-  medCard: { width: 130, backgroundColor: '#fff', borderRadius: 14, padding: 12, borderWidth: 1, borderColor: '#e2e8f0' },
+  catChipLabel: { fontSize: 13, fontWeight: '700', color: '#3C4F47' },
+  sectionTitle: { fontSize: 15, fontWeight: '800', color: '#0B2019', marginTop: 18, marginBottom: 10 },
+  medCard: { width: 130, backgroundColor: '#fff', borderRadius: 14, padding: 12, borderWidth: 1, borderColor: '#E2E9DF' },
   medIcon: { fontSize: 20 },
-  medName: { fontSize: 13, fontWeight: '700', color: '#0f172a', marginTop: 4 },
+  medName: { fontSize: 13, fontWeight: '700', color: '#0B2019', marginTop: 4 },
   medPrice: { fontSize: 18, fontWeight: '900', color: C.primary, marginTop: 4 },
-  medUnit: { fontSize: 11, fontWeight: '600', color: '#94a3b8' },
-  medRange: { fontSize: 10, color: '#94a3b8', marginTop: 2 },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: '#fff', borderRadius: 12, padding: 12, marginBottom: 8, borderWidth: 1, borderColor: '#eef2f6' },
+  medUnit: { fontSize: 11, fontWeight: '600', color: '#8A9A92' },
+  medRange: { fontSize: 10, color: '#8A9A92', marginTop: 2 },
+  row: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: '#fff', borderRadius: 12, padding: 12, marginBottom: 8, borderWidth: 1, borderColor: '#EAF0E7' },
   rowIcon: { fontSize: 22 },
-  rowName: { fontSize: 14, fontWeight: '700', color: '#0f172a' },
-  rowMeta: { fontSize: 11, color: '#94a3b8', marginTop: 2 },
-  pendingTag: { alignSelf: 'flex-start', backgroundColor: '#fef9c3', borderRadius: 5, paddingHorizontal: 6, paddingVertical: 1, marginTop: 4 },
-  pendingText: { fontSize: 10, color: '#a16207', fontWeight: '700' },
+  rowName: { fontSize: 14, fontWeight: '700', color: '#0B2019' },
+  rowMeta: { fontSize: 11, color: '#8A9A92', marginTop: 2 },
+  pendingTag: { alignSelf: 'flex-start', backgroundColor: '#FDF3DE', borderRadius: 5, paddingHorizontal: 6, paddingVertical: 1, marginTop: 4 },
+  pendingText: { fontSize: 10, color: '#8A6410', fontWeight: '700' },
   rowRight: { alignItems: 'flex-end' },
-  rowPrice: { fontSize: 16, fontWeight: '900', color: '#0f172a' },
-  rowUnit: { fontSize: 10, color: '#94a3b8' },
+  rowPrice: { fontSize: 16, fontWeight: '900', color: '#0B2019' },
+  rowUnit: { fontSize: 10, color: '#8A9A92' },
   votes: { alignItems: 'center', gap: 2, marginLeft: 4 },
   voteBtn: { flexDirection: 'row', alignItems: 'center', gap: 3, paddingVertical: 2 },
-  voteNum: { fontSize: 12, fontWeight: '700', color: '#94a3b8' },
+  voteNum: { fontSize: 12, fontWeight: '700', color: '#8A9A92' },
   empty: { alignItems: 'center', paddingVertical: 40, gap: 8 },
   emptyIcon: { fontSize: 40 },
-  emptyText: { fontSize: 13, color: '#94a3b8', textAlign: 'center', lineHeight: 19 },
+  emptyText: { fontSize: 13, color: '#8A9A92', textAlign: 'center', lineHeight: 19 },
   fab: { position: 'absolute', bottom: 20, alignSelf: 'center', flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: C.primary, paddingHorizontal: 22, paddingVertical: 14, borderRadius: 28, shadowColor: C.primary, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.35, shadowRadius: 10, elevation: 8 },
   fabText: { color: '#fff', fontWeight: '800', fontSize: 15 },
   // modal
   modalWrap: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.45)' },
   sheet: { backgroundColor: '#fff', borderTopLeftRadius: 22, borderTopRightRadius: 22, padding: 18, maxHeight: '92%' },
   sheetHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
-  sheetTitle: { fontSize: 18, fontWeight: '800', color: '#0f172a' },
-  label: { fontSize: 13, fontWeight: '700', color: '#334155', marginTop: 12, marginBottom: 6 },
-  optional: { fontWeight: '400', color: '#94a3b8' },
-  input: { backgroundColor: '#f8fafc', borderRadius: 10, borderWidth: 1, borderColor: '#e2e8f0', paddingHorizontal: 12, paddingVertical: 11, fontSize: 15, color: '#0f172a', marginBottom: 2 },
+  sheetTitle: { fontSize: 18, fontWeight: '800', color: '#0B2019' },
+  label: { fontSize: 13, fontWeight: '700', color: '#2E4139', marginTop: 12, marginBottom: 6 },
+  optional: { fontWeight: '400', color: '#8A9A92' },
+  input: { backgroundColor: '#F2F6F0', borderRadius: 10, borderWidth: 1, borderColor: '#E2E9DF', paddingHorizontal: 12, paddingVertical: 11, fontSize: 15, color: '#0B2019', marginBottom: 2 },
   segRow: { flexDirection: 'row', gap: 6 },
-  seg: { flex: 1, alignItems: 'center', backgroundColor: '#f8fafc', borderRadius: 10, paddingVertical: 10, borderWidth: 2, borderColor: '#e2e8f0', gap: 2 },
-  segActive: { borderColor: C.primary, backgroundColor: '#f0fdf4' },
+  seg: { flex: 1, alignItems: 'center', backgroundColor: '#F2F6F0', borderRadius: 10, paddingVertical: 10, borderWidth: 2, borderColor: '#E2E9DF', gap: 2 },
+  segActive: { borderColor: C.primary, backgroundColor: '#EEF6F1' },
   segIcon: { fontSize: 18 },
-  segLabel: { fontSize: 11, fontWeight: '700', color: '#64748b' },
+  segLabel: { fontSize: 11, fontWeight: '700', color: '#4A5B53' },
   sugRow: { gap: 6, paddingVertical: 8 },
-  sugChip: { backgroundColor: '#f0fdf4', borderRadius: 16, paddingHorizontal: 12, paddingVertical: 6, borderWidth: 1, borderColor: '#bbf7d0' },
+  sugChip: { backgroundColor: '#EEF6F1', borderRadius: 16, paddingHorizontal: 12, paddingVertical: 6, borderWidth: 1, borderColor: '#A7D1BA' },
   sugText: { fontSize: 12, color: C.primary, fontWeight: '600' },
   priceRow: { flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap' },
-  madLabel: { fontSize: 13, fontWeight: '700', color: '#64748b' },
+  madLabel: { fontSize: 13, fontWeight: '700', color: '#4A5B53' },
   unitRow: { flexDirection: 'row', gap: 4 },
-  unitChip: { backgroundColor: '#f1f5f9', borderRadius: 8, paddingHorizontal: 10, paddingVertical: 8 },
+  unitChip: { backgroundColor: '#E9F0E6', borderRadius: 8, paddingHorizontal: 10, paddingVertical: 8 },
   unitChipActive: { backgroundColor: C.primary },
-  unitChipText: { fontSize: 12, fontWeight: '700', color: '#475569' },
+  unitChipText: { fontSize: 12, fontWeight: '700', color: '#3C4F47' },
   submitBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, backgroundColor: C.primary, borderRadius: 14, paddingVertical: 15, marginTop: 20 },
   submitText: { color: '#fff', fontWeight: '800', fontSize: 16 },
 });

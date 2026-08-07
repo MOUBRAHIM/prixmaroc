@@ -91,8 +91,8 @@ const StoreComparisonCard: React.FC<{
   return (
     <View style={[styles.storeCard, !allAvailable && styles.storeCardDisabled, saving === 0 && styles.storeCardBest]}>
       <View style={styles.storeCardHeader}>
-        <Ionicons name="storefront" size={18} color={allAvailable ? C.primary : '#94a3b8'} />
-        <Text style={[styles.storeName, !allAvailable && { color: '#94a3b8' }]}>{storeName}</Text>
+        <Ionicons name="storefront" size={18} color={allAvailable ? C.primary : '#8A9A92'} />
+        <Text style={[styles.storeName, !allAvailable && { color: '#8A9A92' }]}>{storeName}</Text>
         {saving !== null && (
           <View style={[
             styles.savingBadge,
@@ -100,7 +100,7 @@ const StoreComparisonCard: React.FC<{
           ]}>
             {saving === 0 ? (
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
-                <Ionicons name="trophy" size={11} color="#15803d" />
+                <Ionicons name="trophy" size={11} color="#0C3F30" />
                 <Text style={[styles.savingText, styles.savingTextBest]}>MEILLEUR PRIX</Text>
               </View>
             ) : (
@@ -109,7 +109,7 @@ const StoreComparisonCard: React.FC<{
           </View>
         )}
       </View>
-      <Text style={[styles.storeTotal, !allAvailable && { color: '#94a3b8' }]}>
+      <Text style={[styles.storeTotal, !allAvailable && { color: '#8A9A92' }]}>
         {allAvailable ? `Total : ${total.toFixed(2)} MAD` : 'Produits non disponibles'}
       </Text>
     </View>
@@ -236,17 +236,17 @@ const ComparerPrixScreen: React.FC<Props> = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#f8fafc' },
+  safeArea: { flex: 1, backgroundColor: '#F2F6F0' },
   content: { padding: 16, paddingBottom: 32 },
   centered: { alignItems: 'center', paddingTop: 80, gap: 12 },
-  loadingText: { color: '#64748b', fontSize: 15 },
+  loadingText: { color: '#4A5B53', fontSize: 15 },
   errorText: { color: '#ef4444', fontSize: 15, fontWeight: '600' },
   retryBtn: { backgroundColor: C.primary, borderRadius: 10, paddingHorizontal: 24, paddingVertical: 10 },
   retryBtnText: { color: '#fff', fontWeight: '700', fontSize: 14 },
   summaryCard: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
-    backgroundColor: '#15803d', borderRadius: 20, padding: 22, marginBottom: 16,
-    shadowColor: '#15803d',
+    backgroundColor: '#0C3F30', borderRadius: 20, padding: 22, marginBottom: 16,
+    shadowColor: '#0C3F30',
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.3,
     shadowRadius: 14,
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10, paddingVertical: 4,
   },
   sectionTitle: {
-    fontSize: 12, fontWeight: '700', color: '#64748b',
+    fontSize: 12, fontWeight: '700', color: '#4A5B53',
     marginBottom: 10, marginTop: 4,
     textTransform: 'uppercase', letterSpacing: 0.8,
   },
@@ -270,44 +270,44 @@ const styles = StyleSheet.create({
     flexDirection: 'row', alignItems: 'center',
     backgroundColor: '#fff', borderRadius: 16, padding: 14, marginBottom: 8,
     shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.07, shadowRadius: 8, elevation: 3,
-    borderWidth: 1, borderColor: '#e2e8f0',
+    borderWidth: 1, borderColor: '#E2E9DF',
   },
-  productRowBest: { borderColor: C.primary, borderWidth: 2, backgroundColor: '#f0fdf4', shadowColor: '#16a34a', shadowOpacity: 0.12 },
+  productRowBest: { borderColor: C.primary, borderWidth: 2, backgroundColor: '#EEF6F1', shadowColor: '#0F4C3A', shadowOpacity: 0.12 },
   rankBadge: {
-    width: 34, height: 34, borderRadius: 17, backgroundColor: '#f1f5f9',
+    width: 34, height: 34, borderRadius: 17, backgroundColor: '#E9F0E6',
     alignItems: 'center', justifyContent: 'center', marginRight: 12,
   },
-  rankText: { fontSize: 14, fontWeight: '800', color: '#64748b' },
+  rankText: { fontSize: 14, fontWeight: '800', color: '#4A5B53' },
   rankTextBest: { color: C.primary },
   productRowInfo: { flex: 1 },
-  productRowName: { fontSize: 14, fontWeight: '700', color: '#0f172a', marginBottom: 2 },
-  productRowBrand: { fontSize: 12, color: '#64748b', marginBottom: 2 },
-  productRowStore: { fontSize: 12, color: '#94a3b8' },
+  productRowName: { fontSize: 14, fontWeight: '700', color: '#0B2019', marginBottom: 2 },
+  productRowBrand: { fontSize: 12, color: '#4A5B53', marginBottom: 2 },
+  productRowStore: { fontSize: 12, color: '#8A9A92' },
   productRowPrice: { alignItems: 'flex-end', gap: 2 },
-  originalPrice: { fontSize: 12, color: '#94a3b8', textDecorationLine: 'line-through' },
-  effectivePrice: { fontSize: 16, fontWeight: '800', color: '#0f172a' },
-  naPrice: { fontSize: 16, color: '#94a3b8' },
+  originalPrice: { fontSize: 12, color: '#8A9A92', textDecorationLine: 'line-through' },
+  effectivePrice: { fontSize: 16, fontWeight: '800', color: '#0B2019' },
+  naPrice: { fontSize: 16, color: '#8A9A92' },
   promoBadge: {
     backgroundColor: '#fef2f2', borderRadius: 4, paddingHorizontal: 5, paddingVertical: 1,
     borderWidth: 1, borderColor: '#fecaca',
   },
-  promoBadgeText: { color: '#dc2626', fontSize: 9, fontWeight: '700' },
+  promoBadgeText: { color: '#C1272D', fontSize: 9, fontWeight: '700' },
   storeCard: {
     backgroundColor: '#fff', borderRadius: 14, padding: 14, marginBottom: 8,
-    borderWidth: 1, borderColor: '#e2e8f0',
+    borderWidth: 1, borderColor: '#E2E9DF',
     shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.06, shadowRadius: 4, elevation: 2,
   },
-  storeCardDisabled: { backgroundColor: '#f8fafc', opacity: 0.7 },
+  storeCardDisabled: { backgroundColor: '#F2F6F0', opacity: 0.7 },
   storeCardHeader: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 6 },
-  storeName: { flex: 1, fontSize: 15, fontWeight: '700', color: '#0f172a' },
-  savingBadge: { backgroundColor: '#f0fdf4', borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3 },
-  savingBadgeNeg: { backgroundColor: '#fef9c3' },
-  savingBadgeBest: { backgroundColor: '#dcfce7', borderWidth: 1, borderColor: '#86efac' },
+  storeName: { flex: 1, fontSize: 15, fontWeight: '700', color: '#0B2019' },
+  savingBadge: { backgroundColor: '#EEF6F1', borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3 },
+  savingBadgeNeg: { backgroundColor: '#FDF3DE' },
+  savingBadgeBest: { backgroundColor: '#D3E8DC', borderWidth: 1, borderColor: '#6FB294' },
   savingText: { fontSize: 12, fontWeight: '700', color: C.primary },
   savingTextNeg: { color: '#92400e' },
-  savingTextBest: { color: '#15803d', fontSize: 11, fontWeight: '800' },
-  storeCardBest: { borderColor: '#16a34a', borderWidth: 2, backgroundColor: '#f0fdf4' },
-  storeTotal: { fontSize: 13, color: '#64748b', marginLeft: 26 },
+  savingTextBest: { color: '#0C3F30', fontSize: 11, fontWeight: '800' },
+  storeCardBest: { borderColor: '#0F4C3A', borderWidth: 2, backgroundColor: '#EEF6F1' },
+  storeTotal: { fontSize: 13, color: '#4A5B53', marginLeft: 26 },
 });
 
 export default ComparerPrixScreen;

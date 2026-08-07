@@ -36,7 +36,7 @@ const MiniBarChart: React.FC<{ points: PricePoint[]; min: number; max: number }>
         const height = Math.max(4, ((pt.price - min) / range) * 60 + 4);
         return (
           <View key={i} style={chart.barWrap}>
-            <View style={[chart.bar, { height, backgroundColor: pt.is_promo ? '#dc2626' : C.primary }]} />
+            <View style={[chart.bar, { height, backgroundColor: pt.is_promo ? '#C1272D' : C.primary }]} />
           </View>
         );
       })}
@@ -62,7 +62,7 @@ const PriceRow: React.FC<{ point: PricePoint; isLast: boolean }> = ({ point, isL
         {point.is_promo && (
           <View style={styles.promoBadge}><Text style={styles.promoBadgeText}>PROMO</Text></View>
         )}
-        <Text style={[styles.priceRowValue, point.is_promo && { color: '#dc2626' }]}>
+        <Text style={[styles.priceRowValue, point.is_promo && { color: '#C1272D' }]}>
           {point.price.toFixed(2)} MAD
         </Text>
       </View>
@@ -135,7 +135,7 @@ const HistoriquePrixScreen: React.FC<Props> = ({ route }) => {
               </View>
               <View style={styles.statDivider} />
               <View style={styles.statItem}>
-                <Ionicons name="stats-chart" size={20} color="#64748b" />
+                <Ionicons name="stats-chart" size={20} color="#4A5B53" />
                 <Text style={styles.statLabel}>Moyen</Text>
                 <Text style={styles.statValue}>{data.avg_price?.toFixed(2) ?? '—'} MAD</Text>
               </View>
@@ -160,7 +160,7 @@ const HistoriquePrixScreen: React.FC<Props> = ({ route }) => {
                     <Text style={styles.legendText}>Prix normal</Text>
                   </View>
                   <View style={styles.legendItem}>
-                    <View style={[styles.legendDot, { backgroundColor: '#dc2626' }]} />
+                    <View style={[styles.legendDot, { backgroundColor: '#C1272D' }]} />
                     <Text style={styles.legendText}>Promotion</Text>
                   </View>
                 </View>
@@ -200,18 +200,18 @@ const HistoriquePrixScreen: React.FC<Props> = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#f8fafc' },
+  safeArea: { flex: 1, backgroundColor: '#F2F6F0' },
   content: { padding: 16, paddingBottom: 32 },
   periodBar: {
     flexDirection: 'row', backgroundColor: '#fff', padding: 12, gap: 8,
-    borderBottomWidth: 1, borderBottomColor: '#e2e8f0',
+    borderBottomWidth: 1, borderBottomColor: '#E2E9DF',
   },
-  periodBtn: { flex: 1, alignItems: 'center', paddingVertical: 8, borderRadius: 8, backgroundColor: '#f1f5f9' },
+  periodBtn: { flex: 1, alignItems: 'center', paddingVertical: 8, borderRadius: 8, backgroundColor: '#E9F0E6' },
   periodBtnActive: { backgroundColor: C.primary },
-  periodBtnText: { fontSize: 14, fontWeight: '600', color: '#64748b' },
+  periodBtnText: { fontSize: 14, fontWeight: '600', color: '#4A5B53' },
   periodBtnTextActive: { color: '#fff' },
   centered: { alignItems: 'center', paddingTop: 80, gap: 12 },
-  loadingText: { color: '#64748b', fontSize: 15 },
+  loadingText: { color: '#4A5B53', fontSize: 15 },
   errorText: { color: '#ef4444', fontSize: 15, fontWeight: '600' },
   retryBtn: { backgroundColor: C.primary, borderRadius: 10, paddingHorizontal: 24, paddingVertical: 10 },
   retryBtnText: { color: '#fff', fontWeight: '700', fontSize: 14 },
@@ -220,39 +220,39 @@ const styles = StyleSheet.create({
     shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 6, elevation: 3,
   },
   statItem: { flex: 1, alignItems: 'center', gap: 6 },
-  statLabel: { fontSize: 12, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5 },
-  statValue: { fontSize: 15, fontWeight: '800', color: '#0f172a' },
-  statDivider: { width: 1, backgroundColor: '#e2e8f0', marginVertical: 4 },
+  statLabel: { fontSize: 12, color: '#8A9A92', textTransform: 'uppercase', letterSpacing: 0.5 },
+  statValue: { fontSize: 15, fontWeight: '800', color: '#0B2019' },
+  statDivider: { width: 1, backgroundColor: '#E2E9DF', marginVertical: 4 },
   chartCard: {
     backgroundColor: '#fff', borderRadius: 16, padding: 16, marginBottom: 12,
     shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 6, elevation: 3,
   },
-  chartTitle: { fontSize: 13, fontWeight: '600', color: '#64748b', marginBottom: 12 },
+  chartTitle: { fontSize: 13, fontWeight: '600', color: '#4A5B53', marginBottom: 12 },
   chartLegend: { flexDirection: 'row', gap: 16, marginTop: 8 },
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   legendDot: { width: 10, height: 10, borderRadius: 5 },
-  legendText: { fontSize: 12, color: '#64748b' },
+  legendText: { fontSize: 12, color: '#4A5B53' },
   emptyState: { alignItems: 'center', paddingVertical: 48, gap: 12 },
   emptyTitle: { fontSize: 18, fontWeight: '700', color: '#374151' },
-  emptySubtitle: { fontSize: 14, color: '#9ca3af', textAlign: 'center' },
-  sectionTitle: { fontSize: 15, fontWeight: '700', color: '#0f172a', marginBottom: 8 },
+  emptySubtitle: { fontSize: 14, color: '#8A9A92', textAlign: 'center' },
+  sectionTitle: { fontSize: 15, fontWeight: '700', color: '#0B2019', marginBottom: 8 },
   priceList: {
     backgroundColor: '#fff', borderRadius: 14, overflow: 'hidden',
-    borderWidth: 1, borderColor: '#e2e8f0',
+    borderWidth: 1, borderColor: '#E2E9DF',
   },
   priceRow: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 11 },
-  priceRowBorder: { borderBottomWidth: 1, borderBottomColor: '#f1f5f9' },
-  priceRowHeader: { backgroundColor: '#f8fafc', paddingVertical: 9 },
-  headerText: { fontSize: 11, fontWeight: '700', color: '#94a3b8', textTransform: 'uppercase' },
-  priceRowDate: { fontSize: 12, color: '#64748b', width: 60 },
-  priceRowStore: { flex: 1, fontSize: 13, color: '#0f172a', paddingHorizontal: 6 },
+  priceRowBorder: { borderBottomWidth: 1, borderBottomColor: '#E9F0E6' },
+  priceRowHeader: { backgroundColor: '#F2F6F0', paddingVertical: 9 },
+  headerText: { fontSize: 11, fontWeight: '700', color: '#8A9A92', textTransform: 'uppercase' },
+  priceRowDate: { fontSize: 12, color: '#4A5B53', width: 60 },
+  priceRowStore: { flex: 1, fontSize: 13, color: '#0B2019', paddingHorizontal: 6 },
   priceRowRight: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   promoBadge: {
     backgroundColor: '#fef2f2', borderRadius: 4, paddingHorizontal: 5, paddingVertical: 1,
     borderWidth: 1, borderColor: '#fecaca',
   },
-  promoBadgeText: { color: '#dc2626', fontSize: 9, fontWeight: '700' },
-  priceRowValue: { fontSize: 14, fontWeight: '700', color: '#0f172a', minWidth: 80, textAlign: 'right' },
+  promoBadgeText: { color: '#C1272D', fontSize: 9, fontWeight: '700' },
+  priceRowValue: { fontSize: 14, fontWeight: '700', color: '#0B2019', minWidth: 80, textAlign: 'right' },
 });
 
 export default HistoriquePrixScreen;

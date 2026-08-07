@@ -20,7 +20,7 @@ type Props = NativeStackScreenProps<ProfilStackParamList, 'MesScans'>;
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; icon: React.ComponentProps<typeof Ionicons>['name'] }> = {
   done:       { label: 'Traité',          color: C.primary,  icon: 'checkmark-circle' },
-  pending:    { label: 'En attente',       color: '#f59e0b',  icon: 'hourglass' },
+  pending:    { label: 'En attente',       color: '#E8A020',  icon: 'hourglass' },
   processing: { label: 'En cours',         color: '#3b82f6',  icon: 'sync' },
   failed:     { label: 'Échec',            color: '#ef4444',  icon: 'close-circle' },
 };
@@ -56,7 +56,7 @@ const ScanCard: React.FC<{ scan: OcrScan }> = ({ scan }) => {
 
         {storeName && (
           <Text style={styles.scanStore}>
-            <Ionicons name="storefront-outline" size={12} color="#94a3b8" /> {storeName}
+            <Ionicons name="storefront-outline" size={12} color="#8A9A92" /> {storeName}
           </Text>
         )}
 
@@ -69,7 +69,7 @@ const ScanCard: React.FC<{ scan: OcrScan }> = ({ scan }) => {
           )}
           {itemCount > 0 && (
             <View style={styles.scanStat}>
-              <Ionicons name="list-outline" size={13} color="#64748b" />
+              <Ionicons name="list-outline" size={13} color="#4A5B53" />
               <Text style={styles.scanStatText}>{itemCount} article{itemCount > 1 ? 's' : ''}</Text>
             </View>
           )}
@@ -146,15 +146,15 @@ const MesScansScreen: React.FC<Props> = () => {
 };
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#f8fafc' },
+  safeArea: { flex: 1, backgroundColor: '#F2F6F0' },
   centered: { flex: 1, alignItems: 'center', paddingTop: 80, gap: 12 },
-  loadingText: { color: '#64748b', fontSize: 15 },
+  loadingText: { color: '#4A5B53', fontSize: 15 },
   errorText: { color: '#ef4444', fontSize: 15, fontWeight: '600' },
   retryBtn: { backgroundColor: C.primary, borderRadius: 10, paddingHorizontal: 24, paddingVertical: 10 },
   retryBtnText: { color: '#fff', fontWeight: '700', fontSize: 14 },
   listContent: { padding: 16, paddingBottom: 32 },
   listHeader: {
-    fontSize: 13, color: '#94a3b8', fontStyle: 'italic', marginBottom: 10,
+    fontSize: 13, color: '#8A9A92', fontStyle: 'italic', marginBottom: 10,
   },
   scanCard: {
     flexDirection: 'row', alignItems: 'flex-start',
@@ -165,18 +165,18 @@ const styles = StyleSheet.create({
   scanIcon: { width: 44, height: 44, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
   scanContent: { flex: 1 },
   scanHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 },
-  scanDate: { fontSize: 13, fontWeight: '600', color: '#0f172a' },
+  scanDate: { fontSize: 13, fontWeight: '600', color: '#0B2019' },
   statusBadge: { borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3 },
   statusText: { fontSize: 11, fontWeight: '700' },
-  scanStore: { fontSize: 12, color: '#94a3b8', marginBottom: 6 },
+  scanStore: { fontSize: 12, color: '#8A9A92', marginBottom: 6 },
   scanStats: { flexDirection: 'row', gap: 12 },
   scanStat: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   scanStatValue: { fontSize: 14, fontWeight: '800', color: C.primary },
-  scanStatText: { fontSize: 13, color: '#64748b' },
+  scanStatText: { fontSize: 13, color: '#4A5B53' },
   errorMsg: { fontSize: 12, color: '#ef4444', marginTop: 4, fontStyle: 'italic' },
   emptyState: { alignItems: 'center', paddingTop: 60, paddingHorizontal: 40, gap: 12 },
   emptyTitle: { fontSize: 20, fontWeight: '700', color: '#374151' },
-  emptySubtitle: { fontSize: 14, color: '#9ca3af', textAlign: 'center', lineHeight: 20 },
+  emptySubtitle: { fontSize: 14, color: '#8A9A92', textAlign: 'center', lineHeight: 20 },
 });
 
 export default MesScansScreen;

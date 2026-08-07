@@ -67,8 +67,8 @@ const PANEL_HEIGHT = SCREEN_HEIGHT * 0.60;
 const DEFAULT_RADIUS = 10;
 
 const MARKER_GREEN  = C.primary;      // product_count > 20
-const MARKER_ORANGE = '#f59e0b';      // product_count 5–20
-const MARKER_GRAY   = '#94a3b8';      // product_count < 5
+const MARKER_ORANGE = '#E8A020';      // product_count 5–20
+const MARKER_GRAY   = '#8A9A92';      // product_count < 5
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -828,7 +828,7 @@ const styles = StyleSheet.create({
     bottom: PANEL_HEIGHT - 24, // slight overlap for smooth transition
   },
   mapFallback: {
-    backgroundColor: '#eef2f6',
+    backgroundColor: '#EAF0E7',
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 24,
@@ -1003,7 +1003,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   tabActive: {
-    backgroundColor: C.primaryLight ?? '#dcfce7',
+    backgroundColor: C.primaryLight ?? '#D3E8DC',
   },
   tabText: {
     fontSize: 13,
@@ -1052,7 +1052,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   storeRowSelected: {
-    backgroundColor: '#f0fdf4',
+    backgroundColor: '#EEF6F1',
   },
   checkbox: {
     width: 22,
@@ -1308,12 +1308,12 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   productChip: {
-    backgroundColor: '#f0fdf4',
+    backgroundColor: '#EEF6F1',
     borderRadius: 8,
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderWidth: 1,
-    borderColor: '#bbf7d0',
+    borderColor: '#A7D1BA',
   },
   productChipText: {
     fontSize: 11,

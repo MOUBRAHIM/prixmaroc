@@ -161,7 +161,7 @@ const EditableItemRow: React.FC<{
           value={name}
           onChangeText={setName}
           placeholder="Nom du produit"
-          placeholderTextColor="#9ca3af"
+          placeholderTextColor="#8A9A92"
           returnKeyType="next"
         />
         <View style={editStyles.priceRow}>
@@ -171,7 +171,7 @@ const EditableItemRow: React.FC<{
             onChangeText={setPrice}
             keyboardType="decimal-pad"
             placeholder="0.00"
-            placeholderTextColor="#9ca3af"
+            placeholderTextColor="#8A9A92"
           />
           <Text style={editStyles.priceCurrency}>MAD</Text>
           <TouchableOpacity style={editStyles.saveBtn} onPress={handleSave}>
@@ -202,7 +202,7 @@ const EditableItemRow: React.FC<{
         <Text style={styles.itemPriceUnit}>MAD</Text>
       </View>
       <TouchableOpacity style={editStyles.editBtn} onPress={onEdit}>
-        <Ionicons name="pencil-outline" size={15} color="#94a3b8" />
+        <Ionicons name="pencil-outline" size={15} color="#8A9A92" />
       </TouchableOpacity>
     </View>
   );
@@ -238,7 +238,7 @@ const ResultsView: React.FC<{ scan: OcrScan; onReset: () => void }> = ({
       ? C.primary
       : scan.status === 'failed'
       ? '#ef4444'
-      : '#f59e0b';
+      : '#E8A020';
 
   const statusLabel =
     scan.status === 'done'
@@ -324,7 +324,7 @@ const ResultsView: React.FC<{ scan: OcrScan; onReset: () => void }> = ({
 
           {storeName ? (
             <View style={styles.infoRow}>
-              <Ionicons name="storefront-outline" size={16} color="#64748b" />
+              <Ionicons name="storefront-outline" size={16} color="#4A5B53" />
               <Text style={styles.infoLabel}>Magasin</Text>
               <Text style={styles.infoValue}>{storeName}</Text>
             </View>
@@ -332,7 +332,7 @@ const ResultsView: React.FC<{ scan: OcrScan; onReset: () => void }> = ({
 
           {date ? (
             <View style={styles.infoRow}>
-              <Ionicons name="calendar-outline" size={16} color="#64748b" />
+              <Ionicons name="calendar-outline" size={16} color="#4A5B53" />
               <Text style={styles.infoLabel}>Date</Text>
               <Text style={styles.infoValue}>{date}</Text>
             </View>
@@ -427,7 +427,7 @@ const ResultsView: React.FC<{ scan: OcrScan; onReset: () => void }> = ({
         {/* Déjà confirmé */}
         {(isAlreadyConfirmed || confirmState === 'done') && (
           <View style={styles.confirmedBanner}>
-            <Ionicons name="shield-checkmark-outline" size={16} color="#15803d" />
+            <Ionicons name="shield-checkmark-outline" size={16} color="#0C3F30" />
             <Text style={styles.confirmedBannerText}>
               Prix enregistrés — ils améliorent la précision de l'application pour tous
             </Text>
@@ -621,7 +621,7 @@ const styles = StyleSheet.create({
   },
   permissionText: {
     fontSize: 15,
-    color: '#9ca3af',
+    color: '#8A9A92',
     textAlign: 'center',
     marginBottom: 32,
     lineHeight: 22,
@@ -774,7 +774,7 @@ const styles = StyleSheet.create({
     backgroundColor: C.primary,
   },
   progressDotDone: {
-    backgroundColor: '#15803d',
+    backgroundColor: '#0C3F30',
   },
   progressDotInner: {
     width: 8,
@@ -803,7 +803,7 @@ const styles = StyleSheet.create({
   // Retry guide
   retryGuideWrap: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#F2F6F0',
     justifyContent: 'center',
     padding: 20,
   },
@@ -822,31 +822,31 @@ const styles = StyleSheet.create({
     width: 76,
     height: 76,
     borderRadius: 38,
-    backgroundColor: '#f0fdf4',
+    backgroundColor: '#EEF6F1',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
     borderWidth: 2,
-    borderColor: '#bbf7d0',
+    borderColor: '#A7D1BA',
   },
   retryIconEmoji: { fontSize: 38 },
   retryGuideTitle: {
     fontSize: 20,
     fontWeight: '800',
-    color: '#0f172a',
+    color: '#0B2019',
     marginBottom: 8,
     textAlign: 'center',
   },
   retryGuideSubtitle: {
     fontSize: 14,
-    color: '#64748b',
+    color: '#4A5B53',
     textAlign: 'center',
     marginBottom: 22,
     lineHeight: 20,
   },
   tipsList: {
     alignSelf: 'stretch',
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#F2F6F0',
     borderRadius: 12,
     padding: 16,
     gap: 10,
@@ -878,13 +878,13 @@ const styles = StyleSheet.create({
   retryBtnText: { color: '#ffffff', fontSize: 17, fontWeight: '700' },
   manualLink: { paddingVertical: 6 },
   manualLinkText: {
-    color: '#64748b',
+    color: '#4A5B53',
     fontSize: 14,
     textDecorationLine: 'underline',
   },
 
   // Results
-  resultsScroll: { flex: 1, backgroundColor: '#f8fafc' },
+  resultsScroll: { flex: 1, backgroundColor: '#F2F6F0' },
   resultsContent: { padding: 16, paddingBottom: 40 },
   resultsHeader: { alignItems: 'center', paddingVertical: 28, gap: 10 },
   resultsIconWrap: {
@@ -904,7 +904,7 @@ const styles = StyleSheet.create({
   resultsTitle: {
     fontSize: 22,
     fontWeight: '800',
-    color: '#0f172a',
+    color: '#0B2019',
   },
   statusBadge: {
     flexDirection: 'row',
@@ -932,7 +932,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#94a3b8',
+    color: '#8A9A92',
     marginBottom: 14,
     textTransform: 'uppercase',
     letterSpacing: 1,
@@ -943,14 +943,14 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#f1f5f9',
+    borderBottomColor: '#E9F0E6',
   },
   totalRow: { borderBottomWidth: 0, paddingTop: 14 },
-  infoLabel: { flex: 1, fontSize: 14, color: '#64748b', fontWeight: '500' },
-  infoValue: { fontSize: 14, fontWeight: '600', color: '#0f172a' },
+  infoLabel: { flex: 1, fontSize: 14, color: '#4A5B53', fontWeight: '500' },
+  infoValue: { fontSize: 14, fontWeight: '600', color: '#0B2019' },
   totalValue: { fontSize: 22, fontWeight: '800', color: C.primary },
   noInfoText: {
-    color: '#94a3b8',
+    color: '#8A9A92',
     fontSize: 14,
     fontStyle: 'italic',
     textAlign: 'center',
@@ -965,17 +965,17 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   articlesBadge: {
-    backgroundColor: '#f0fdf4',
+    backgroundColor: '#EEF6F1',
     borderRadius: 10,
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderWidth: 1,
-    borderColor: '#bbf7d0',
+    borderColor: '#A7D1BA',
   },
   articlesBadgeText: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#16a34a',
+    color: '#0F4C3A',
   },
   itemRow: {
     flexDirection: 'row',
@@ -983,16 +983,16 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     gap: 10,
   },
-  itemRowBorder: { borderBottomWidth: 1, borderBottomColor: '#f1f5f9' },
+  itemRowBorder: { borderBottomWidth: 1, borderBottomColor: '#E9F0E6' },
   itemInfo: { flex: 1 },
   itemName: {
     fontSize: 14,
-    color: '#0f172a',
+    color: '#0B2019',
     fontWeight: '600',
     marginBottom: 3,
     lineHeight: 19,
   },
-  itemQty: { fontSize: 12, color: '#94a3b8', marginBottom: 3 },
+  itemQty: { fontSize: 12, color: '#8A9A92', marginBottom: 3 },
   promoBadge: {
     alignSelf: 'flex-start',
     backgroundColor: '#fef2f2',
@@ -1003,17 +1003,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#fecaca',
   },
-  promoBadgeText: { color: '#dc2626', fontSize: 9, fontWeight: '800' },
+  promoBadgeText: { color: '#C1272D', fontSize: 9, fontWeight: '800' },
   itemPriceWrap: { alignItems: 'flex-end' },
   itemPrice: {
     fontSize: 15,
     fontWeight: '700',
-    color: '#0f172a',
+    color: '#0B2019',
     textAlign: 'right',
   },
   itemPriceUnit: {
     fontSize: 10,
-    color: '#94a3b8',
+    color: '#8A9A92',
     fontWeight: '600',
     textAlign: 'right',
   },
@@ -1024,10 +1024,10 @@ const styles = StyleSheet.create({
     paddingTop: 14,
     marginTop: 4,
     borderTopWidth: 1,
-    borderTopColor: '#e2e8f0',
+    borderTopColor: '#E2E9DF',
   },
-  subtotalLabel: { fontSize: 13, color: '#64748b', fontWeight: '600' },
-  subtotalValue: { fontSize: 15, fontWeight: '800', color: '#0f172a' },
+  subtotalLabel: { fontSize: 13, color: '#4A5B53', fontWeight: '600' },
+  subtotalValue: { fontSize: 15, fontWeight: '800', color: '#0B2019' },
 
   // Confirm button
   confirmBtn: {
@@ -1045,7 +1045,7 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 6,
   },
-  confirmBtnDone: { backgroundColor: '#15803d' },
+  confirmBtnDone: { backgroundColor: '#0C3F30' },
   confirmBtnLoading: { opacity: 0.7 },
   confirmBtnText: { color: '#ffffff', fontSize: 16, fontWeight: '700' },
 
@@ -1053,18 +1053,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    backgroundColor: '#f0fdf4',
+    backgroundColor: '#EEF6F1',
     borderRadius: 10,
     paddingHorizontal: 14,
     paddingVertical: 10,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: '#bbf7d0',
+    borderColor: '#A7D1BA',
   },
   confirmedBannerText: {
     flex: 1,
     fontSize: 13,
-    color: '#15803d',
+    color: '#0C3F30',
     lineHeight: 18,
   },
 
@@ -1094,7 +1094,7 @@ const editStyles = StyleSheet.create({
     flex: 1,
     textAlign: 'right',
     fontSize: 11,
-    color: '#94a3b8',
+    color: '#8A9A92',
     fontStyle: 'italic',
   },
   editRow: {
@@ -1102,14 +1102,14 @@ const editStyles = StyleSheet.create({
     gap: 8,
   },
   nameInput: {
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#F2F6F0',
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#cbd5e1',
+    borderColor: '#C9D5C4',
     paddingHorizontal: 10,
     paddingVertical: 8,
     fontSize: 14,
-    color: '#0f172a',
+    color: '#0B2019',
   },
   priceRow: {
     flexDirection: 'row',
@@ -1118,20 +1118,20 @@ const editStyles = StyleSheet.create({
   },
   priceInput: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#F2F6F0',
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#cbd5e1',
+    borderColor: '#C9D5C4',
     paddingHorizontal: 10,
     paddingVertical: 8,
     fontSize: 14,
-    color: '#0f172a',
+    color: '#0B2019',
     textAlign: 'right',
   },
   priceCurrency: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#64748b',
+    color: '#4A5B53',
   },
   saveBtn: {
     backgroundColor: C.primary,
@@ -1150,7 +1150,7 @@ const editStyles = StyleSheet.create({
     padding: 6,
     marginLeft: 4,
     borderRadius: 6,
-    backgroundColor: '#f1f5f9',
+    backgroundColor: '#E9F0E6',
   },
 });
 

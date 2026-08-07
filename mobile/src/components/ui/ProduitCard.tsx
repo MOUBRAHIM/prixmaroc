@@ -20,7 +20,7 @@ import {
   Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors, C } from '@constants/colors';
+import { Colors, C, Radius } from '@constants/colors';
 import ProductVisual from './ProductVisual';
 import type { ProductSummary } from '@types/models';
 
@@ -318,19 +318,22 @@ const styles = StyleSheet.create({
     color: Colors.text.tertiary,
     fontStyle: 'italic',
   },
+  // Pastille d'économie : ambre, arrondie — repère chaud sur la vignette
   promoBadge: {
     position: 'absolute',
-    top: 4,
-    right: 4,
-    backgroundColor: Colors.promo,
-    borderRadius: 6,
-    paddingHorizontal: 5,
-    paddingVertical: 2,
+    top: -6,
+    right: -6,
+    backgroundColor: Colors.gold[500],
+    borderRadius: Radius.pill,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderWidth: 2,
+    borderColor: Colors.surface.card,
   },
   promoBadgeText: {
     color: '#fff',
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: '800',
   },
   actionBtn: {
     padding: 4,
@@ -343,7 +346,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.surface.card,
     marginHorizontal: 16,
     marginVertical: 5,
-    borderRadius: 14,
+    borderRadius: Radius.lg,
     padding: 12,
     alignItems: 'center',
     borderWidth: 1.5,
@@ -390,9 +393,10 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   priceMin: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: '800',
-    color: Colors.success,
+    color: C.primary,
+    letterSpacing: -0.3,
   },
   listActions: {
     alignItems: 'center',
@@ -404,7 +408,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.surface.card,
     margin: 5,
-    borderRadius: 14,
+    borderRadius: Radius.lg,
     overflow: 'hidden',
     borderWidth: 1.5,
     borderColor: 'transparent',
@@ -442,9 +446,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   gridPrice: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: '800',
-    color: Colors.success,
+    color: C.primary,
+    letterSpacing: -0.3,
   },
 
   // ── DETAIL ────────────────────────────────────────────────────────────────
@@ -452,7 +457,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.surface.card,
     marginHorizontal: 16,
     marginVertical: 6,
-    borderRadius: 16,
+    borderRadius: Radius.lg,
     borderWidth: 1.5,
     borderColor: 'transparent',
     overflow: 'hidden',

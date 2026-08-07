@@ -146,7 +146,7 @@ const QuickActions: React.FC = () => {
 
 // ── Alerts list ───────────────────────────────────────────────────────────────
 
-const ALERT_COLORS = ['#16a34a', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6'];
+const ALERT_COLORS = ['#0F4C3A', '#3b82f6', '#E8A020', '#ef4444', '#8b5cf6'];
 
 const AlertesList: React.FC<{ alertes: DashboardAlerte[] }> = ({ alertes }) => {
   if (alertes.length === 0) {
@@ -178,7 +178,7 @@ const AlertesList: React.FC<{ alertes: DashboardAlerte[] }> = ({ alertes }) => {
                 {alerte.current_price != null ? ` · Actuel : ${alerte.current_price.toFixed(2)} MAD` : ''}
               </Text>
               {alerte.is_triggered ? (
-                <Text style={[styles.alertePrix, { color: '#16a34a' }]}>
+                <Text style={[styles.alertePrix, { color: '#0F4C3A' }]}>
                   🎉 Prix atteint !
                 </Text>
               ) : null}
@@ -218,7 +218,7 @@ const DashboardScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
 
   return (
     <View style={styles.root}>
-      <StatusBar barStyle="light-content" backgroundColor="#15803d" />
+      <StatusBar barStyle="light-content" backgroundColor="#0C3F30" />
       <SafeAreaView style={styles.safeArea} edges={['top']}>
         <DashboardHeader />
       </SafeAreaView>
@@ -321,14 +321,14 @@ const DashboardScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
 // ── Styles ────────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: '#f1f5f9' },
-  safeArea: { backgroundColor: '#15803d' },
+  root: { flex: 1, backgroundColor: '#E9F0E6' },
+  safeArea: { backgroundColor: '#0C3F30' },
   scroll: { flex: 1, marginTop: -1 },
   scrollContent: { paddingBottom: 40 },
 
   // Header
   header: {
-    backgroundColor: '#15803d',
+    backgroundColor: '#0C3F30',
     paddingHorizontal: 20,
     paddingTop: 8,
     paddingBottom: 0,
@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
   },
   headerWave: {
     height: 20,
-    backgroundColor: '#f1f5f9',
+    backgroundColor: '#E9F0E6',
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     marginTop: -2,
@@ -380,7 +380,7 @@ const styles = StyleSheet.create({
 
   // Loading / Error
   loadingContainer: { alignItems: 'center', paddingVertical: 64 },
-  loadingText: { marginTop: 14, color: '#64748b', fontSize: 15 },
+  loadingText: { marginTop: 14, color: '#4A5B53', fontSize: 15 },
   errorContainer: {
     margin: 20,
     padding: 28,
@@ -394,8 +394,8 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   errorEmoji: { fontSize: 40, marginBottom: 12 },
-  errorTitle: { fontSize: 17, fontWeight: '700', color: '#0f172a', marginBottom: 8 },
-  errorMessage: { fontSize: 14, color: '#64748b', textAlign: 'center', marginBottom: 20, lineHeight: 20 },
+  errorTitle: { fontSize: 17, fontWeight: '700', color: '#0B2019', marginBottom: 8 },
+  errorMessage: { fontSize: 14, color: '#4A5B53', textAlign: 'center', marginBottom: 20, lineHeight: 20 },
   retryButton: {
     backgroundColor: C.primary,
     paddingHorizontal: 28,
@@ -410,9 +410,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 8,
     marginBottom: 4,
-    backgroundColor: '#15803d',
+    backgroundColor: '#0C3F30',
     borderRadius: 20,
-    shadowColor: '#15803d',
+    shadowColor: '#0C3F30',
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.30,
     shadowRadius: 14,
@@ -473,16 +473,16 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: '800',
-    color: '#0f172a',
+    color: '#0B2019',
     letterSpacing: -0.2,
   },
   voirTout: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#16a34a',
+    color: '#0F4C3A',
     paddingHorizontal: 10,
     paddingVertical: 4,
-    backgroundColor: '#f0fdf4',
+    backgroundColor: '#EEF6F1',
     borderRadius: 12,
   },
 
@@ -508,9 +508,9 @@ const styles = StyleSheet.create({
   statValue: { fontSize: 22, fontWeight: '800', letterSpacing: -0.5 },
   statLabel: { fontSize: 11, marginTop: 3, fontWeight: '600', textAlign: 'center' },
 
-  statCardGreen: { backgroundColor: '#f0fdf4', borderWidth: 1, borderColor: '#bbf7d0' },
-  statValueGreen: { color: '#15803d' },
-  statLabelGreen: { color: '#16a34a' },
+  statCardGreen: { backgroundColor: '#EEF6F1', borderWidth: 1, borderColor: '#A7D1BA' },
+  statValueGreen: { color: '#0C3F30' },
+  statLabelGreen: { color: '#0F4C3A' },
 
   statCardBlue: { backgroundColor: '#eff6ff', borderWidth: 1, borderColor: '#bfdbfe' },
   statValueBlue: { color: '#1d4ed8' },
@@ -540,18 +540,18 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 4,
     borderWidth: 1,
-    borderColor: '#f1f5f9',
+    borderColor: '#E9F0E6',
   },
   actionIconWrap: {
     width: 48,
     height: 48,
     borderRadius: 14,
-    backgroundColor: '#f0fdf4',
+    backgroundColor: '#EEF6F1',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 8,
     borderWidth: 1,
-    borderColor: '#dcfce7',
+    borderColor: '#D3E8DC',
   },
   actionEmoji: { fontSize: 24 },
   actionLabel: {
@@ -580,7 +580,7 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 4,
     borderWidth: 1,
-    borderColor: '#f1f5f9',
+    borderColor: '#E9F0E6',
   },
   shortcutEmoji: { fontSize: 32, marginBottom: 10 },
   shortcutLabel: {
@@ -605,7 +605,7 @@ const styles = StyleSheet.create({
   },
   alertesEmptyEmoji: { fontSize: 32, marginBottom: 10 },
   alertesEmptyText: { color: '#374151', fontSize: 15, fontWeight: '600', marginBottom: 4 },
-  alertesEmptyHint: { color: '#94a3b8', fontSize: 13, textAlign: 'center' },
+  alertesEmptyHint: { color: '#8A9A92', fontSize: 13, textAlign: 'center' },
   alerteItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -624,10 +624,10 @@ const styles = StyleSheet.create({
   alerteProduit: {
     fontSize: 15,
     fontWeight: '700',
-    color: '#0f172a',
+    color: '#0B2019',
     marginBottom: 3,
   },
-  alerteMessage: { fontSize: 13, color: '#64748b', lineHeight: 18 },
+  alerteMessage: { fontSize: 13, color: '#4A5B53', lineHeight: 18 },
   alertePrix: {
     fontSize: 14,
     fontWeight: '700',
@@ -635,7 +635,7 @@ const styles = StyleSheet.create({
   },
   alerteChevron: {
     fontSize: 22,
-    color: '#cbd5e1',
+    color: '#C9D5C4',
     marginLeft: 8,
     fontWeight: '300',
   },

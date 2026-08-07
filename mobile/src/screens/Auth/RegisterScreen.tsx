@@ -68,7 +68,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
               <TextInput
                 style={styles.input}
                 placeholder="Mohammed Alami"
-                placeholderTextColor="#9ca3af"
+                placeholderTextColor="#8A9A92"
                 value={name}
                 onChangeText={setName}
                 autoCapitalize="words"
@@ -81,7 +81,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
               <TextInput
                 style={styles.input}
                 placeholder="votre@email.com"
-                placeholderTextColor="#9ca3af"
+                placeholderTextColor="#8A9A92"
                 value={email}
                 onChangeText={setEmail}
                 autoCapitalize="none"
@@ -95,7 +95,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
               <TextInput
                 style={styles.input}
                 placeholder="mon_pseudo"
-                placeholderTextColor="#9ca3af"
+                placeholderTextColor="#8A9A92"
                 value={username}
                 onChangeText={setUsername}
                 autoCapitalize="none"
@@ -108,7 +108,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
               <TextInput
                 style={styles.input}
                 placeholder="••••••••"
-                placeholderTextColor="#9ca3af"
+                placeholderTextColor="#8A9A92"
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
@@ -145,7 +145,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f0fdf4',
+    backgroundColor: '#EEF6F1',
   },
   keyboardAvoid: {
     flex: 1,
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   logo: {
     fontSize: 40,
     fontWeight: '800',
-    color: '#16a34a',
+    color: '#0F4C3A',
     letterSpacing: -1,
   },
   subtitle: {
@@ -216,17 +216,17 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     fontSize: 16,
     color: '#111827',
-    backgroundColor: '#f9fafb',
+    backgroundColor: '#F5F8F3',
   },
   button: {
-    backgroundColor: '#16a34a',
+    backgroundColor: '#0F4C3A',
     borderRadius: 10,
     paddingVertical: 14,
     alignItems: 'center',
     marginTop: 8,
   },
   buttonDisabled: {
-    backgroundColor: '#86efac',
+    backgroundColor: '#6FB294',
   },
   buttonText: {
     color: '#ffffff',
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   footerLink: {
-    color: '#16a34a',
+    color: '#0F4C3A',
     fontSize: 15,
     fontWeight: '700',
   },
