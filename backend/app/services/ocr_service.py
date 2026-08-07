@@ -151,23 +151,35 @@ class ImagePreprocessor:
             return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         return img
 
-    # Plafond de résolution : au-delà, Tesseract consomme énormément de RAM
-    # sans gagner en précision sur un ticket de caisse.
-    MAX_DIMENSION = 2200
+    # Plafond de résolution : au-delà, le traitement coûte beaucoup sans gagner
+    # en précision sur un ticket de caisse.
+    MAX_DIMENSION = 1800
+    # Cible d'agrandissement pour les images trop petites (texte trop fin).
+    MIN_DIMENSION = 1200
 
     def _scale_to_dpi(self, gray: np.ndarray) -> np.ndarray:
         """Ajuste la résolution : agrandit si trop petit, réduit si trop grand."""
         h, w = gray.shape[:2]
         longest = max(h, w)
-        if longest < 1500:
-            scale = 1500 / longest
+        if longest < self.MIN_DIMENSION:
+            scale = self.MIN_DIMENSION / longest
             gray = cv2.resize(gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_CUBIC)
         elif longest > self.MAX_DIMENSION:
             scale = self.MAX_DIMENSION / longest
             gray = cv2.resize(gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
         return gray
 
+    # Au-delà de ce nombre de pixels, fastNlMeansDenoising devient prohibitif
+    # (coût ~ pixels x templateWindow² x searchWindow²) : plusieurs dizaines de
+    # milliards d'opérations, ce qui fait tuer le processus sur un petit serveur.
+    NLMEANS_PIXEL_BUDGET = 1_200_000
+
     def _denoise(self, gray: np.ndarray) -> np.ndarray:
+        h, w = gray.shape[:2]
+        if h * w > self.NLMEANS_PIXEL_BUDGET:
+            # Débruitage rapide : préserve les contours du texte pour un coût
+            # linéaire. Qualité suffisante sur un ticket de caisse.
+            return cv2.bilateralFilter(gray, d=5, sigmaColor=50, sigmaSpace=50)
         return cv2.fastNlMeansDenoising(gray, h=10, templateWindowSize=7, searchWindowSize=21)
 
     def _deskew(self, gray: np.ndarray) -> np.ndarray:
