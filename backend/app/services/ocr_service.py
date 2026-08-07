@@ -11,8 +11,10 @@ Pipeline :
 """
 from __future__ import annotations
 
+import gc
 import io
 import math
+import os
 import re
 import unicodedata
 from dataclasses import dataclass, field
@@ -149,12 +151,20 @@ class ImagePreprocessor:
             return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         return img
 
+    # Plafond de résolution : au-delà, Tesseract consomme énormément de RAM
+    # sans gagner en précision sur un ticket de caisse.
+    MAX_DIMENSION = 2200
+
     def _scale_to_dpi(self, gray: np.ndarray) -> np.ndarray:
-        """Agrandit l'image si elle est trop petite pour Tesseract."""
+        """Ajuste la résolution : agrandit si trop petit, réduit si trop grand."""
         h, w = gray.shape[:2]
-        if max(h, w) < 1500:
-            scale = 1500 / max(h, w)
+        longest = max(h, w)
+        if longest < 1500:
+            scale = 1500 / longest
             gray = cv2.resize(gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_CUBIC)
+        elif longest > self.MAX_DIMENSION:
+            scale = self.MAX_DIMENSION / longest
+            gray = cv2.resize(gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_AREA)
         return gray
 
     def _denoise(self, gray: np.ndarray) -> np.ndarray:
@@ -585,15 +595,28 @@ class OcrService:
     # psm 4 = colonne unique (optimal pour tickets thermiques étroits)
     # psm 6 = bloc de texte uniforme
     # psm 3 = segmentation auto (fallback)
+    # Ordonnées de la plus rentable à la plus coûteuse. Le français seul est
+    # placé en tête : il charge un seul modèle de langue (moitié moins de
+    # mémoire) et suffit à la très grande majorité des tickets marocains.
     _TESSERACT_CONFIGS = [
-        "--oem 3 --psm 4 -l fra+ara",   # colonne unique — meilleur pour tickets fins
-        "--oem 3 --psm 6 -l fra+ara",   # bloc de texte uniforme
-        "--oem 3 --psm 4 -l fra",       # français seul (si arabe perturbe)
-        "--oem 3 --psm 6 -l fra",       # français seul, bloc uniforme
-        "--oem 3 --psm 3 -l fra+ara",   # auto segmentation
+        "--oem 3 --psm 4 -l fra",       # colonne unique, français — le plus léger
+        "--oem 3 --psm 6 -l fra",       # bloc de texte uniforme, français
+        "--oem 3 --psm 4 -l fra+ara",   # ajoute l'arabe si le français ne suffit pas
+        "--oem 3 --psm 6 -l fra+ara",   # bloc uniforme, bilingue
+        "--oem 3 --psm 3 -l fra+ara",   # segmentation auto (dernier recours)
     ]
 
-    def __init__(self, catalog: list[str] | None = None):
+    # Nombre maximum de configurations essayées. Réglable via l'environnement :
+    # 2 suffit sur un hébergement à mémoire limitée (512 Mo), 5 sur un serveur
+    # confortable pour maximiser la précision.
+    DEFAULT_MAX_PASSES = 2
+
+    def __init__(self, catalog: list[str] | None = None, max_passes: int | None = None):
+        try:
+            env_passes = int(os.getenv("OCR_MAX_PASSES", "") or 0)
+        except ValueError:
+            env_passes = 0
+        self.max_passes = max(1, max_passes or env_passes or self.DEFAULT_MAX_PASSES)
         self.preprocessor = ImagePreprocessor()
         self.parser = ReceiptParser()
         self.normalizer = ProductNormalizer(catalog)
@@ -631,12 +654,15 @@ class OcrService:
                 self._best_ocr(p) for p in pages
             )
         else:
-            # Essaie les deux pipelines de preprocessing
+            # Le second prétraitement n'est calculé que s'il est réellement
+            # nécessaire (évite de garder deux grandes images en mémoire).
             processed_full = self.preprocessor.process(image_data, mime_type)
-            processed_light = self.preprocessor._enhance_light(
-                self.preprocessor._decode_image(image_data)
+            raw_text = self._best_ocr_dual(
+                processed_full,
+                lambda: self.preprocessor._enhance_light(
+                    self.preprocessor._decode_image(image_data)
+                ),
             )
-            raw_text = self._best_ocr_dual(processed_full, processed_light)
 
         receipt = self.parser.parse(raw_text)
         receipt.ocr_confidence = self._estimate_confidence(raw_text)
@@ -656,24 +682,54 @@ class OcrService:
         readable = self._estimate_confidence(text)
         return price_lines * readable
 
+    # Un ticket correctement lu dépasse largement ce score : inutile de
+    # continuer à essayer d'autres configurations (chaque passe Tesseract
+    # charge les modèles de langue et coûte cher en mémoire).
+    _GOOD_ENOUGH_SCORE = 4.0
+
     def _best_ocr(self, img: np.ndarray) -> str:
-        """Essaie plusieurs configs Tesseract et retourne le meilleur résultat."""
+        """
+        Essaie les configs Tesseract et retourne le meilleur résultat.
+
+        S'arrête dès qu'un résultat est suffisamment bon, et se limite à
+        OCR_MAX_PASSES configurations : sur un hébergement à mémoire réduite,
+        enchaîner toutes les passes fait tuer le processus (OOM).
+        """
         best_text = ""
         best_score = -1.0
-        for cfg in self._TESSERACT_CONFIGS:
+        for cfg in self._TESSERACT_CONFIGS[:self.max_passes]:
             try:
                 text = self._run_tesseract(img, cfg)
                 score = self._score_text(text)
                 if score > best_score:
                     best_score = score
                     best_text = text
+                if best_score >= self._GOOD_ENOUGH_SCORE:
+                    break
             except Exception:
                 continue
+            finally:
+                gc.collect()
         return best_text or ""
 
-    def _best_ocr_dual(self, img_full: np.ndarray, img_light: np.ndarray) -> str:
-        """Essaie les deux images preprocessées et retourne le meilleur résultat."""
-        text_full  = self._best_ocr(img_full)
+    def _best_ocr_dual(self, img_full: np.ndarray, make_light) -> str:
+        """
+        Lit l'image principale, et ne tente le second prétraitement que si le
+        résultat est faible. `make_light` est un callable : l'image allégée
+        n'est donc calculée qu'en cas de besoin (économie mémoire).
+        """
+        text_full = self._best_ocr(img_full)
+        if self._score_text(text_full) >= self._GOOD_ENOUGH_SCORE:
+            return text_full
+
+        del img_full
+        gc.collect()
+
+        try:
+            img_light = make_light()
+        except Exception:
+            return text_full
+
         text_light = self._best_ocr(img_light)
         if self._score_text(text_light) > self._score_text(text_full):
             return text_light

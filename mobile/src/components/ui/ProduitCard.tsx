@@ -15,13 +15,13 @@ import React, { memo } from 'react';
 import {
   View,
   Text,
-  Image,
   TouchableOpacity,
   StyleSheet,
   Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors, C } from '@constants/colors';
+import ProductVisual from './ProductVisual';
 import type { ProductSummary } from '@types/models';
 
 // ── Props ─────────────────────────────────────────────────────────────────────
@@ -44,8 +44,6 @@ const formatPrice = (price: number | null | undefined): string => {
 
 const discountPct = (regular: number, lowest: number): number =>
   Math.round(((regular - lowest) / regular) * 100);
-
-const PLACEHOLDER = 'https://placehold.co/120x120/dcfce7/16a34a?text=PM';
 
 // ── Badge Promo ───────────────────────────────────────────────────────────────
 
@@ -72,11 +70,7 @@ const CardList = memo(({ product, onPress, onCompare, onAlert, isInCompare }: Pr
     >
       {/* Image */}
       <View style={styles.listImageWrap}>
-        <Image
-          source={{ uri: product.image_url || PLACEHOLDER }}
-          style={styles.listImage}
-          resizeMode="contain"
-        />
+        <ProductVisual name={product.name} imageUrl={product.image_url} size={72} radius={10} />
         {product.has_promo && showDiscount && (
           <PromoBadge pct={discountPct(product.highest_price!, product.lowest_price!)} />
         )}
@@ -154,11 +148,7 @@ const CardGrid = memo(({ product, onPress, onCompare, isInCompare }: ProduitCard
     >
       {/* Image */}
       <View style={styles.gridImageWrap}>
-        <Image
-          source={{ uri: product.image_url || PLACEHOLDER }}
-          style={styles.gridImage}
-          resizeMode="contain"
-        />
+        <ProductVisual name={product.name} imageUrl={product.image_url} size={96} radius={14} />
         {product.has_promo && showDiscount && (
           <PromoBadge pct={discountPct(product.highest_price!, product.lowest_price!)} />
         )}
@@ -208,11 +198,7 @@ const CardDetail = memo(({ product, onPress, onCompare, onAlert, isInCompare }: 
     >
       {/* En-tête */}
       <View style={styles.detailHeader}>
-        <Image
-          source={{ uri: product.image_url || PLACEHOLDER }}
-          style={styles.detailImage}
-          resizeMode="contain"
-        />
+        <ProductVisual name={product.name} imageUrl={product.image_url} size={80} radius={12} />
         <View style={styles.detailHeaderText}>
           {product.brand && <Text style={styles.brand}>{product.brand}</Text>}
           <Text style={styles.detailName} numberOfLines={3}>{product.name}</Text>

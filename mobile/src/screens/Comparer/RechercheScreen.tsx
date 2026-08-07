@@ -17,6 +17,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQuery } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
 import { ProductsAPI } from '@services/api';
+import ProductVisual from '@components/ui/ProductVisual';
 import { C } from '@constants/colors';
 import type { ComparerStackParamList, ProductSummary } from '@types/models';
 
@@ -202,14 +203,7 @@ const ProductCard: React.FC<{
 }> = ({ item, onPress, onHistorique }) => (
   <TouchableOpacity style={styles.productCard} onPress={onPress} activeOpacity={0.75}>
     <View style={styles.productImageWrap}>
-      {item.image_url ? (
-        <ImageWithFallback uri={item.image_url} />
-      ) : (
-        <View style={styles.productImagePlaceholder}>
-          <Ionicons name="image-outline" size={22} color="#cbd5e1" />
-          <Text style={styles.productImagePlaceholderText}>Photo{'\n'}à venir</Text>
-        </View>
-      )}
+      <ProductVisual name={item.name} imageUrl={item.image_url} size={64} radius={10} />
       {item.has_promo && (
         <View style={styles.promoBadge}>
           <Text style={styles.promoBadgeText}>PROMO</Text>

@@ -16,6 +16,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
 import Svg, { Polyline, Circle, Line, Text as SvgText } from 'react-native-svg';
 import { ProductsAPI, AlertsAPI } from '@services/api';
+import ProductVisual from '@components/ui/ProductVisual';
 import { C } from '@constants/colors';
 import type { PriceInStore } from '@types/models';
 
@@ -513,17 +514,12 @@ const ProduitDetailScreen: React.FC<Props> = ({ route, navigation }) => {
           <>
             {/* Header produit */}
             <View style={styles.productHeader}>
-              {data.image_url ? (
-                <Image
-                  source={{ uri: data.image_url }}
-                  style={styles.productImage}
-                  resizeMode="contain"
-                />
-              ) : (
-                <View style={styles.productImagePlaceholder}>
-                  <Ionicons name="cube-outline" size={48} color="#d1d5db" />
-                </View>
-              )}
+              <ProductVisual
+                name={data.name}
+                imageUrl={data.image_url}
+                size={110}
+                radius={16}
+              />
               <View style={styles.productMeta}>
                 <Text style={styles.productName}>{data.name}</Text>
                 {data.brand ? <Text style={styles.productBrand}>{data.brand}</Text> : null}
