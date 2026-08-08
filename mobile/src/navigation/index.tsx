@@ -57,6 +57,7 @@ import NouvelleListeIAScreen from '@screens/Listes/NouvelleListeIAScreen';
 // ── Écrans Profil ─────────────────────────────────────────────────────────────
 import MonProfilScreen from '@screens/Profil/MonProfilScreen';
 import MesScansScreen from '@screens/Profil/MesScansScreen';
+import DetailScanScreen from '@screens/Profil/DetailScanScreen';
 import MesAlertesScreen from '@screens/Profil/MesAlertesScreen';
 import ParametresScreen from '@screens/Profil/ParametresScreen';
 
@@ -186,6 +187,7 @@ function ProfilNavigator() {
     <ProfilStack.Navigator screenOptions={headerOptions}>
       <ProfilStack.Screen name="MonProfil" component={MonProfilScreen} options={{ title: 'Mon profil' }} />
       <ProfilStack.Screen name="MesScans" component={MesScansScreen} options={{ title: 'Mes tickets scannés' }} />
+      <ProfilStack.Screen name="DetailScan" component={DetailScanScreen} options={{ title: 'Détail du ticket' }} />
       <ProfilStack.Screen name="MesAlertes" component={MesAlertesScreen} options={{ title: 'Mes alertes prix' }} />
       <ProfilStack.Screen name="Parametres" component={ParametresScreen} options={{ title: 'Préférences' }} />
     </ProfilStack.Navigator>

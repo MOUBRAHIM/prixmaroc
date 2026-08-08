@@ -508,6 +508,7 @@ export type ListesStackParamList = {
 export type ProfilStackParamList = {
   MonProfil: undefined;
   MesScans: undefined;
+  DetailScan: { scanId: number };
   MesAlertes: undefined;
   Parametres: undefined;
 };

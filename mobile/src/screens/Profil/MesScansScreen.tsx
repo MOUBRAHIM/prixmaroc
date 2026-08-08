@@ -27,7 +27,7 @@ const STATUS_CONFIG: Record<string, { label: string; color: string; icon: React.
 
 // ── Carte scan ────────────────────────────────────────────────────────────────
 
-const ScanCard: React.FC<{ scan: OcrScan }> = ({ scan }) => {
+const ScanCard: React.FC<{ scan: OcrScan; onPress: () => void }> = ({ scan, onPress }) => {
   const config = STATUS_CONFIG[scan.status] ?? STATUS_CONFIG.pending;
   const date = new Date(scan.created_at).toLocaleDateString('fr-MA', {
     day: '2-digit', month: 'short', year: 'numeric',
@@ -40,7 +40,7 @@ const ScanCard: React.FC<{ scan: OcrScan }> = ({ scan }) => {
   const itemCount = scan.parsed_data?.items?.length ?? 0;
 
   return (
-    <View style={styles.scanCard}>
+    <TouchableOpacity style={styles.scanCard} onPress={onPress} activeOpacity={0.75}>
       <View style={styles.scanLeft}>
         <View style={[styles.scanIcon, { backgroundColor: `${config.color}15` }]}>
           <Ionicons name={config.icon} size={22} color={config.color} />
@@ -79,13 +79,14 @@ const ScanCard: React.FC<{ scan: OcrScan }> = ({ scan }) => {
           <Text style={styles.errorMsg} numberOfLines={1}>{scan.error_message}</Text>
         )}
       </View>
-    </View>
+      <Ionicons name="chevron-forward" size={18} color="#8A9A92" />
+    </TouchableOpacity>
   );
 };
 
 // ── Écran principal ───────────────────────────────────────────────────────────
 
-const MesScansScreen: React.FC<Props> = () => {
+const MesScansScreen: React.FC<Props> = ({ navigation }) => {
   const { data, isLoading, isError, refetch, isRefetching } = useQuery({
     queryKey: ['ocr-scans'],
     queryFn: OcrAPI.getScans,
@@ -118,7 +119,9 @@ const MesScansScreen: React.FC<Props> = () => {
         <FlatList
           data={sorted}
           keyExtractor={(item) => String(item.id)}
-          renderItem={({ item }) => <ScanCard scan={item} />}
+          renderItem={({ item }) => (
+            <ScanCard scan={item} onPress={() => navigation.navigate('DetailScan', { scanId: item.id })} />
+          )}
           contentContainerStyle={styles.listContent}
           refreshControl={
             <RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor={C.primary} />

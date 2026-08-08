@@ -365,6 +365,12 @@ export const OcrAPI = {
     return data;
   },
 
+  /** Détail d'un ticket scanné (articles reconnus, magasin, total, texte brut). */
+  getScan: async (scanId: number): Promise<OcrScan> => {
+    const { data } = await api.get<OcrScan>(`/ocr/scan/${scanId}`);
+    return data;
+  },
+
   /**
    * Confirme un scan OCR et enregistre les prix détectés en base de données.
    * Les prix du ticket corrigent/complètent les données scraping pour ce magasin.
