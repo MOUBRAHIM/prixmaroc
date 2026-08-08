@@ -19,9 +19,10 @@
  */
 import {
   readdirSync, readFileSync, writeFileSync, copyFileSync,
-  mkdirSync, existsSync, statSync, rmSync,
+  mkdirSync, existsSync, statSync, rmSync, renameSync,
 } from 'node:fs';
-import { join, basename } from 'node:path';
+import { join, basename, dirname } from 'node:path';
+import { createHash } from 'node:crypto';
 
 const DIST = process.argv[2] ?? 'dist';
 const ASSETS = join(DIST, 'assets');
@@ -71,6 +72,26 @@ for (const b of bundles) {
 // 3. Supprimer l'ancienne arborescence (non déployable de toute façon)
 rmSync(ASSETS, { recursive: true, force: true });
 
+// 3b. Renommer les bundles modifiés selon leur NOUVEAU contenu.
+//     Indispensable : le hash du nom est calculé par expo AVANT cette
+//     réécriture. Sans renommage, le CDN et le navigateur continuent de servir
+//     l'ancien bundle (même nom de fichier) et les polices restent introuvables.
+const indexHtml = join(DIST, 'index.html');
+let html = existsSync(indexHtml) ? readFileSync(indexHtml, 'utf8') : '';
+let renommes = 0;
+
+for (const b of bundles) {
+  const contenu = readFileSync(b);
+  const nouveauHash = createHash('md5').update(contenu).digest('hex');
+  const nom = basename(b);
+  const remplace = nom.replace(/-([a-f0-9]{32})\.js$/, `-${nouveauHash}.js`);
+  if (remplace === nom) continue;              // pas de hash reconnaissable
+  renameSync(b, join(dirname(b), remplace));
+  html = html.split(nom).join(remplace);
+  renommes++;
+}
+if (html) writeFileSync(indexHtml, html, 'utf8');
+
 // 4. Garantir que la route SPA n'avale pas /fonts/
 const redirects = join(DIST, '_redirects');
 const regles = ['/fonts/*  /fonts/:splat  200', '/*  /index.html  200', ''].join('\n');
@@ -78,5 +99,5 @@ writeFileSync(redirects, regles, 'utf8');
 
 console.log(
   `[fix-web-fonts] ${polices.length} polices aplaties dans /fonts · ` +
-  `${reecrites} références réécrites · _redirects mis à jour`
+  `${reecrites} références réécrites · ${renommes} bundle(s) renommé(s) · _redirects mis à jour`
 );
