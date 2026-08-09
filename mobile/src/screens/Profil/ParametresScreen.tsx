@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 10,
     borderWidth: 1,
-    borderColor: '#bae6fd',
+    borderColor: '#CBE4EA',
   },
   rtlHintText: { flex: 1, fontSize: 12, color: '#0284c7', fontWeight: '500' },
   saveBtn: {

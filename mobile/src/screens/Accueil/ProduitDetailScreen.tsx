@@ -138,13 +138,13 @@ const NutritionSection: React.FC<NutritionSectionProps> = ({
           )}
 
           {proteins != null && (
-            <NutriBar label="Protéines" value={proteins} unit="g" max={30} color="#3b82f6" />
+            <NutriBar label="Protéines" value={proteins} unit="g" max={30} color="#2E7D8F" />
           )}
           {lipids != null && (
             <NutriBar label="Lipides" value={lipids} unit="g" max={40} color="#E8A020" />
           )}
           {carbs != null && (
-            <NutriBar label="Glucides" value={carbs} unit="g" max={80} color="#8b5cf6" />
+            <NutriBar label="Glucides" value={carbs} unit="g" max={80} color="#7A5AA6" />
           )}
           {fibers != null && (
             <NutriBar label="Fibres" value={fibers} unit="g" max={15} color="#1E6B4F" />
@@ -190,14 +190,14 @@ const nutri = StyleSheet.create({
     borderRadius: 8,
     padding: 10,
   },
-  caloriesLabel: { fontSize: 14, fontWeight: '600', color: '#374151' },
+  caloriesLabel: { fontSize: 14, fontWeight: '600', color: '#3C4F47' },
   caloriesValue: { fontSize: 18, fontWeight: '800', color: '#C1272D' },
   barRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   barLabel: { width: 72, fontSize: 12, fontWeight: '600', color: '#3C4F47' },
   barTrack: { flex: 1, height: 8, backgroundColor: '#E9F0E6', borderRadius: 4, overflow: 'hidden' },
   barFill: { height: 8, borderRadius: 4 },
-  barValue: { width: 48, fontSize: 12, fontWeight: '700', color: '#374151', textAlign: 'right' },
-  label: { fontSize: 13, fontWeight: '700', color: '#374151', marginBottom: 8 },
+  barValue: { width: 48, fontSize: 12, fontWeight: '700', color: '#3C4F47', textAlign: 'right' },
+  label: { fontSize: 13, fontWeight: '700', color: '#3C4F47', marginBottom: 8 },
   row: { gap: 8 },
   badges: { flexDirection: 'row', gap: 4 },
   badge: { width: 32, height: 32, borderRadius: 6, alignItems: 'center', justifyContent: 'center' },
@@ -271,7 +271,7 @@ function SparklineChart({ points, minPrice, maxPrice }: SparklineChartProps) {
       />
       {/* Points promo en rouge */}
       {coords.filter((c) => c.is_promo).map((c, i) => (
-        <Circle key={i} cx={c.x} cy={c.y} r={3} fill="#ef4444" />
+        <Circle key={i} cx={c.x} cy={c.y} r={3} fill="#D6453F" />
       ))}
       {/* Dernier point mis en avant */}
       <Circle cx={lastPt.x} cy={lastPt.y} r={4} fill={C.primary} stroke="#fff" strokeWidth="1.5" />
@@ -324,7 +324,7 @@ const PriceSparklineSection: React.FC<PriceSparklineProps> = ({ productId }) => 
       <View style={spark.header}>
         <Ionicons name="trending-up-outline" size={16} color={C.primary} />
         <Text style={spark.title}>Évolution 30 jours</Text>
-        <View style={[spark.variationBadge, { backgroundColor: variation > 5 ? '#fef2f2' : '#EEF6F1' }]}>
+        <View style={[spark.variationBadge, { backgroundColor: variation > 5 ? '#FBEDEC' : '#EEF6F1' }]}>
           <Text style={[spark.variationText, { color: variation > 5 ? '#C1272D' : '#0F4C3A' }]}>
             {variation > 0 ? '+' : ''}{variation.toFixed(1)}%
           </Text>
@@ -346,7 +346,7 @@ const PriceSparklineSection: React.FC<PriceSparklineProps> = ({ productId }) => 
           <Text style={spark.legendLabel}>Dernier prix</Text>
         </View>
         <View style={spark.legendItem}>
-          <View style={[spark.legendDot, { backgroundColor: '#ef4444' }]} />
+          <View style={[spark.legendDot, { backgroundColor: '#D6453F' }]} />
           <Text style={spark.legendLabel}>Promotion</Text>
         </View>
         <View style={spark.legendItem}>
@@ -500,7 +500,7 @@ const ProduitDetailScreen: React.FC<Props> = ({ route, navigation }) => {
         {/* Erreur */}
         {isError && (
           <View style={styles.errorContainer}>
-            <Ionicons name="alert-circle-outline" size={44} color="#ef4444" />
+            <Ionicons name="alert-circle-outline" size={44} color="#D6453F" />
             <Text style={styles.errorTitle}>Impossible de charger le produit</Text>
             <Text style={styles.errorMsg}>{(error as Error)?.message}</Text>
             <TouchableOpacity style={styles.retryBtn} onPress={() => refetch()}>
@@ -550,7 +550,7 @@ const ProduitDetailScreen: React.FC<Props> = ({ route, navigation }) => {
               <View style={styles.priceDivider} />
               <View style={styles.priceStat}>
                 <Text style={styles.priceStatLabel}>Max</Text>
-                <Text style={[styles.priceStatValue, { color: '#ef4444' }]}>
+                <Text style={[styles.priceStatValue, { color: '#D6453F' }]}>
                   {data.highest_price?.toFixed(2) ?? '—'} MAD
                 </Text>
               </View>
@@ -589,7 +589,7 @@ const ProduitDetailScreen: React.FC<Props> = ({ route, navigation }) => {
 
             {sortedPrices.length === 0 ? (
               <View style={styles.noPricesContainer}>
-                <Ionicons name="storefront-outline" size={40} color="#d1d5db" />
+                <Ionicons name="storefront-outline" size={40} color="#B7C4B2" />
                 <Text style={styles.noPricesText}>Aucun prix disponible pour le moment</Text>
               </View>
             ) : (
@@ -623,7 +623,7 @@ const styles = StyleSheet.create({
   loadingContainer: { flex: 1, alignItems: 'center', paddingTop: 80, gap: 12 },
   loadingText: { color: '#4A5B53', fontSize: 15 },
   errorContainer: { flex: 1, alignItems: 'center', paddingTop: 80, gap: 12, paddingHorizontal: 32 },
-  errorTitle: { fontSize: 16, fontWeight: '700', color: '#ef4444' },
+  errorTitle: { fontSize: 16, fontWeight: '700', color: '#D6453F' },
   errorMsg: { fontSize: 13, color: '#4A5B53', textAlign: 'center' },
   retryBtn: {
     backgroundColor: C.primary,
@@ -772,13 +772,13 @@ const styles = StyleSheet.create({
   promoPrice: { fontSize: 20, fontWeight: '800', color: '#C1272D' },
   regularPriceStrike: { fontSize: 13, color: '#8A9A92', textDecorationLine: 'line-through' },
   promoBadge: {
-    backgroundColor: '#fef2f2',
+    backgroundColor: '#FBEDEC',
     borderRadius: 8,
     paddingHorizontal: 8,
     paddingVertical: 3,
     marginTop: 4,
     borderWidth: 1,
-    borderColor: '#fecaca',
+    borderColor: '#F3C9C6',
   },
   promoBadgeText: { color: '#C1272D', fontSize: 11, fontWeight: '700' },
   noPricesContainer: { alignItems: 'center', paddingVertical: 40, gap: 12 },

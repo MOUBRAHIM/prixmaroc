@@ -114,7 +114,7 @@ const HistoriquePrixScreen: React.FC<Props> = ({ route }) => {
 
         {isError && (
           <View style={styles.centered}>
-            <Ionicons name="alert-circle-outline" size={44} color="#ef4444" />
+            <Ionicons name="alert-circle-outline" size={44} color="#D6453F" />
             <Text style={styles.errorText}>Impossible de charger l'historique</Text>
             <TouchableOpacity style={styles.retryBtn} onPress={() => refetch()}>
               <Text style={styles.retryBtnText}>Réessayer</Text>
@@ -141,9 +141,9 @@ const HistoriquePrixScreen: React.FC<Props> = ({ route }) => {
               </View>
               <View style={styles.statDivider} />
               <View style={styles.statItem}>
-                <Ionicons name="trending-up" size={20} color="#ef4444" />
+                <Ionicons name="trending-up" size={20} color="#D6453F" />
                 <Text style={styles.statLabel}>Maximum</Text>
-                <Text style={[styles.statValue, { color: '#ef4444' }]}>
+                <Text style={[styles.statValue, { color: '#D6453F' }]}>
                   {data.max_price?.toFixed(2) ?? '—'} MAD
                 </Text>
               </View>
@@ -170,7 +170,7 @@ const HistoriquePrixScreen: React.FC<Props> = ({ route }) => {
             {/* Vide */}
             {data.points.length === 0 && (
               <View style={styles.emptyState}>
-                <Ionicons name="analytics-outline" size={64} color="#d1d5db" />
+                <Ionicons name="analytics-outline" size={64} color="#B7C4B2" />
                 <Text style={styles.emptyTitle}>Aucun historique</Text>
                 <Text style={styles.emptySubtitle}>Pas de données sur les {days} derniers jours.</Text>
               </View>
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
   periodBtnTextActive: { color: '#fff' },
   centered: { alignItems: 'center', paddingTop: 80, gap: 12 },
   loadingText: { color: '#4A5B53', fontSize: 15 },
-  errorText: { color: '#ef4444', fontSize: 15, fontWeight: '600' },
+  errorText: { color: '#D6453F', fontSize: 15, fontWeight: '600' },
   retryBtn: { backgroundColor: C.primary, borderRadius: 10, paddingHorizontal: 24, paddingVertical: 10 },
   retryBtnText: { color: '#fff', fontWeight: '700', fontSize: 14 },
   statsCard: {
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
   legendDot: { width: 10, height: 10, borderRadius: 5 },
   legendText: { fontSize: 12, color: '#4A5B53' },
   emptyState: { alignItems: 'center', paddingVertical: 48, gap: 12 },
-  emptyTitle: { fontSize: 18, fontWeight: '700', color: '#374151' },
+  emptyTitle: { fontSize: 18, fontWeight: '700', color: '#3C4F47' },
   emptySubtitle: { fontSize: 14, color: '#8A9A92', textAlign: 'center' },
   sectionTitle: { fontSize: 15, fontWeight: '700', color: '#0B2019', marginBottom: 8 },
   priceList: {
@@ -248,8 +248,8 @@ const styles = StyleSheet.create({
   priceRowStore: { flex: 1, fontSize: 13, color: '#0B2019', paddingHorizontal: 6 },
   priceRowRight: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   promoBadge: {
-    backgroundColor: '#fef2f2', borderRadius: 4, paddingHorizontal: 5, paddingVertical: 1,
-    borderWidth: 1, borderColor: '#fecaca',
+    backgroundColor: '#FBEDEC', borderRadius: 4, paddingHorizontal: 5, paddingVertical: 1,
+    borderWidth: 1, borderColor: '#F3C9C6',
   },
   promoBadgeText: { color: '#C1272D', fontSize: 9, fontWeight: '700' },
   priceRowValue: { fontSize: 14, fontWeight: '700', color: '#0B2019', minWidth: 80, textAlign: 'right' },

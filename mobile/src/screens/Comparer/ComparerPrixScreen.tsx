@@ -176,7 +176,7 @@ const ComparerPrixScreen: React.FC<Props> = ({ route, navigation }) => {
 
         {isError && (
           <View style={styles.centered}>
-            <Ionicons name="alert-circle-outline" size={44} color="#ef4444" />
+            <Ionicons name="alert-circle-outline" size={44} color="#D6453F" />
             <Text style={styles.errorText}>Erreur lors de la comparaison</Text>
             <TouchableOpacity style={styles.retryBtn} onPress={refetchAll}>
               <Text style={styles.retryBtnText}>Réessayer</Text>
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
   content: { padding: 16, paddingBottom: 32 },
   centered: { alignItems: 'center', paddingTop: 80, gap: 12 },
   loadingText: { color: '#4A5B53', fontSize: 15 },
-  errorText: { color: '#ef4444', fontSize: 15, fontWeight: '600' },
+  errorText: { color: '#D6453F', fontSize: 15, fontWeight: '600' },
   retryBtn: { backgroundColor: C.primary, borderRadius: 10, paddingHorizontal: 24, paddingVertical: 10 },
   retryBtnText: { color: '#fff', fontWeight: '700', fontSize: 14 },
   summaryCard: {
@@ -288,8 +288,8 @@ const styles = StyleSheet.create({
   effectivePrice: { fontSize: 16, fontWeight: '800', color: '#0B2019' },
   naPrice: { fontSize: 16, color: '#8A9A92' },
   promoBadge: {
-    backgroundColor: '#fef2f2', borderRadius: 4, paddingHorizontal: 5, paddingVertical: 1,
-    borderWidth: 1, borderColor: '#fecaca',
+    backgroundColor: '#FBEDEC', borderRadius: 4, paddingHorizontal: 5, paddingVertical: 1,
+    borderWidth: 1, borderColor: '#F3C9C6',
   },
   promoBadgeText: { color: '#C1272D', fontSize: 9, fontWeight: '700' },
   storeCard: {

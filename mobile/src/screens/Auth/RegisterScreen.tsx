@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
-    color: '#6b7280',
+    color: '#4A5B53',
     marginTop: 6,
   },
   card: {
@@ -184,19 +184,19 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 22,
     fontWeight: '700',
-    color: '#111827',
+    color: '#0B2019',
     marginBottom: 20,
   },
   errorBox: {
-    backgroundColor: '#fef2f2',
+    backgroundColor: '#FBEDEC',
     borderRadius: 8,
     padding: 12,
     marginBottom: 16,
     borderLeftWidth: 4,
-    borderLeftColor: '#ef4444',
+    borderLeftColor: '#D6453F',
   },
   errorText: {
-    color: '#b91c1c',
+    color: '#9E2A25',
     fontSize: 14,
   },
   inputGroup: {
@@ -205,17 +205,17 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#374151',
+    color: '#3C4F47',
     marginBottom: 6,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#d1d5db',
+    borderColor: '#B7C4B2',
     borderRadius: 10,
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 16,
-    color: '#111827',
+    color: '#0B2019',
     backgroundColor: '#F5F8F3',
   },
   button: {
@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   footerText: {
-    color: '#6b7280',
+    color: '#4A5B53',
     fontSize: 15,
   },
   footerLink: {

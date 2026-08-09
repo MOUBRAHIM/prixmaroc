@@ -100,7 +100,7 @@ const ListCard: React.FC<{
         onPress={onDelete}
         hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
       >
-        <Ionicons name="trash-outline" size={18} color="#ef4444" />
+        <Ionicons name="trash-outline" size={18} color="#D6453F" />
       </TouchableOpacity>
     </TouchableOpacity>
   );
@@ -299,7 +299,7 @@ const MesListesScreen: React.FC<Props> = ({ navigation }) => {
       )}
       {isError && (
         <View style={styles.centered}>
-          <Ionicons name="alert-circle-outline" size={44} color="#ef4444" />
+          <Ionicons name="alert-circle-outline" size={44} color="#D6453F" />
           <Text style={styles.errorText}>Impossible de charger les listes</Text>
           <TouchableOpacity style={styles.retryBtn} onPress={() => refetch()}>
             <Text style={styles.retryBtnText}>Réessayer</Text>
@@ -324,7 +324,7 @@ const MesListesScreen: React.FC<Props> = ({ navigation }) => {
           ListEmptyComponent={
             activeTab === 'toutes' ? (
               <View style={styles.emptyState}>
-                <Ionicons name="list-outline" size={72} color="#d1d5db" />
+                <Ionicons name="list-outline" size={72} color="#B7C4B2" />
                 <Text style={styles.emptyTitle}>Aucune liste</Text>
                 <Text style={styles.emptySubtitle}>
                   Créez votre première liste ou laissez l'IA en générer une.
@@ -437,12 +437,12 @@ const styles = StyleSheet.create({
 
   centered: { flex: 1, alignItems: 'center', paddingTop: 80, gap: 12 },
   loadingText: { color: '#4A5B53', fontSize: 15 },
-  errorText: { color: '#ef4444', fontSize: 15, fontWeight: '600' },
+  errorText: { color: '#D6453F', fontSize: 15, fontWeight: '600' },
   retryBtn: { backgroundColor: C.primary, borderRadius: 12, paddingHorizontal: 24, paddingVertical: 12 },
   retryBtnText: { color: '#ffffff', fontWeight: '700', fontSize: 14 },
 
   emptyState: { alignItems: 'center', paddingTop: 60, paddingHorizontal: 40, gap: 12 },
-  emptyTitle: { fontSize: 20, fontWeight: '700', color: '#374151' },
+  emptyTitle: { fontSize: 20, fontWeight: '700', color: '#3C4F47' },
   emptySubtitle: { fontSize: 14, color: '#8A9A92', textAlign: 'center', lineHeight: 20 },
   quickButtons: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, justifyContent: 'center', marginTop: 8 },
   quickBtn: {

@@ -129,7 +129,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
                   <TextInput
                     style={styles.input}
                     placeholder="votre@email.com"
-                    placeholderTextColor="#b0b8c4"
+                    placeholderTextColor="#9AA89A"
                     value={email}
                     onChangeText={handleEmailChange}
                     autoCapitalize="none"
@@ -155,7 +155,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
                   <TextInput
                     style={styles.input}
                     placeholder="••••••••"
-                    placeholderTextColor="#b0b8c4"
+                    placeholderTextColor="#9AA89A"
                     value={password}
                     onChangeText={handlePasswordChange}
                     secureTextEntry
@@ -341,12 +341,12 @@ const styles = StyleSheet.create({
   errorBox: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    backgroundColor: '#fef2f2',
+    backgroundColor: '#FBEDEC',
     borderRadius: 10,
     padding: 12,
     marginBottom: 18,
     borderLeftWidth: 4,
-    borderLeftColor: '#ef4444',
+    borderLeftColor: '#D6453F',
     gap: 8,
   },
   errorIcon: {
@@ -355,7 +355,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     flex: 1,
-    color: '#b91c1c',
+    color: '#9E2A25',
     fontSize: 14,
     lineHeight: 20,
   },

@@ -212,7 +212,7 @@ const NouvelleListeIAScreen: React.FC<Props> = ({ navigation }) => {
   const budgetStatus = generatedList?.budget_status;
   const budgetColor =
     budgetStatus === 'dans_budget' ? C.primary :
-    budgetStatus === 'dépasse_budget' ? '#ef4444' : '#8A9A92';
+    budgetStatus === 'dépasse_budget' ? '#D6453F' : '#8A9A92';
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['bottom']}>
@@ -454,11 +454,11 @@ const styles = StyleSheet.create({
   storesLabel: { fontSize: 13, color: '#4A5B53' },
   storesValue: { fontSize: 13, fontWeight: '600', color: '#0B2019', flex: 1 },
   reasoningCard: {
-    flexDirection: 'row', gap: 8, backgroundColor: '#f0f9ff',
+    flexDirection: 'row', gap: 8, backgroundColor: '#EEF6F8',
     borderRadius: 12, padding: 12, marginBottom: 12,
-    borderWidth: 1, borderColor: '#bae6fd',
+    borderWidth: 1, borderColor: '#CBE4EA',
   },
-  reasoningText: { flex: 1, fontSize: 13, color: '#0369a1', lineHeight: 18 },
+  reasoningText: { flex: 1, fontSize: 13, color: '#1F5F6B', lineHeight: 18 },
   catSection: {
     marginBottom: 6,
   },
@@ -488,9 +488,9 @@ const styles = StyleSheet.create({
   itemName: { fontSize: 14, fontWeight: '700', color: '#0B2019', marginBottom: 3 },
   itemStore: { fontSize: 12, color: '#8A9A92', marginBottom: 3 },
   promoBadge: {
-    alignSelf: 'flex-start', backgroundColor: '#fef2f2', borderRadius: 4,
+    alignSelf: 'flex-start', backgroundColor: '#FBEDEC', borderRadius: 4,
     paddingHorizontal: 5, paddingVertical: 1, marginBottom: 3,
-    borderWidth: 1, borderColor: '#fecaca',
+    borderWidth: 1, borderColor: '#F3C9C6',
   },
   promoBadgeText: { color: '#C1272D', fontSize: 9, fontWeight: '700' },
   itemReasoning: { fontSize: 11, color: '#8A9A92', fontStyle: 'italic', lineHeight: 16 },

@@ -237,7 +237,7 @@ const ResultsView: React.FC<{ scan: OcrScan; onReset: () => void }> = ({
     scan.status === 'done'
       ? C.primary
       : scan.status === 'failed'
-      ? '#ef4444'
+      ? '#D6453F'
       : '#E8A020';
 
   const statusLabel =
@@ -594,7 +594,7 @@ const ScannerScreen: React.FC = () => {
 // ── Styles ────────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#111827' },
+  safeArea: { flex: 1, backgroundColor: '#0B2019' },
   centered: {
     flex: 1,
     alignItems: 'center',
@@ -711,7 +711,7 @@ const styles = StyleSheet.create({
     gap: 14,
   },
   scanHint: {
-    color: '#d1d5db',
+    color: '#B7C4B2',
     fontSize: 13,
     textAlign: 'center',
     paddingHorizontal: 40,
@@ -855,7 +855,7 @@ const styles = StyleSheet.create({
   tipRow: {},
   tipText: {
     fontSize: 14,
-    color: '#374151',
+    color: '#3C4F47',
     lineHeight: 20,
   },
   retryBtn: {
@@ -995,13 +995,13 @@ const styles = StyleSheet.create({
   itemQty: { fontSize: 12, color: '#8A9A92', marginBottom: 3 },
   promoBadge: {
     alignSelf: 'flex-start',
-    backgroundColor: '#fef2f2',
+    backgroundColor: '#FBEDEC',
     borderRadius: 5,
     paddingHorizontal: 6,
     paddingVertical: 2,
     marginTop: 3,
     borderWidth: 1,
-    borderColor: '#fecaca',
+    borderColor: '#F3C9C6',
   },
   promoBadgeText: { color: '#C1272D', fontSize: 9, fontWeight: '800' },
   itemPriceWrap: { alignItems: 'flex-end' },
@@ -1035,11 +1035,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 10,
-    backgroundColor: '#0891b2',  // cyan-600
+    backgroundColor: '#2E7D8F',  // cyan-600
     borderRadius: 16,
     paddingVertical: 17,
     marginBottom: 12,
-    shadowColor: '#0891b2',
+    shadowColor: '#2E7D8F',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.35,
     shadowRadius: 10,

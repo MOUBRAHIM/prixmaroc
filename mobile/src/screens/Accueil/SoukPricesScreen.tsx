@@ -68,8 +68,8 @@ const PriceRow: React.FC<{ p: SoukPrice; onVote: (id: number, v: 1 | -1) => void
         <Text style={[styles.voteNum, p.my_vote === 1 && { color: C.primary }]}>{p.upvotes}</Text>
       </TouchableOpacity>
       <TouchableOpacity disabled={voting} onPress={() => onVote(p.id, -1)} style={styles.voteBtn} hitSlop={8}>
-        <Ionicons name={p.my_vote === -1 ? 'thumbs-down' : 'thumbs-down-outline'} size={18} color={p.my_vote === -1 ? '#ef4444' : '#8A9A92'} />
-        <Text style={[styles.voteNum, p.my_vote === -1 && { color: '#ef4444' }]}>{p.downvotes}</Text>
+        <Ionicons name={p.my_vote === -1 ? 'thumbs-down' : 'thumbs-down-outline'} size={18} color={p.my_vote === -1 ? '#D6453F' : '#8A9A92'} />
+        <Text style={[styles.voteNum, p.my_vote === -1 && { color: '#D6453F' }]}>{p.downvotes}</Text>
       </TouchableOpacity>
     </View>
   </View>

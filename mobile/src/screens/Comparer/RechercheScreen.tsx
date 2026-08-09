@@ -67,7 +67,7 @@ const FilterModal: React.FC<{
           <View style={fm.sheetHeader}>
             <Text style={fm.sheetTitle}>Filtres</Text>
             <TouchableOpacity onPress={onClose} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-              <Ionicons name="close" size={24} color="#374151" />
+              <Ionicons name="close" size={24} color="#3C4F47" />
             </TouchableOpacity>
           </View>
 
@@ -234,7 +234,7 @@ const ProductCard: React.FC<{
     </View>
 
     <View style={styles.productActions}>
-      <Ionicons name="chevron-forward" size={20} color="#d1d5db" />
+      <Ionicons name="chevron-forward" size={20} color="#B7C4B2" />
       <TouchableOpacity
         style={styles.historiqueBtn}
         onPress={(e) => { e.stopPropagation(); onHistorique(); }}
@@ -400,7 +400,7 @@ const RechercheScreen: React.FC<Props> = ({ navigation }) => {
       {/* État vide (avant recherche) */}
       {searchTerm.length < 2 && query.length < 2 && !isLoading && (
         <View style={styles.emptyState}>
-          <Ionicons name="search-circle-outline" size={72} color="#d1d5db" />
+          <Ionicons name="search-circle-outline" size={72} color="#B7C4B2" />
           <Text style={styles.emptyTitle}>Comparez les prix</Text>
           <Text style={styles.emptySubtitle}>
             Les résultats apparaissent au fur et à mesure que vous tapez.{'\n'}
@@ -412,7 +412,7 @@ const RechercheScreen: React.FC<Props> = ({ navigation }) => {
       {/* Erreur */}
       {isError && (
         <View style={styles.errorContainer}>
-          <Ionicons name="alert-circle-outline" size={44} color="#ef4444" />
+          <Ionicons name="alert-circle-outline" size={44} color="#D6453F" />
           <Text style={styles.errorText}>Erreur lors de la recherche</Text>
           <TouchableOpacity style={styles.retryBtn} onPress={() => refetch()}>
             <Text style={styles.retryBtnText}>Réessayer</Text>
@@ -444,7 +444,7 @@ const RechercheScreen: React.FC<Props> = ({ navigation }) => {
           }
           ListEmptyComponent={
             <View style={styles.emptyState}>
-              <Ionicons name="cube-outline" size={64} color="#d1d5db" />
+              <Ionicons name="cube-outline" size={64} color="#B7C4B2" />
               <Text style={styles.emptyTitle}>Aucun résultat</Text>
               <Text style={styles.emptySubtitle}>
                 {hasActiveFilters
@@ -630,7 +630,7 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     gap: 12,
   },
-  emptyTitle: { fontSize: 20, fontWeight: '700', color: '#374151', marginTop: 16, marginBottom: 6 },
+  emptyTitle: { fontSize: 20, fontWeight: '700', color: '#3C4F47', marginTop: 16, marginBottom: 6 },
   emptySubtitle: { fontSize: 14, color: '#8A9A92', textAlign: 'center', lineHeight: 22 },
   resetFiltersBtn: {
     backgroundColor: C.primary,
@@ -643,7 +643,7 @@ const styles = StyleSheet.create({
   loadingContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12 },
   loadingText: { color: '#4A5B53', fontSize: 15 },
   errorContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12 },
-  errorText: { color: '#ef4444', fontSize: 15, fontWeight: '600' },
+  errorText: { color: '#D6453F', fontSize: 15, fontWeight: '600' },
   retryBtn: {
     backgroundColor: C.primary,
     borderRadius: 12,

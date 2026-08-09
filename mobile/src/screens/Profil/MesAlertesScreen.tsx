@@ -77,7 +77,7 @@ const AlertCard: React.FC<{
         onPress={onDelete}
         hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
       >
-        <Ionicons name="trash-outline" size={18} color="#ef4444" />
+        <Ionicons name="trash-outline" size={18} color="#D6453F" />
       </TouchableOpacity>
     </View>
   );
@@ -124,7 +124,7 @@ const MesAlertesScreen: React.FC<Props> = () => {
 
       {isError && (
         <View style={styles.centered}>
-          <Ionicons name="alert-circle-outline" size={44} color="#ef4444" />
+          <Ionicons name="alert-circle-outline" size={44} color="#D6453F" />
           <Text style={styles.errorText}>Impossible de charger les alertes</Text>
           <TouchableOpacity style={styles.retryBtn} onPress={() => refetch()}>
             <Text style={styles.retryBtnText}>Réessayer</Text>
@@ -160,7 +160,7 @@ const MesAlertesScreen: React.FC<Props> = () => {
           }
           ListEmptyComponent={
             <View style={styles.emptyState}>
-              <Ionicons name="notifications-off-outline" size={72} color="#d1d5db" />
+              <Ionicons name="notifications-off-outline" size={72} color="#B7C4B2" />
               <Text style={styles.emptyTitle}>Aucune alerte</Text>
               <Text style={styles.emptySubtitle}>
                 Créez des alertes depuis la fiche d'un produit pour être notifié quand son prix baisse.
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: '#F2F6F0' },
   centered: { flex: 1, alignItems: 'center', paddingTop: 80, gap: 12 },
   loadingText: { color: '#4A5B53', fontSize: 15 },
-  errorText: { color: '#ef4444', fontSize: 15, fontWeight: '600' },
+  errorText: { color: '#D6453F', fontSize: 15, fontWeight: '600' },
   retryBtn: { backgroundColor: C.primary, borderRadius: 10, paddingHorizontal: 24, paddingVertical: 10 },
   retryBtnText: { color: '#fff', fontWeight: '700', fontSize: 14 },
   listContent: { padding: 16, paddingBottom: 32 },
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
   alertStatus: { fontSize: 12, color: '#8A9A92', fontStyle: 'italic' },
   deleteBtn: { padding: 4, marginLeft: 4 },
   emptyState: { alignItems: 'center', paddingTop: 60, paddingHorizontal: 40, gap: 12 },
-  emptyTitle: { fontSize: 20, fontWeight: '700', color: '#374151' },
+  emptyTitle: { fontSize: 20, fontWeight: '700', color: '#3C4F47' },
   emptySubtitle: { fontSize: 14, color: '#8A9A92', textAlign: 'center', lineHeight: 20 },
 });
 

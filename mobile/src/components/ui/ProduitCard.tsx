@@ -536,7 +536,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   promoTag: {
-    backgroundColor: '#fef2f2',
+    backgroundColor: '#FBEDEC',
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 20,

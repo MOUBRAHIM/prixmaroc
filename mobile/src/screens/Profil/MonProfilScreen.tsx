@@ -68,7 +68,7 @@ const MenuItem: React.FC<{
     {value ? (
       <Text style={styles.menuValue}>{value}</Text>
     ) : (
-      <Ionicons name="chevron-forward" size={16} color="#d1d5db" />
+      <Ionicons name="chevron-forward" size={16} color="#B7C4B2" />
     )}
   </TouchableOpacity>
 );
@@ -152,12 +152,12 @@ const AgeCounter: React.FC<{
 
 const SCRAPERS = [
   { slug: 'marjane',   label: 'Marjane',    color: '#C1272D' },
-  { slug: 'carrefour', label: 'Carrefour',  color: '#2563eb' },
+  { slug: 'carrefour', label: 'Carrefour',  color: '#256B7A' },
   { slug: 'labelvie',  label: "Label'Vie",  color: '#0F4C3A' },
   { slug: 'bim',       label: 'BIM',        color: '#ca8a04' },
-  { slug: 'kazyon',    label: 'Kazyon',     color: '#ea580c' },
+  { slug: 'kazyon',    label: 'Kazyon',     color: '#C4620F' },
   { slug: 'sopreco',   label: 'Sopreco',    color: '#7c3aed' },
-  { slug: 'hmizate',   label: 'Hmizate',    color: '#0891b2' },
+  { slug: 'hmizate',   label: 'Hmizate',    color: '#2E7D8F' },
 ];
 
 const AdminSection: React.FC = () => {
@@ -583,7 +583,7 @@ const MonProfilScreen: React.FC<Props> = ({ navigation }) => {
                       <TextInput
                         style={styles.catBudgetField}
                         placeholder="—"
-                        placeholderTextColor="#d1d5db"
+                        placeholderTextColor="#B7C4B2"
                         value={budgetCategories[cat.key] ?? ''}
                         onChangeText={(v) => {
                           const next = { ...budgetCategories, [cat.key]: v };
@@ -630,7 +630,7 @@ const MonProfilScreen: React.FC<Props> = ({ navigation }) => {
               <Text style={styles.statLabel}>Listes</Text>
             </View>
             <View style={styles.statCard}>
-              <Ionicons name="trending-down-outline" size={24} color="#3b82f6" />
+              <Ionicons name="trending-down-outline" size={24} color="#2E7D8F" />
               <Text style={styles.statValue}>
                 {statsData?.economies != null ? `${statsData.economies} MAD` : '—'}
               </Text>
@@ -647,7 +647,7 @@ const MonProfilScreen: React.FC<Props> = ({ navigation }) => {
         {/* Déconnexion */}
         <View style={styles.section}>
           <View style={styles.card}>
-            <MenuItem icon="log-out-outline" label="Déconnexion" onPress={handleLogout} color="#ef4444" />
+            <MenuItem icon="log-out-outline" label="Déconnexion" onPress={handleLogout} color="#D6453F" />
           </View>
         </View>
 
@@ -733,7 +733,7 @@ const styles = StyleSheet.create({
   ageCats: { gap: 8 },
   ageRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   ageIcon: { fontSize: 20 },
-  ageLabel: { flex: 1, fontSize: 14, color: '#374151', fontWeight: '500' },
+  ageLabel: { flex: 1, fontSize: 14, color: '#3C4F47', fontWeight: '500' },
   ageControls: { flexDirection: 'row', alignItems: 'center', gap: 0, backgroundColor: '#E9F0E6', borderRadius: 10, overflow: 'hidden' },
   ageBtn: { padding: 10, paddingHorizontal: 14 },
   ageValue: { fontSize: 17, fontWeight: '800', color: '#0B2019', minWidth: 28, textAlign: 'center' },
@@ -756,7 +756,7 @@ const styles = StyleSheet.create({
   catsBudgetToggle: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 14 },
   catsBudgetList: { marginTop: 8, gap: 8 },
   catBudgetRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  catBudgetLabel: { flex: 1, fontSize: 13, color: '#374151' },
+  catBudgetLabel: { flex: 1, fontSize: 13, color: '#3C4F47' },
   catBudgetInput: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#E9F0E6', borderRadius: 8, paddingHorizontal: 10, paddingVertical: 6 },
   catBudgetField: { width: 64, fontSize: 14, fontWeight: '700', color: '#0B2019', textAlign: 'right' },
   catBudgetUnit: { fontSize: 12, color: '#4A5B53', marginLeft: 4 },
@@ -767,8 +767,8 @@ const styles = StyleSheet.create({
   storeChipActive: { borderColor: C.primary, backgroundColor: '#EEF6F1' },
   storeChipText: { fontSize: 13, fontWeight: '600', color: '#3C4F47' },
 
-  infoRow: { flexDirection: 'row', gap: 6, marginTop: 12, backgroundColor: '#f0f9ff', borderRadius: 8, padding: 10, borderWidth: 1, borderColor: '#bae6fd' },
-  infoText: { flex: 1, fontSize: 12, color: '#0369a1', lineHeight: 16 },
+  infoRow: { flexDirection: 'row', gap: 6, marginTop: 12, backgroundColor: '#EEF6F8', borderRadius: 8, padding: 10, borderWidth: 1, borderColor: '#CBE4EA' },
+  infoText: { flex: 1, fontSize: 12, color: '#1F5F6B', lineHeight: 16 },
 
   menuItem: { flexDirection: 'row', alignItems: 'center', paddingVertical: 14, paddingHorizontal: 0, gap: 12 },
   menuIconWrap: { width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
@@ -783,7 +783,7 @@ const styles = StyleSheet.create({
   statCard: { flex: 1, backgroundColor: '#fff', borderRadius: 14, padding: 16, alignItems: 'center', gap: 6, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.06, shadowRadius: 4, elevation: 2 },
   statValue: { fontSize: 20, fontWeight: '800', color: '#0B2019' },
   statLabel: { fontSize: 12, color: '#8A9A92' },
-  version: { textAlign: 'center', fontSize: 12, color: '#d1d5db', marginTop: 24 },
+  version: { textAlign: 'center', fontSize: 12, color: '#B7C4B2', marginTop: 24 },
 
   // Guest mode
   guestContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32 },

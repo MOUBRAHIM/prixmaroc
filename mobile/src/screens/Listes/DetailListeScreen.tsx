@@ -103,7 +103,7 @@ const ListItemRow: React.FC<{
               onPress={onDelete}
               hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
             >
-              <Ionicons name="trash-outline" size={15} color="#ef4444" />
+              <Ionicons name="trash-outline" size={15} color="#D6453F" />
             </TouchableOpacity>
           </>
         ) : (
@@ -305,7 +305,7 @@ const OptimizeModal: React.FC<{
           <View style={opt.header}>
             <Text style={opt.title}>Optimiser vos courses</Text>
             <TouchableOpacity onPress={onClose} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-              <Ionicons name="close" size={24} color="#374151" />
+              <Ionicons name="close" size={24} color="#3C4F47" />
             </TouchableOpacity>
           </View>
 
@@ -401,7 +401,7 @@ const opt = StyleSheet.create({
   groupName: { flex: 1, fontSize: 15, fontWeight: '700', color: '#0B2019' },
   groupTotal: { fontSize: 15, fontWeight: '800', color: C.primary },
   itemRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 3 },
-  itemName: { flex: 1, fontSize: 13, color: '#374151' },
+  itemName: { flex: 1, fontSize: 13, color: '#3C4F47' },
   itemPrice: { fontSize: 13, fontWeight: '600', color: '#3C4F47', marginLeft: 8 },
   totalRow: {
     flexDirection: 'row',
@@ -420,7 +420,7 @@ const opt = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: '#2563eb',
+    backgroundColor: '#256B7A',
     borderRadius: 12,
     paddingVertical: 14,
   },
@@ -624,8 +624,8 @@ const DetailListeScreen: React.FC<Props> = ({ route }) => {
             onPress={() => setShowOptimize(true)}
             disabled={!source || totalCount === 0}
           >
-            <Ionicons name="git-branch-outline" size={19} color="#8b5cf6" />
-            <Text style={[styles.actionBtnText, { color: '#8b5cf6' }]}>Optimiser</Text>
+            <Ionicons name="git-branch-outline" size={19} color="#7A5AA6" />
+            <Text style={[styles.actionBtnText, { color: '#7A5AA6' }]}>Optimiser</Text>
           </TouchableOpacity>
           {/* Mode courses */}
           <TouchableOpacity
@@ -677,7 +677,7 @@ const DetailListeScreen: React.FC<Props> = ({ route }) => {
       )}
       {isError && !offlineData && (
         <View style={styles.centered}>
-          <Ionicons name="alert-circle-outline" size={44} color="#ef4444" />
+          <Ionicons name="alert-circle-outline" size={44} color="#D6453F" />
           <Text style={styles.errorText}>Impossible de charger la liste</Text>
           <TouchableOpacity style={styles.retryBtn} onPress={() => refetch()}>
             <Text style={styles.retryBtnText}>Réessayer</Text>
@@ -729,7 +729,7 @@ const DetailListeScreen: React.FC<Props> = ({ route }) => {
           }
           ListEmptyComponent={
             <View style={styles.emptyState}>
-              <Ionicons name="basket-outline" size={72} color="#d1d5db" />
+              <Ionicons name="basket-outline" size={72} color="#B7C4B2" />
               <Text style={styles.emptyTitle}>Liste vide</Text>
               <Text style={styles.emptySubtitle}>
                 Ajoutez vos articles en appuyant sur le bouton +
@@ -826,7 +826,7 @@ const styles = StyleSheet.create({
   /* États */
   centered: { flex: 1, alignItems: 'center', paddingTop: 80, gap: 12 },
   loadingText: { color: '#4A5B53', fontSize: 15 },
-  errorText: { color: '#ef4444', fontSize: 15, fontWeight: '600' },
+  errorText: { color: '#D6453F', fontSize: 15, fontWeight: '600' },
   retryBtn: {
     backgroundColor: C.primary,
     borderRadius: 10,
@@ -862,7 +862,7 @@ const styles = StyleSheet.create({
     height: 24,
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: '#d1d5db',
+    borderColor: '#B7C4B2',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
@@ -909,7 +909,7 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 8,
-    backgroundColor: '#fef2f2',
+    backgroundColor: '#FBEDEC',
     alignItems: 'center',
     justifyContent: 'center',
     marginLeft: 6,
@@ -927,7 +927,7 @@ const styles = StyleSheet.create({
 
   /* Vide */
   emptyState: { alignItems: 'center', paddingTop: 60, paddingHorizontal: 40, gap: 12 },
-  emptyTitle: { fontSize: 20, fontWeight: '700', color: '#374151' },
+  emptyTitle: { fontSize: 20, fontWeight: '700', color: '#3C4F47' },
   emptySubtitle: { fontSize: 14, color: '#8A9A92', textAlign: 'center', lineHeight: 20 },
 
   /* FAB */

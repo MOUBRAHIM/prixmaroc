@@ -7,11 +7,12 @@
  * (deep links notifications, etc.)
  */
 import React, { useRef } from 'react';
-import { Platform, View, Text } from 'react-native';
+import { Platform, View, Text, TouchableOpacity } from 'react-native';
 import {
   NavigationContainer,
   NavigationContainerRef,
   createNavigationContainerRef,
+  useNavigation,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -132,11 +133,36 @@ export const linking = {
 
 // ── Options header partagées ──────────────────────────────────────────────────
 
+/**
+ * Bouton retour maison.
+ *
+ * React Navigation 6 code en dur le libellé « Go back » lorsque le titre de
+ * retour est vide (voir HeaderBackButton). Ce libellé apparaît sur le web et
+ * est lu par les lecteurs d'écran : on fournit donc notre propre bouton, en
+ * français.
+ */
+const BoutonRetour: React.FC<{ canGoBack?: boolean }> = ({ canGoBack }) => {
+  const navigation = useNavigation();
+  if (!canGoBack) return null;
+  return (
+    <TouchableOpacity
+      onPress={() => navigation.goBack()}
+      accessibilityRole="button"
+      accessibilityLabel="Retour"
+      hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+      style={{ paddingRight: 14, paddingVertical: 4 }}
+    >
+      <Ionicons name="chevron-back" size={26} color={C.white} />
+    </TouchableOpacity>
+  );
+};
+
 const headerOptions = {
   headerStyle: { backgroundColor: C.primary },
   headerTintColor: C.white,
   headerTitleStyle: { fontWeight: '700' as const, fontSize: 17 },
   headerBackTitle: '',
+  headerLeft: (props: { canGoBack?: boolean }) => <BoutonRetour {...props} />,
 };
 
 // ── Stacks individuels ────────────────────────────────────────────────────────

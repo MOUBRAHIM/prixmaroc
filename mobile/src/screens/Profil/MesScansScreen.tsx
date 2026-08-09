@@ -21,8 +21,8 @@ type Props = NativeStackScreenProps<ProfilStackParamList, 'MesScans'>;
 const STATUS_CONFIG: Record<string, { label: string; color: string; icon: React.ComponentProps<typeof Ionicons>['name'] }> = {
   done:       { label: 'Traité',          color: C.primary,  icon: 'checkmark-circle' },
   pending:    { label: 'En attente',       color: '#E8A020',  icon: 'hourglass' },
-  processing: { label: 'En cours',         color: '#3b82f6',  icon: 'sync' },
-  failed:     { label: 'Échec',            color: '#ef4444',  icon: 'close-circle' },
+  processing: { label: 'En cours',         color: '#2E7D8F',  icon: 'sync' },
+  failed:     { label: 'Échec',            color: '#D6453F',  icon: 'close-circle' },
 };
 
 // ── Carte scan ────────────────────────────────────────────────────────────────
@@ -107,7 +107,7 @@ const MesScansScreen: React.FC<Props> = ({ navigation }) => {
 
       {isError && (
         <View style={styles.centered}>
-          <Ionicons name="alert-circle-outline" size={44} color="#ef4444" />
+          <Ionicons name="alert-circle-outline" size={44} color="#D6453F" />
           <Text style={styles.errorText}>Impossible de charger les scans</Text>
           <TouchableOpacity style={styles.retryBtn} onPress={() => refetch()}>
             <Text style={styles.retryBtnText}>Réessayer</Text>
@@ -135,7 +135,7 @@ const MesScansScreen: React.FC<Props> = ({ navigation }) => {
           }
           ListEmptyComponent={
             <View style={styles.emptyState}>
-              <Ionicons name="scan-outline" size={72} color="#d1d5db" />
+              <Ionicons name="scan-outline" size={72} color="#B7C4B2" />
               <Text style={styles.emptyTitle}>Aucun scan</Text>
               <Text style={styles.emptySubtitle}>
                 Scannez vos tickets de caisse depuis l'onglet Scanner pour les retrouver ici.
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: '#F2F6F0' },
   centered: { flex: 1, alignItems: 'center', paddingTop: 80, gap: 12 },
   loadingText: { color: '#4A5B53', fontSize: 15 },
-  errorText: { color: '#ef4444', fontSize: 15, fontWeight: '600' },
+  errorText: { color: '#D6453F', fontSize: 15, fontWeight: '600' },
   retryBtn: { backgroundColor: C.primary, borderRadius: 10, paddingHorizontal: 24, paddingVertical: 10 },
   retryBtnText: { color: '#fff', fontWeight: '700', fontSize: 14 },
   listContent: { padding: 16, paddingBottom: 32 },
@@ -176,9 +176,9 @@ const styles = StyleSheet.create({
   scanStat: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   scanStatValue: { fontSize: 14, fontWeight: '800', color: C.primary },
   scanStatText: { fontSize: 13, color: '#4A5B53' },
-  errorMsg: { fontSize: 12, color: '#ef4444', marginTop: 4, fontStyle: 'italic' },
+  errorMsg: { fontSize: 12, color: '#D6453F', marginTop: 4, fontStyle: 'italic' },
   emptyState: { alignItems: 'center', paddingTop: 60, paddingHorizontal: 40, gap: 12 },
-  emptyTitle: { fontSize: 20, fontWeight: '700', color: '#374151' },
+  emptyTitle: { fontSize: 20, fontWeight: '700', color: '#3C4F47' },
   emptySubtitle: { fontSize: 14, color: '#8A9A92', textAlign: 'center', lineHeight: 20 },
 });
 

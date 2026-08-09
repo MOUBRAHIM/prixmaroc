@@ -146,7 +146,7 @@ const QuickActions: React.FC = () => {
 
 // ── Alerts list ───────────────────────────────────────────────────────────────
 
-const ALERT_COLORS = ['#0F4C3A', '#3b82f6', '#E8A020', '#ef4444', '#8b5cf6'];
+const ALERT_COLORS = ['#0F4C3A', '#2E7D8F', '#E8A020', '#D6453F', '#7A5AA6'];
 
 const AlertesList: React.FC<{ alertes: DashboardAlerte[] }> = ({ alertes }) => {
   if (alertes.length === 0) {
@@ -512,13 +512,13 @@ const styles = StyleSheet.create({
   statValueGreen: { color: '#0C3F30' },
   statLabelGreen: { color: '#0F4C3A' },
 
-  statCardBlue: { backgroundColor: '#eff6ff', borderWidth: 1, borderColor: '#bfdbfe' },
+  statCardBlue: { backgroundColor: '#EAF3F5', borderWidth: 1, borderColor: '#bfdbfe' },
   statValueBlue: { color: '#1d4ed8' },
-  statLabelBlue: { color: '#2563eb' },
+  statLabelBlue: { color: '#256B7A' },
 
-  statCardOrange: { backgroundColor: '#fff7ed', borderWidth: 1, borderColor: '#fed7aa' },
+  statCardOrange: { backgroundColor: '#FDF6EC', borderWidth: 1, borderColor: '#F6DCB4' },
   statValueOrange: { color: '#c2410c' },
-  statLabelOrange: { color: '#ea580c' },
+  statLabelOrange: { color: '#C4620F' },
 
   // Quick actions
   actionsGrid: {
@@ -557,7 +557,7 @@ const styles = StyleSheet.create({
   actionLabel: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#374151',
+    color: '#3C4F47',
     textAlign: 'center',
   },
 
@@ -586,7 +586,7 @@ const styles = StyleSheet.create({
   shortcutLabel: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#374151',
+    color: '#3C4F47',
   },
 
   // Alerts
@@ -604,7 +604,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   alertesEmptyEmoji: { fontSize: 32, marginBottom: 10 },
-  alertesEmptyText: { color: '#374151', fontSize: 15, fontWeight: '600', marginBottom: 4 },
+  alertesEmptyText: { color: '#3C4F47', fontSize: 15, fontWeight: '600', marginBottom: 4 },
   alertesEmptyHint: { color: '#8A9A92', fontSize: 13, textAlign: 'center' },
   alerteItem: {
     flexDirection: 'row',
