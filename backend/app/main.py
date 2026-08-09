@@ -18,8 +18,10 @@ if _SENTRY_DSN:
         pass  # sentry_sdk non installé, on continue sans
 
 from contextlib import asynccontextmanager
+from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from app.core.config import settings
 from app.routers import auth, produits, prix, magasins, listes, utilisateurs, ocr, admin_scraper, admin_products, admin_stores, admin_prices
@@ -83,6 +85,13 @@ app.include_router(api_ai.router)
 app.include_router(api_souk.router)
 app.include_router(api_dashboard.router)
 app.include_router(api_notifications.router)
+
+
+# Fichiers statiques — vignettes produit découpées des catalogues.
+# Livrées avec l'image Docker : pas de stockage externe à provisionner.
+_STATIC = Path(__file__).resolve().parent.parent / "static"
+if _STATIC.is_dir():
+    app.mount("/static", StaticFiles(directory=str(_STATIC)), name="static")
 
 
 @app.get("/", tags=["health"])
