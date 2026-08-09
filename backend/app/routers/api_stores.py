@@ -122,18 +122,24 @@ async def get_nearby_stores(
     nearby.sort(key=lambda x: x["distance_km"])
     nearby = nearby[:limit]
 
-    # Comptage produits par magasin (prix actifs)
-    store_ids = [n["store"].id for n in nearby]
-    product_counts: dict[int, int] = {}
-    if store_ids:
+    # Comptage produits par ENSEIGNE, pas par succursale : un prix de catalogue
+    # est national, donc chaque magasin d'une enseigne propose son assortiment.
+    # Compter par store_id afficherait 0 produit sur toutes les succursales
+    # importées depuis OpenStreetMap, qui ne portent aucun prix en propre.
+    enseignes = {n["store"].name for n in nearby}
+    counts_par_enseigne: dict[str, int] = {}
+    if enseignes:
         count_stmt = (
-            select(Price.store_id, func.count(Price.product_id.distinct()).label("cnt"))
-            .where(Price.store_id.in_(store_ids))
-            .group_by(Price.store_id)
+            select(Store.name, func.count(Price.product_id.distinct()).label("cnt"))
+            .join(Price, Price.store_id == Store.id)
+            .where(Store.name.in_(enseignes))
+            .group_by(Store.name)
         )
-        cnt_result = await db.execute(count_stmt)
-        for row in cnt_result.all():
-            product_counts[row.store_id] = row.cnt
+        for row in (await db.execute(count_stmt)).all():
+            counts_par_enseigne[row.name] = row.cnt
+    product_counts = {
+        n["store"].id: counts_par_enseigne.get(n["store"].name, 0) for n in nearby
+    }
 
     response = [
         StoreNearby(
