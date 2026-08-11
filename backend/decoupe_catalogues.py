@@ -67,6 +67,22 @@ def decoupe_page(gris: np.ndarray, marge: tuple[int, int, int, int]) -> list[tup
     return boites
 
 
+def decoupe_grille(marge: tuple[int, int, int, int], colonnes: int, rangees: int) -> list[tuple[int, int, int, int]]:
+    """
+    Découpe régulière, pour les catalogues à fond coloré (Atacadão) où la
+    segmentation par gouttières blanches ne fonctionne pas : les vignettes y
+    sont posées sur une grille fixe, on la reproduit directement.
+    """
+    x0, y0, x1, y1 = marge
+    largeur = (x1 - x0) / colonnes
+    hauteur = (y1 - y0) / rangees
+    return [
+        (int(x0 + c * largeur), int(y0 + r * hauteur),
+         int(x0 + (c + 1) * largeur), int(y0 + (r + 1) * hauteur))
+        for r in range(rangees) for c in range(colonnes)
+    ]
+
+
 def planche_contact(page: Image.Image, boites: list, chemin: Path) -> None:
     """Copie de la page avec les vignettes encadrées et numérotées."""
     aperçu = page.copy()
@@ -101,7 +117,12 @@ def main() -> None:
 
             # marge : on écarte l'en-tête et le pied de page du rendu web
             marge = (int(w * 0.06), int(h * 0.10), int(w * 0.95), int(h * 0.90))
-            boites = decoupe_page(gris, marge)
+            if enseigne == "atacadao":
+                # fond vert : pas de gouttière blanche exploitable, grille 3×4
+                marge = (int(w * 0.08), int(h * 0.115), int(w * 0.94), int(h * 0.80))
+                boites = decoupe_grille(marge, colonnes=3, rangees=4)
+            else:
+                boites = decoupe_page(gris, marge)
             if not boites:
                 continue
 
