@@ -52,6 +52,14 @@ ELECTROMENAGER = (
     # machine », qui est bien un consommable.
     "machine a cafe", "machine espresso", "machine a panini", "machine a coudre",
     "machine a pain", "expresso", "capsules fakir", "gaufrier", "sorbetiere",
+    "apple watch", "smartwatch", "plaque gaz", "plaque de cuisson", "barbecue",
+    "trancheuse", "yaourtiere", "deshydrateur", "purificateur", "humidificateur",
+)
+
+# Restes d'extraction : mentions de mise en page prises pour des produits.
+FRAGMENTS = (
+    "a partir de", "economie", "promotionnel", "prix promotion", "au lieu de",
+    "offre speciale", "des le", "soit", "valeur", "remise",
 )
 
 VAISSELLE_RANGEMENT = (
@@ -93,15 +101,28 @@ def sans_accents(texte: str) -> str:
 
 
 def contient_mot(texte: str, termes: tuple[str, ...]) -> bool:
-    """Recherche sur mots entiers — « semoule » ne doit pas matcher « moule »."""
+    """
+    Recherche sur mots entiers, pluriel toléré.
+
+    La limite de mot est indispensable — sans elle « seMOULE » matcherait
+    « moule ». Mais une limite stricte fait rater les pluriels : « pyjama »
+    ne reconnaîtrait pas « pyjamaS ». D'où le « s » final optionnel.
+    """
     for terme in termes:
-        if re.search(rf"(?<![a-z]){re.escape(terme)}(?![a-z])", texte):
+        # Pluriel possible sur CHAQUE mot : « serviettes hygiéniques » doit
+        # être reconnu par « serviette hygiénique ».
+        motif = r"\s+".join(re.escape(mot) + "s?" for mot in terme.split())
+        if re.search(rf"(?<![a-z]){motif}(?![a-z])", texte):
             return True
     return False
 
 
 def categorie(nom: str) -> str:
     s = sans_accents(nom)
+    # Un nom qui se réduit à une mention de mise en page n'est pas un produit.
+    depouille = re.sub(r"[^a-z ]", " ", s).strip()
+    if any(depouille.startswith(f) or depouille == f for f in FRAGMENTS):
+        return "fragment"
     if contient_mot(s, ELECTROMENAGER):
         return "electromenager"
     if contient_mot(s, HYGIENE_ENTRETIEN):
@@ -117,7 +138,7 @@ async def main() -> None:
     appliquer = "--appliquer" in sys.argv
     garder_hygiene = "--garder-hygiene" in sys.argv
 
-    hors_perimetre = {"electromenager", "vaisselle", "deco"}
+    hors_perimetre = {"electromenager", "vaisselle", "deco", "fragment"}
     if not garder_hygiene:
         hors_perimetre.add("hygiene")
 
