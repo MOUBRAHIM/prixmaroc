@@ -199,14 +199,44 @@ def texte_utile(html: str) -> str:
     return "\n".join(garde)[:14000]
 
 
+class CollecteInterrompue(Exception):
+    """Panne qui condamne toute la collecte : inutile d'essayer les suivants."""
+
+
 async def extraire(claude: anthropic.AsyncAnthropic, texte: str) -> list[dict]:
-    """Demande à Claude la liste structurée des produits."""
-    reponse = await claude.messages.create(
-        model=MODELE,
-        max_tokens=4096,
-        system=CONSIGNE,
-        messages=[{"role": "user", "content": texte}],
-    )
+    """
+    Demande à Claude la liste structurée des produits.
+
+    Cette fonction tourne dans une tâche programmée sans personne devant
+    l'écran : une panne doit se lire dans le journal, pas s'y écraser en
+    trace d'exception. On distingue deux cas — ce qui ne concerne qu'un
+    catalogue (on passe au suivant) et ce qui condamne toute l'exécution
+    (crédit épuisé, clé révoquée : on s'arrête en le disant).
+    """
+    try:
+        reponse = await claude.messages.create(
+            model=MODELE,
+            max_tokens=4096,
+            system=CONSIGNE,
+            messages=[{"role": "user", "content": texte}],
+        )
+    except anthropic.AuthenticationError:
+        raise CollecteInterrompue(
+            "clé API refusée — vérifier ANTHROPIC_API_KEY dans .env"
+        ) from None
+    except anthropic.PermissionDeniedError:
+        raise CollecteInterrompue("clé API sans accès au modèle") from None
+    except anthropic.BadRequestError as e:
+        if "credit balance" in str(e).lower():
+            raise CollecteInterrompue(
+                "crédit API épuisé — recharger sur console.anthropic.com "
+                "(Plans & Billing)"
+            ) from None
+        return []                      # requête invalide : ce catalogue seul
+    except (anthropic.RateLimitError, anthropic.APIStatusError,
+            anthropic.APIConnectionError):
+        return []                      # incident passager : catalogue suivant
+
     brut = reponse.content[0].text.strip()
     brut = re.sub(r"^```(?:json)?|```$", "", brut, flags=re.MULTILINE).strip()
     try:
@@ -349,7 +379,13 @@ async def main() -> None:
                     print(f"  [VIDE]   {enseigne:14} aucun prix dans la page")
                     continue
 
-                donnees = await extraire(claude, texte)
+                try:
+                    donnees = await extraire(claude, texte)
+                except CollecteInterrompue as arret:
+                    print(f"\n[ARRÊT] {arret}")
+                    await engine.dispose()
+                    sys.exit(1)
+
                 gardes, rejets = valider(donnees, enseigne, url)
                 total_gardes += len(gardes)
                 total_rejets += rejets
