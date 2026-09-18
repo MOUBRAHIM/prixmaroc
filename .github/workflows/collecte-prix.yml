@@ -1,0 +1,87 @@
+#
+# Collecte hebdomadaire des prix.
+#
+# Lit les catalogues d'enseignes publiés en ligne et en extrait les produits
+# et leurs prix. Sans cette tâche, les prix de l'application se figent à leur
+# date d'import — et une comparaison de prix périmés fait perdre de l'argent
+# à qui lui fait confiance.
+#
+# Deux secrets sont nécessaires, à déclarer dans
+# Settings → Secrets and variables → Actions :
+#   ANTHROPIC_API_KEY  clé de la console Anthropic, compte crédité
+#   DATABASE_URL       chaîne de connexion PostgreSQL de production
+#
+# Tant qu'ils manquent, la tâche s'arrête proprement en le disant : elle ne
+# laisse ni trace d'exception ni écriture partielle en base.
+#
+name: Collecte des prix
+
+on:
+  schedule:
+    # Lundi 4 h UTC, soit 5 h à Casablanca : les catalogues de la semaine
+    # sont en ligne et personne n'utilise l'application.
+    - cron: "0 4 * * 1"
+  workflow_dispatch:
+    inputs:
+      simuler:
+        description: "Simuler sans rien écrire en base"
+        type: boolean
+        required: false
+        default: true
+      catalogues:
+        description: "Nombre de catalogues à traiter"
+        required: false
+        default: "20"
+
+permissions:
+  contents: read
+
+# Deux collectes simultanées écriraient les mêmes relevés : on n'en veut qu'une.
+concurrency:
+  group: collecte-prix
+  cancel-in-progress: false
+
+jobs:
+  collecter:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Installer les dépendances
+        working-directory: backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Vérifier que les secrets sont présents
+        env:
+          CLE: ${{ secrets.ANTHROPIC_API_KEY }}
+          BASE: ${{ secrets.DATABASE_URL }}
+        run: |
+          manquants=""
+          [ -z "$CLE" ]  && manquants="$manquants ANTHROPIC_API_KEY"
+          [ -z "$BASE" ] && manquants="$manquants DATABASE_URL"
+          if [ -n "$manquants" ]; then
+            echo "::error::Secret(s) absent(s) :$manquants — à déclarer dans Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+          echo "Secrets présents."
+
+      - name: Collecter
+        working-directory: backend
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          # Une exécution manuelle simule par défaut ; la tâche programmée écrit.
+          MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.simuler == true && '--simuler' || '--appliquer' }}
+          NOMBRE: ${{ inputs.catalogues || '20' }}
+        run: |
+          echo "Mode : $MODE · $NOMBRE catalogues"
+          python collecte_prix.py $MODE --catalogues=$NOMBRE

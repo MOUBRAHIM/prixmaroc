@@ -1,0 +1,59 @@
+#
+# Réveil de l'API — empêche l'hébergement de mettre le serveur en veille.
+#
+# L'offre gratuite de Render endort un service inactif au bout d'un quart
+# d'heure. Le réveil suivant prend près d'une minute : mesuré à 56 s. Un
+# utilisateur qui ouvre l'application dans un rayon de supermarché n'attend
+# pas une minute devant un écran vide — il la désinstalle.
+#
+# On appelle donc /health toutes les dix minutes. Le dépôt étant public, les
+# minutes GitHub Actions sont gratuites et sans plafond.
+#
+# Deux limites connues, assumées :
+#   - GitHub décale fréquemment les tâches programmées de cinq à quinze
+#     minutes aux heures chargées. Une veille occasionnelle reste possible ;
+#     l'appel suivant la lève.
+#   - GitHub désactive les tâches programmées d'un dépôt sans commit depuis
+#     soixante jours. Le bouton « Run workflow » les réactive.
+#
+name: Réveil de l'API
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+# Rien n'est écrit dans le dépôt : lecture seule.
+permissions:
+  contents: read
+
+concurrency:
+  group: reveil-api
+  cancel-in-progress: true
+
+jobs:
+  appeler:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+
+    steps:
+      - name: Appeler /health
+        run: |
+          debut=$(date +%s)
+          code=$(curl -sS --max-time 120 --retry 2 --retry-delay 15 \
+                      -o /dev/null -w "%{http_code}" \
+                      "https://prixmaroc-api-07el.onrender.com/health")
+          duree=$(( $(date +%s) - debut ))
+
+          echo "HTTP $code en ${duree}s"
+
+          if [ "$code" != "200" ]; then
+            echo "::error::L'API a répondu $code — service en panne ou redéployé."
+            exit 1
+          fi
+
+          # Au-delà de vingt secondes, le serveur s'était rendormi : le rythme
+          # d'appel ne suffit plus, ou GitHub a décalé la tâche.
+          if [ "$duree" -gt 20 ]; then
+            echo "::warning::Réveil lent (${duree}s) — le service s'était endormi."
+          fi
