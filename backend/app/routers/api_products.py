@@ -9,15 +9,19 @@ GET /api/products/{id}/price-history Historique 30/90 jours
 from __future__ import annotations
 
 import math
+import re
+import unicodedata
 from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import func, select, or_, and_, desc
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.db import get_db
 from app.models import Category, Price, Product, Store
+from app.services import open_food_facts
 from app.schemas.api import (
     CompareProduct,
     CompareResponse,
@@ -339,6 +343,97 @@ async def compare_products(
 # ──────────────────────────────────────────────────────────────────────────────
 # GET /api/products/{id}
 # ──────────────────────────────────────────────────────────────────────────────
+
+# ──────────────────────────────────────────────────────────────────────────────
+# GET /api/products/barcode/{code}
+#
+# Déclaré AVANT /{product_id} : sans cela, « barcode » serait d'abord confronté
+# à la route du détail produit.
+# ──────────────────────────────────────────────────────────────────────────────
+
+@router.get("/barcode/{code}", response_model=ProductDetail,
+            summary="Produit par code-barres")
+async def get_by_barcode(
+    code: str,
+    city: str | None = Query(None, description="Filtrer les prix par ville"),
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Cherche un produit par son code-barres, en base d'abord.
+
+    Si la référence est inconnue, on interroge Open Food Facts et on crée la
+    fiche : nom, marque, photo officielle et valeurs nutritionnelles arrivent
+    d'un coup. C'est la seule voie qui enrichit le catalogue sans travail
+    manuel — y compris pour les produits que les utilisateurs ajoutent.
+
+    Le produit créé n'a encore aucun prix : c'est attendu. L'application
+    invite alors l'utilisateur à saisir celui qu'il a sous les yeux.
+    """
+    chiffres = "".join(c for c in code if c.isdigit())
+    if not 8 <= len(chiffres) <= 14:
+        raise HTTPException(status_code=422, detail="Code-barres invalide")
+
+    produit = (await db.execute(
+        select(Product).where(Product.barcode == chiffres)
+    )).scalar_one_or_none()
+
+    if produit is None:
+        fiche = await open_food_facts.chercher(chiffres)
+        if fiche is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Produit inconnu. Vous pouvez l'ajouter manuellement.",
+            )
+        produit = await _creer_depuis_fiche(fiche, db)
+
+    elif not produit.is_active:
+        raise HTTPException(status_code=404, detail="Produit introuvable")
+
+    prix = await _latest_price_per_store(produit.id, city, db)
+    return await _build_product_detail(produit, prix, db)
+
+
+async def _creer_depuis_fiche(fiche, db: AsyncSession) -> Product:
+    """
+    Crée le produit à partir d'une fiche Open Food Facts.
+
+    Un même code-barres peut être scanné par deux utilisateurs au même
+    instant : la contrainte d'unicité tranche, et on relit la ligne gagnante
+    plutôt que de renvoyer une erreur à celui qui a perdu la course.
+    """
+    base = re.sub(r"[^a-z0-9]+", "-", unicodedata.normalize("NFKD", fiche.nom.lower())
+                  .encode("ascii", "ignore").decode()).strip("-")[:180]
+
+    produit = Product(
+        name=fiche.nom,
+        slug=f"{base or 'produit'}-{fiche.code}",
+        barcode=fiche.code,
+        brand=fiche.marque,
+        unit_size=fiche.format,
+        image_url=fiche.photo,
+        calories=fiche.calories,
+        proteins=fiche.proteines,
+        lipids=fiche.lipides,
+        carbs=fiche.glucides,
+        fibers=fiche.fibres,
+        nutriscore=fiche.nutriscore,
+        is_active=True,
+    )
+    db.add(produit)
+    try:
+        await db.commit()
+    except IntegrityError:
+        await db.rollback()
+        existant = (await db.execute(
+            select(Product).where(Product.barcode == fiche.code)
+        )).scalar_one_or_none()
+        if existant is None:
+            raise
+        return existant
+
+    await db.refresh(produit)
+    return produit
+
 
 @router.get("/{product_id}", response_model=ProductDetail, summary="Détail d'un produit")
 async def get_product(

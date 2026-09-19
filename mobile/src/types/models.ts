@@ -435,6 +435,12 @@ export type AccueilStackParamList = {
   Alertes: undefined;
 };
 
+export type ScannerStackParamList = {
+  ScanTicket: undefined;
+  ScanCodeBarres: undefined;
+  ProduitDetail: { productId: number; productName: string };
+};
+
 // ─── Prix communautaires du souk ──────────────────────────────────────────────
 
 export type SoukCategory = 'legumes' | 'fruits' | 'viande' | 'poisson';

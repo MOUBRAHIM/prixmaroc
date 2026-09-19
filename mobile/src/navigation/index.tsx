@@ -29,6 +29,7 @@ import type {
   ComparerStackParamList,
   ListesStackParamList,
   ProfilStackParamList,
+  ScannerStackParamList
 } from '@types/models';
 
 // ── Écrans Auth ───────────────────────────────────────────────────────────────
@@ -44,6 +45,7 @@ import SoukPricesScreen from '@screens/Accueil/SoukPricesScreen';
 
 // ── Écrans Scanner ────────────────────────────────────────────────────────────
 import ScannerScreen from '@screens/Scanner/ScannerScreen';
+import ScanCodeBarresScreen from '@screens/Scanner/ScanCodeBarresScreen';
 
 // ── Écrans Comparer ───────────────────────────────────────────────────────────
 import RechercheScreen from '@screens/Comparer/RechercheScreen';
@@ -72,6 +74,7 @@ const AccueilStack = createNativeStackNavigator<AccueilStackParamList>();
 const ComparerStack = createNativeStackNavigator<ComparerStackParamList>();
 const ListesStack = createNativeStackNavigator<ListesStackParamList>();
 const ProfilStack = createNativeStackNavigator<ProfilStackParamList>();
+const ScannerStack = createNativeStackNavigator<ScannerStackParamList>();
 
 // ── NavigationRef global — utilisé par le service de notifications ────────────
 
@@ -181,7 +184,17 @@ function AccueilNavigator() {
 }
 
 function ScannerNavigator() {
-  return <ScannerScreen />;
+  return (
+    <ScannerStack.Navigator screenOptions={headerOptions}>
+      {/* Le ticket reste l'entrée par défaut : il porte l'historique d'achats. */}
+      <ScannerStack.Screen name="ScanTicket" component={ScannerScreen}
+        options={{ headerShown: false }} />
+      <ScannerStack.Screen name="ScanCodeBarres" component={ScanCodeBarresScreen}
+        options={{ title: 'Scanner un produit' }} />
+      <ScannerStack.Screen name="ProduitDetail" component={ProduitDetailScreen}
+        options={({ route }) => ({ title: route.params.productName })} />
+    </ScannerStack.Navigator>
+  );
 }
 
 function ComparerNavigator() {

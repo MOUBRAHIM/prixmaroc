@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CameraView, useCameraPermissions } from 'expo-camera';
+import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { OcrAPI } from '@services/api';
 import { C } from '@constants/colors';
@@ -451,6 +452,7 @@ const ResultsView: React.FC<{ scan: OcrScan; onReset: () => void }> = ({
 // ── Main scanner screen ───────────────────────────────────────────────────────
 
 const ScannerScreen: React.FC = () => {
+  const navigation = useNavigation<any>();
   const [permission, requestPermission] = useCameraPermissions();
   const [isCapturing, setIsCapturing] = useState(false);
   const [captureStep, setCaptureStep] = useState<CaptureStep>(null);
@@ -544,6 +546,17 @@ const ScannerScreen: React.FC = () => {
             <Text style={styles.topHintSub}>
               Alignez votre ticket dans le cadre
             </Text>
+            {/* Les deux scans partagent la caméra : on bascule d'ici plutôt
+                que d'ajouter un sixième onglet. */}
+            <TouchableOpacity
+              style={styles.basculeScan}
+              onPress={() => navigation.navigate('ScanCodeBarres')}
+              accessibilityRole="button"
+              accessibilityLabel="Scanner le code-barres d'un produit"
+            >
+              <Ionicons name="barcode-outline" size={17} color="#FFFFFF" />
+              <Text style={styles.basculeScanTexte}>Scanner un code-barres</Text>
+            </TouchableOpacity>
           </View>
 
           {/* Scan frame row */}
@@ -653,6 +666,13 @@ const styles = StyleSheet.create({
   },
   topHint: { color: '#ffffff', fontSize: 16, fontWeight: '700' },
   topHintSub: { color: 'rgba(255,255,255,0.65)', fontSize: 13 },
+  basculeScan: {
+    flexDirection: 'row', alignItems: 'center', alignSelf: 'center', gap: 7,
+    marginTop: 14, paddingVertical: 9, paddingHorizontal: 16,
+    borderRadius: 100, borderWidth: 1, borderColor: 'rgba(255,255,255,0.45)',
+    backgroundColor: 'rgba(255,255,255,0.12)',
+  },
+  basculeScanTexte: { color: '#FFFFFF', fontSize: 13.5, fontWeight: '600' },
 
   overlayMiddle: { flexDirection: 'row', height: FRAME_SIZE },
   overlaySide: { flex: 1, backgroundColor: 'rgba(0,0,0,0.62)' },

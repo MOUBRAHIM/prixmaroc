@@ -222,6 +222,24 @@ export const ProductsAPI = {
     return data;
   },
 
+  /**
+   * Produit correspondant à un code-barres.
+   *
+   * Si la référence est inconnue de la base, le serveur interroge Open Food
+   * Facts et crée la fiche — photo officielle et valeurs nutritionnelles
+   * comprises. `null` signifie que personne ne connaît ce code : à
+   * l'appelant de proposer une saisie manuelle.
+   */
+  getByBarcode: async (code: string): Promise<ProductDetail | null> => {
+    try {
+      const { data } = await api.get<ProductDetail>(`/api/products/barcode/${code}`);
+      return data;
+    } catch (e) {
+      if (axios.isAxiosError(e) && e.response?.status === 404) return null;
+      throw e;
+    }
+  },
+
   getPriceHistory: async (id: number, days: 30 | 90 = 30): Promise<PriceHistory> => {
     const { data } = await api.get<PriceHistory>(`/api/products/${id}/price-history`, {
       params: { days },
