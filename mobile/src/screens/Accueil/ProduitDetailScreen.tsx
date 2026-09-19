@@ -18,6 +18,7 @@ import Svg, { Polyline, Circle, Line, Text as SvgText } from 'react-native-svg';
 import { ProductsAPI, AlertsAPI } from '@services/api';
 import ProductVisual from '@components/ui/ProductVisual';
 import { C } from '@constants/colors';
+import { libelleFraicheur, niveauFraicheur } from '@utils/fraicheur';
 import type { PriceInStore } from '@types/models';
 
 // ProduitDetailScreen est utilisé dans AccueilStack ET ComparerStack
@@ -392,6 +393,7 @@ const spark = StyleSheet.create({
 
 const StoreCard: React.FC<{ price: PriceInStore; isFirst: boolean }> = ({ price, isFirst }) => {
   const effectivePrice = price.promo_price ?? price.price;
+  const niveau = niveauFraicheur(price.recorded_at);
   return (
     <View style={[styles.storeCard, isFirst && styles.storeCardBest]}>
       {isFirst && (
@@ -404,7 +406,16 @@ const StoreCard: React.FC<{ price: PriceInStore; isFirst: boolean }> = ({ price,
         <View style={styles.storeInfo}>
           <Text style={styles.storeName}>{price.store_name}</Text>
           {price.store_city ? <Text style={styles.storeCity}>{price.store_city}</Text> : null}
-          <Text style={styles.storeSource}>Via {price.source}</Text>
+          <View style={styles.fraicheurRow}>
+            <Ionicons
+              name={niveau === 'perime' ? 'alert-circle' : 'time-outline'}
+              size={12}
+              color={niveau === 'perime' ? C.promo : C.textMuted}
+            />
+            <Text style={[styles.fraicheurText, niveau === 'perime' && styles.fraicheurPerime]}>
+              {libelleFraicheur(price.recorded_at)}
+            </Text>
+          </View>
         </View>
         <View style={styles.priceBox}>
           {price.is_promo && price.promo_price != null ? (
@@ -766,6 +777,9 @@ const styles = StyleSheet.create({
   storeName: { fontSize: 15, fontWeight: '700', color: '#0B2019' },
   storeCity: { fontSize: 12, color: '#4A5B53', marginTop: 3 },
   storeSource: { fontSize: 11, color: '#8A9A92', marginTop: 2, textTransform: 'capitalize' },
+  fraicheurRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 3 },
+  fraicheurText: { fontSize: 11, color: C.textMuted },
+  fraicheurPerime: { color: C.promo, fontWeight: '600' },
   priceBox: { alignItems: 'flex-end' },
   regularPrice: { fontSize: 20, fontWeight: '800', color: '#0B2019' },
   bestPrice: { color: C.primary },
