@@ -203,6 +203,9 @@ function ComparerNavigator() {
       <ComparerStack.Screen name="Recherche" component={RechercheScreen} options={{ title: 'Comparer les prix' }} />
       <ComparerStack.Screen name="ProduitDetail" component={ProduitDetailScreen}
         options={({ route }) => ({ title: route.params.productName })} />
+      {/* Accessible aussi depuis la recherche : scanner, c'est chercher. */}
+      <ComparerStack.Screen name="ScanCodeBarres" component={ScanCodeBarresScreen}
+        options={{ title: 'Scanner un produit' }} />
       <ComparerStack.Screen name="ComparerPrix" component={ComparerPrixScreen} options={{ title: 'Comparaison' }} />
       <ComparerStack.Screen name="HistoriquePrix" component={HistoriquePrixScreen}
         options={({ route }) => ({ title: `Historique — ${route.params.productName}` })} />

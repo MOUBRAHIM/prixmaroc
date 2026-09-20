@@ -336,9 +336,20 @@ const RechercheScreen: React.FC<Props> = ({ navigation }) => {
             autoCorrect={false}
             autoFocus={false}
           />
-          {query.length > 0 && (
+          {query.length > 0 ? (
             <TouchableOpacity onPress={clearSearch} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
               <Ionicons name="close-circle" size={18} color="#8A9A92" />
+            </TouchableOpacity>
+          ) : (
+            /* Scanner un code-barres est une façon de trouver un produit :
+               sa place est ici, pas seulement derrière l'autorisation caméra. */
+            <TouchableOpacity
+              onPress={() => navigation.navigate('ScanCodeBarres')}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              accessibilityRole="button"
+              accessibilityLabel="Scanner le code-barres d'un produit"
+            >
+              <Ionicons name="barcode-outline" size={20} color={C.primary} />
             </TouchableOpacity>
           )}
         </View>

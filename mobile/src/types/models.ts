@@ -500,6 +500,7 @@ export interface SoukPriceCreate {
 
 export type ComparerStackParamList = {
   Recherche: { query?: string };
+  ScanCodeBarres: undefined;
   ProduitDetail: { productId: number; productName: string };
   ComparerPrix: { productIds: number[] };
   HistoriquePrix: { productId: number; productName: string };
