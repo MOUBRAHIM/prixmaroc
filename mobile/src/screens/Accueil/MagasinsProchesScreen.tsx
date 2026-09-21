@@ -3,7 +3,7 @@
  * Carte interactive des magasins proches + optimisation de parcours
  */
 
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useMemo } from 'react';
 import {
   View,
   Text,
@@ -21,6 +21,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MapView, { Marker, Circle, PROVIDER_DEFAULT } from '@components/Maps';
+import CarteWeb, { type MagasinCarte } from '@components/CarteWeb';
 import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
 import { useQuery } from '@tanstack/react-query';
@@ -347,7 +348,7 @@ const MagasinsProchesScreen: React.FC<Props> = () => {
   }, []);
 
   // UI state — sans clé Google Maps, on démarre (et on reste) sur la liste
-  const [viewMode, setViewMode] = useState<ViewMode>(MAPS_ENABLED ? 'carte' : 'liste');
+  const [viewMode, setViewMode] = useState<ViewMode>(MAPS_ENABLED || Platform.OS === 'web' ? 'carte' : 'liste');
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
 
   // Route state
@@ -422,6 +423,24 @@ const MagasinsProchesScreen: React.FC<Props> = () => {
   const isFallbackMode = needsFallback && storesFallback.length > 0;
   const stores = isFallbackMode ? storesFallback : storesPrimary;
 
+  // Carte web : on ne transmet que des magasins géolocalisés, déjà colorés.
+  const magasinsCarte = useMemo<MagasinCarte[]>(
+    () => stores
+      .filter((s) => s.latitude !== null && s.longitude !== null)
+      .map((s) => ({
+        id: s.id,
+        nom: s.name,
+        ville: s.city,
+        lat: s.latitude as number,
+        lng: s.longitude as number,
+        couleur: markerColor(s.product_count),
+        nbProduits: s.product_count,
+        selectionne: selectedIds.has(s.id),
+      })),
+    [stores, selectedIds],
+  );
+  const [focusWeb, setFocusWeb] = useState<{ lat: number; lng: number; nonce: number } | null>(null);
+
   // ── Selection helpers ─────────────────────────────────────────────────────────
 
   const toggleStore = useCallback((id: number) => {
@@ -434,6 +453,10 @@ const MagasinsProchesScreen: React.FC<Props> = () => {
   }, []);
 
   const focusStore = useCallback((store: StoreNearby) => {
+    if (Platform.OS === 'web' && store.latitude !== null && store.longitude !== null) {
+      setFocusWeb({ lat: store.latitude, lng: store.longitude, nonce: Date.now() });
+      return;
+    }
     if (
       viewMode === 'carte' &&
       store.latitude !== null &&
@@ -536,7 +559,16 @@ const MagasinsProchesScreen: React.FC<Props> = () => {
   return (
     <View style={styles.root}>
       {/* ── MAP (montée uniquement si une clé Google Maps est présente) ── */}
-      {!MAPS_ENABLED ? (
+      {Platform.OS === 'web' ? (
+        <View style={styles.map}>
+          <CarteWeb
+            centre={{ lat, lng }}
+            magasins={magasinsCarte}
+            onBasculer={toggleStore}
+            focus={focusWeb}
+          />
+        </View>
+      ) : !MAPS_ENABLED ? (
         <View style={[styles.map, styles.mapFallback]}>
           <Ionicons name="map-outline" size={40} color={MARKER_GRAY} />
           <Text style={styles.mapFallbackText}>
