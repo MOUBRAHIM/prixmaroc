@@ -1981,8 +1981,10 @@ class ListGenerator:
                 await add_item(role, kws, qty, reason, hs, alimentaire=alim)
 
         # ── Résumé ─────────────────────────────────────────────────────────────
+        # Seules les vraies enseignes sont conseillées : « Souk (prix
+        # indicatif) » n'est pas un magasin où aller.
         stores_mentioned = list(dict.fromkeys(
-            i.store_name for i in items if i.store_name
+            i.store_name for i in items if i.store_name and i.product_id is not None
         ))[:3]
         n = household_size
         type_label = {

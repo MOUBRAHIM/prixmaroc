@@ -86,7 +86,9 @@ const GeneratedItemCard: React.FC<{ item: GeneratedListItem }> = ({ item }) => (
     </View>
     <View style={styles.itemRight}>
       <Text style={styles.itemQty}>× {item.quantity}{item.unit ? ` ${item.unit}` : ''}</Text>
-      <Text style={styles.itemPrice}>{item.estimated_price_total.toFixed(2)} MAD</Text>
+      <Text style={styles.itemPrice}>
+        {item.product_id == null ? '≈ ' : ''}{item.estimated_price_total.toFixed(2)} MAD
+      </Text>
     </View>
   </View>
 );
@@ -191,14 +193,22 @@ const NouvelleListeIAScreen: React.FC<Props> = ({ navigation }) => {
     grouped.forEach(({ cat, items: catItems, subtotal }) => {
       text += `*${cat}*\n`;
       catItems.forEach((i) => {
-        const qty = i.quantity > 1 ? ` × ${i.quantity}${i.unit ? ` ${i.unit}` : ''}` : '';
+        // Une quantité avec unité (« 0.5 kg ») se montre toujours : sans elle,
+        // « Ail » ne dit pas combien acheter.
+        const qty = i.quantity !== 1 || i.unit
+          ? ` × ${i.quantity}${i.unit ? ` ${i.unit}` : ''}` : '';
         const promo = i.is_promo ? ' 🏷️' : '';
-        text += `  • ${i.product_name}${qty} — ${i.estimated_price_total.toFixed(2)} MAD${promo}\n`;
+        // « ≈ » : prix indicatif du souk, pas un prix relevé en magasin.
+        const approx = i.product_id == null ? '≈ ' : '';
+        text += `  • ${i.product_name}${qty} — ${approx}${i.estimated_price_total.toFixed(2)} MAD${promo}\n`;
       });
       text += `  _Sous-total : ${subtotal.toFixed(2)} MAD_\n\n`;
     });
 
     text += `💰 *Total estimé : ${generatedList.total_estimated.toFixed(2)} MAD*\n`;
+    if (generatedList.items.some((i) => i.product_id == null)) {
+      text += `_≈ prix indicatif du souk ou de l'épicerie, à vérifier sur place_\n`;
+    }
     if (generatedList.recommended_stores.length > 0) {
       text += `🏪 Conseillé : ${generatedList.recommended_stores.join(', ')}\n`;
     }
