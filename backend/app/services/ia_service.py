@@ -30,6 +30,16 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import settings
 from app.models import Category, OcrScan, Price, Product, Store, User
 from app.models.ocr_scan import ScanStatus
+from app.services.liste_courses import (
+    candidat_acceptable,
+    contenance,
+    contient_mot,
+    nombre_d_unites,
+    normaliser,
+    prix_de_reference,
+    prix_indicatif,
+    quantite_vendue,
+)
 
 logger = logging.getLogger("prixmaroc.ia")
 
@@ -891,7 +901,7 @@ class ListGenerator:
                 # ── Eau ───────────────────────────────────────────────────────
                 (
                     "Eau minérale",
-                    ["bahia 1.5", "sidi ali 1.5", "bahia", "sidi ali", "eau min"],
+                    ["bahia 1.5", "sidi ali 1.5", "bahia", "sidi ali", "eau min", "eau"],
                     3.5,
                     "Hydratation — 1,5 à 2 L/jour recommandés par l'OMS, "
                     "essentiel au transport des nutriments et à la thermorégulation",
@@ -919,7 +929,7 @@ class ListGenerator:
                     "Œufs frais",
                     ["oeufs frais catégorie a 12", "oeufs frais catégorie a 6",
                      "oeufs frais"],
-                    1.0,
+                    0.36,
                     "Protéines complètes (13 g/100 g, score DIAAS = 1,0) + fer + zinc "
                     "+ vit A + vit D + choline (cerveau) + lécithine "
                     "— incontournables : œuf sur le plat, chakchouka, briouates, kefta ; "
@@ -939,8 +949,8 @@ class ListGenerator:
                 (
                     "Huile végétale (cuisson)",
                     ["huile de tournesol lesieur", "huile de soja cristal",
-                     "huile tournesol", "huile soja"],
-                    0.25,
+                     "huile tournesol", "huile soja", "huile"],
+                    0.35,
                     "Acides gras essentiels oméga-6 (linoléique) + vit E antioxydante "
                     "+ vit K — cuisson quotidienne de tous les plats marocains",
                     1,
@@ -1010,7 +1020,7 @@ class ListGenerator:
                 (
                     "Herbes fraîches (persil/coriandre)",
                     ["persil coriandre", "persil"],
-                    0.3,
+                    0.15,
                     "Vit K (550 µg/100 g) + vit C + fer + folates + chlorophylle "
                     "— garniture obligatoire de tous les plats marocains, chermoula pour poissons",
                     1,
@@ -1018,8 +1028,8 @@ class ListGenerator:
                 # ── Tomates & condiments de base ───────────────────────────────
                 (
                     "Concentré de tomates",
-                    ["double concentré tomate", "concentré tomate"],
-                    0.5,
+                    ["double concentré tomate", "concentré tomate", "concentré de tomate"],
+                    0.15,
                     "Lycopène concentré (10× tomate fraîche) + vit C + fer + zinc "
                     "— base de coloration et saveur de tous les tajines et plats en sauce",
                     1,
@@ -1027,7 +1037,7 @@ class ListGenerator:
                 (
                     "Harissa",
                     ["harissa aïcha forte", "harissa aïcha", "harissa"],
-                    0.5,
+                    0.05,
                     "Vit C (100 mg/100 g) + bêta-carotène + fer + capsaïcine anti-inflammatoire "
                     "— condiment national emblématic, accompagne poissons, kefta, merguez",
                     1,
@@ -1036,7 +1046,7 @@ class ListGenerator:
                 (
                     "Cumin (épice n°1 marocaine)",
                     ["cumin moulu 100g", "cumin"],
-                    0.05,
+                    0.012,
                     "Fer (66 mg/100 g) + manganèse + calcium + antioxydants thymol "
                     "— épice indispensable de kefta, merguez, chermoula, tagines ; "
                     "favorise la digestion, propriétés antifongiques",
@@ -1045,7 +1055,7 @@ class ListGenerator:
                 (
                     "Paprika doux",
                     ["paprika doux 100g", "paprika"],
-                    0.05,
+                    0.012,
                     "Vit C + capsanthin (antioxydant) + vit A + vit E "
                     "— colorant et arôme naturel de tous les plats marocains rouges "
                     "(chermoula, kefta, poulet rôti)",
@@ -1054,8 +1064,8 @@ class ListGenerator:
                 # ── Thé — rituel quotidien ─────────────────────────────────────
                 (
                     "Thé vert / Atay (polyphénols)",
-                    ["atay touareg", "thé atay", "atay", "lipton yellow label", "thé lipton"],
-                    0.3,
+                    ["atay touareg", "thé atay", "atay", "lipton yellow label", "thé lipton", "thé"],
+                    0.06,
                     "Polyphénols EGCG antioxydants + fluorure + théine — le thé à la menthe "
                     "(atay) est servi 3 à 5 fois/jour : accueil des invités, pause famille, "
                     "rituel social marocain fondamental ; réduit cholestérol et stress",
@@ -1074,7 +1084,7 @@ class ListGenerator:
                 (
                     "Sardines en boîte (protéines + oméga-3)",
                     ["sardines aïcha", "sardines saupiquet", "sardine"],
-                    1.5,
+                    0.2,
                     "Protéines complètes (25 g/100 g) + oméga-3 DHA/EPA (2 g/boîte) "
                     "+ calcium (351 mg) + vit D + sélénium "
                     "— protéine conservée la plus consommée au Maroc ; sandwich sardines, "
@@ -1123,7 +1133,7 @@ class ListGenerator:
                 (
                     "Pâtes alimentaires",
                     ["spaghetti safra", "penne safra", "spaghetti", "penne"],
-                    0.5,
+                    0.3,
                     "Glucides complexes + protéines végétales (13 g/100 g) + vit B "
                     "— repas économique et rapide, bases de plats en sauce tomate marocaine",
                     2,
@@ -1172,7 +1182,7 @@ class ListGenerator:
                     "Yaourt (probiotiques)",
                     ["yaourt nature danone", "yaourt activia", "yaourt danone",
                      "yaourt", "activia"],
-                    1.0,
+                    0.5,
                     "Probiotiques lactobacilles + calcium (180 mg/pot) + protéines (5 g) + vit B2 "
                     "— flore intestinale, digestion, collation enfants et adultes ; "
                     "aussi base du raïb marocain (lait caillé épaissi)",
@@ -1182,7 +1192,7 @@ class ListGenerator:
                 (
                     "Thon en boîte",
                     ["thon en boîte", "thon saupiquet", "thon"],
-                    0.5,
+                    0.15,
                     "Protéines maigres (26 g/100 g) + oméga-3 + sélénium (76 µg) + vit B12 "
                     "— salade niçoise marocaine, sandwich, pizza marocaine (matlou farci)",
                     2,
@@ -1191,7 +1201,7 @@ class ListGenerator:
                 (
                     "Beurre / Margarine (tartines & msemen)",
                     ["beurre président", "margarine fleurial", "beurre", "margarine"],
-                    0.2,
+                    0.1,
                     "Acides gras + vit A (rétinol) + vit D + vit E "
                     "— tartines du petit-déjeuner, msemen beurré (crêpe feuilletée marocaine), "
                     "briouates, cornes de gazelle ; énergie concentrée pour enfants",
@@ -1202,7 +1212,7 @@ class ListGenerator:
                     "Fromage fondu / Fromage blanc",
                     ["fromage blanc danone", "fromage raibi jaouda", "fromage fondu",
                      "vache qui rit", "kiri"],
-                    0.5,
+                    0.2,
                     "Calcium (200 mg/portion) + protéines + vit A + vit B12 "
                     "— tartines avec pain ou biscottes, goûters enfants ; "
                     "La Vache Qui Rit est un produit emblématique depuis des décennies au Maroc",
@@ -1278,7 +1288,7 @@ class ListGenerator:
                 (
                     "Ras el Hanout (mélange d'épices marocain)",
                     ["ras el hanout", "ras el hanout 100g"],
-                    0.05,
+                    0.012,
                     "Complexe de 27+ épices (cumin, gingembre, curcuma, cannelle, poivre, "
                     "cardamome, noix de muscade…) — indispensable pour tagine d'agneau, "
                     "pastilla, briouates, couscous royal ; patrimoine culinaire marocain",
@@ -1287,7 +1297,7 @@ class ListGenerator:
                 (
                     "Gingembre moulu",
                     ["gingembre moulu 100g", "gingembre moulu"],
-                    0.05,
+                    0.012,
                     "Gingérols anti-inflammatoires + shogaols + antioxydants + vit B6 "
                     "— épice fondamentale de tous les tagines marocains : poulet-citron-olives, "
                     "kefta, harira ; propriétés digestives reconnues",
@@ -1297,7 +1307,7 @@ class ListGenerator:
                 (
                     "Olives beldi marinées",
                     ["olives beldi marinées", "olives beldi", "olives"],
-                    0.3,
+                    0.15,
                     "Acides gras mono-insaturés (oléique 73 %) + vit E + polyphénols + fer "
                     "— présentes sur chaque table marocaine au petit-déjeuner et déjeuner, "
                     "accompagnent khobz, sardines et fromage ; tradition millénaire berbère",
@@ -1308,7 +1318,7 @@ class ListGenerator:
                     "Confiture (tartines du matin)",
                     ["confiture abricot aïcha", "confiture fraise aïcha",
                      "confiture aïcha", "confiture"],
-                    0.2,
+                    0.1,
                     "Sucres + vit C (si abricot) + pectines (fibres) "
                     "— tartinée sur khobz ou pain de mie avec beurre : "
                     "petit-déjeuner traditionnel marocain (ftor) ; confiture d'abricot marocaine réputée",
@@ -1319,7 +1329,7 @@ class ListGenerator:
                     "Café (nhar ou nous-nous)",
                     ["nescafé classic", "café soluble nescafé", "nescafé",
                      "café amara", "café soluble"],
-                    0.15,
+                    0.05,
                     "Magnésium + polyphénols chlorogéniques + caféine (stimulant cognitif) "
                     "— le 'nous-nous' (moitié café, moitié lait chaud) est servi dans chaque café "
                     "marocain dès 6h ; boisson du matin dans de nombreux foyers",
@@ -1330,12 +1340,12 @@ class ListGenerator:
                     "Cuisses de poulet halal (tagine)",
                     ["cuisses de poulet halal", "poulet entier halal",
                      "blancs de poulet halal", "cuisses de poulet"],
-                    0.75,
+                    0.5,
                     "Protéines complètes (25 g/100 g) + vit B3/B6/B12 + zinc + sélénium "
                     "— viande la plus consommée au Maroc (60 % de la viande totale) ; "
                     "tagine poulet-citrons-olives, djaj mqalli, pastilla, rfissa ; "
                     "moins cher que la viande rouge, faible en graisses saturées",
-                    2,
+                    1,
                 ),
 
                 # ══════════════════════════════════════════════════════════════
@@ -1400,7 +1410,7 @@ class ListGenerator:
                 (
                     "Curcuma (anti-inflammatoire)",
                     ["curcuma 100g", "curcuma"],
-                    0.05,
+                    0.012,
                     "Curcumine anti-inflammatoire + antioxydant puissant + vit B6 "
                     "— colore les plats en jaune (tagine de poulet, riz au safran, mrouzia) ; "
                     "propriétés anticancéreuses reconnues par l'OMS",
@@ -1409,7 +1419,7 @@ class ListGenerator:
                 (
                     "Cannelle moulue (pâtisseries & plats sucrés-salés)",
                     ["cannelle moulue 100g", "cannelle"],
-                    0.05,
+                    0.012,
                     "Cinnamaldéhyde antioxydant + régulateur glycémique + manganèse "
                     "— ingrédient clé de la pastilla (pigeon-amandes-sucre-cannelle), "
                     "cornes de gazelle, seffa, mrouzia, thé à la cannelle hivernal",
@@ -1418,7 +1428,7 @@ class ListGenerator:
                 (
                     "Safran (or rouge marocain)",
                     ["safran filaments", "safran"],
-                    0.05,
+                    0.0005,
                     "Safranal (antidépresseur naturel, aussi efficace que la fluoxétine) "
                     "+ crocine antioxydante + vit B2 + manganèse "
                     "— Maroc (Taliouine) = 2ᵉ producteur mondial ; tagine de poulet au safran, "
@@ -1428,7 +1438,7 @@ class ListGenerator:
                 (
                     "Poivre noir",
                     ["poivre noir moulu 100g", "poivre noir"],
-                    0.05,
+                    0.012,
                     "Pipérine (augmente biodisponibilité curcumine ×2000%) + antioxydants "
                     "— condiment universel, essentiel avec le cumin dans la chermoula et kefta",
                     3,
@@ -1448,17 +1458,17 @@ class ListGenerator:
                     "Viande hachée / Kefta bœuf halal",
                     ["viande hachée bœuf", "kefta bœuf halal",
                      "viande hachée", "kefta bœuf", "kefta"],
-                    0.4,
+                    0.25,
                     "Protéines complètes (20 g/100 g) + fer héminique (2,5 mg) "
                     "+ zinc (4,8 mg) + vit B12 + créatine "
                     "— kefta grillé (brochettes), kefta mkaouara (œufs en sauce tomate), "
                     "farce briouates et cigares ; plat familial hebdomadaire",
-                    3,
+                    2,
                 ),
                 (
                     "Merguez bœuf halal (week-end)",
                     ["merguez bœuf halal", "merguez bœuf", "merguez"],
-                    0.2,
+                    0.1,
                     "Protéines (18 g/100 g) + fer héminique + zinc + épices (cumin, paprika, harissa) "
                     "— grillées au barbecue le vendredi/weekend, accompagnées de pain et harissa ; "
                     "plat convivial familial marocain",
@@ -1467,7 +1477,7 @@ class ListGenerator:
                 (
                     "Agneau halal (couscous du vendredi & méchoui)",
                     ["côtelettes agneau", "escalope de veau", "agneau"],
-                    0.2,
+                    0.15,
                     "Protéines (25 g/100 g) + acides gras mono-insaturés + zinc (4,2 mg) "
                     "+ fer héminique + vit B12 + sélénium "
                     "— couscous royal du vendredi avec légumes (plat symbolique), méchoui, "
@@ -1477,7 +1487,7 @@ class ListGenerator:
                 (
                     "Dinde hachée / Foie de volaille",
                     ["dinde hachée halal", "foie de poulet", "dinde hachée"],
-                    0.3,
+                    0.15,
                     "Protéines maigres (28 g/100 g) + fer héminique (foie : 8 mg) "
                     "+ vit A (foie : 4 968 µg/100 g) + vit B12 "
                     "— alternative économique au bœuf, kefta de dinde, msemen farci ; "
@@ -1630,15 +1640,45 @@ class ListGenerator:
             # non souhaité ("Foie de Poulet") parce qu'il est moins cher.
             used_pids: set[int] = set()
 
-            def find_best_match(keywords: list[str]) -> dict | None:
+            def find_best_match(keywords: list[str], role: str,
+                                alimentaire: bool = True,
+                                besoin: float | None = None) -> dict | None:
+                # Mots entiers, et famille du produit compatible avec le besoin :
+                # sans cela « bahia » (eau) attrapait « Couscous Bahia », et
+                # « sucre » attrapait « Biscuits sans sucre ».
+                if not alimentaire:
+                    # Hygiène : toutes marques confondues, l'article le moins
+                    # cher. La préférence de marque du plan menait à 240 MAD de
+                    # lessive par mois.
+                    tous = [
+                        info for pid, info in best_prices.items()
+                        if pid not in used_pids
+                        and any(contient_mot(info["product"].name, kw) for kw in keywords)
+                        and candidat_acceptable(info["product"].name, role, keywords, False)
+                    ]
+                    return min(tous, key=lambda x: x["price"]) if tous else None
                 for kw in keywords:
-                    kw_l = kw.lower()
                     candidates = [
                         info for pid, info in best_prices.items()
-                        if pid not in used_pids and kw_l in info["product"].name.lower()
+                        if pid not in used_pids
+                        and contient_mot(info["product"].name, kw)
+                        and candidat_acceptable(info["product"].name, role, keywords, alimentaire)
                     ]
-                    if candidates:
+                    if not candidates:
+                        continue
+                    if not alimentaire:
+                        # Hygiène : on compte en articles, donc prix à l'article.
                         return min(candidates, key=lambda x: x["price"])
+                    if besoin:
+                        # Pas de format démesuré : un sac de 5 kg de dattes pour
+                        # un besoin de 1,7 kg n'est pas une économie.
+                        raisonnables = [
+                            x for x in candidates
+                            if (contenance(x["product"].name, x["product"].unit_size) or 0) <= besoin * 2
+                        ]
+                        candidates = raisonnables or candidates
+                    return min(candidates, key=lambda x: prix_de_reference(
+                        x["price"], x["product"].name, x["product"].unit_size))
                 return None
 
             # ── Table de catégorisation par mots-clés dans le nom produit ────────
@@ -1790,27 +1830,92 @@ class ListGenerator:
                 ("waterwipes",       "👶 Bébé"),
             ]
 
+            # Familles génériques, consultées en dernier et en mots entiers.
+            GENERIC_RULES: list[tuple[str, str]] = [
+                ("eau", "💧 Eau & Boissons"), ("jus", "💧 Eau & Boissons"),
+                ("sucre", "🍵 Thé, Café & Sucre"), ("thé", "🍵 Thé, Café & Sucre"),
+                ("café", "🍵 Thé, Café & Sucre"), ("huile", "🫒 Huiles & Corps gras"),
+                ("concentré", "🧂 Épices & Condiments"), ("sel", "🧂 Épices & Condiments"),
+                ("pommes", "🍊 Fruits frais"), ("poisson", "🐟 Poissons & Fruits de mer"),
+                ("ail", "🥦 Légumes & Herbes"),
+            ]
+
             def resolve_category(product_name: str) -> str:
-                n = product_name.lower()
+                # Les règles d'origine sont des débuts de mots (« eau min »,
+                # « pommes 1kg ») : comparaison par sous-chaîne, sans accents.
+                n = normaliser(product_name)
                 for fragment, cat in CATEGORY_RULES:
-                    if fragment in n:
+                    if normaliser(fragment) in n:
+                        return cat
+                for mot, cat in GENERIC_RULES:
+                    if contient_mot(product_name, mot):
                         return cat
                 return "🛒 Divers"
 
+            def categorie_de(role: str, product_name: str) -> str:
+                # Le besoin sait ce qu'il est ; le nom du produit peut tromper
+                # (une marque partagée entre une eau et un couscous).
+                cat = resolve_category(role.split("(")[0])
+                return cat if cat != "🛒 Divers" else resolve_category(product_name)
+
+            async def add_fresh_item(role: str, raw_kg: float, reasoning: str) -> bool:
+                """
+                Besoin qu'aucun catalogue de supermarché ne couvre (légumes,
+                fruits, viande, œufs, sucre, sel) : ligne au prix indicatif,
+                présentée comme telle, plutôt qu'un trou silencieux dans la liste.
+                """
+                nonlocal total
+                ref = prix_indicatif(role)
+                if ref is None:
+                    return False
+                qty = quantite_vendue(raw_kg, ref)
+                line_total = round(ref.prix * qty, 2)
+                if budget_max and (total + line_total) > budget_max:
+                    # Budget serré : la moitié plutôt que rien — un foyer modeste
+                    # achète moins de poulet, il ne s'en passe pas.
+                    qty = quantite_vendue(raw_kg / 2, ref)
+                    line_total = round(ref.prix * qty, 2)
+                    if total + line_total > budget_max:
+                        return False
+                lieu = "Souk / marché" if ref.rayon == "souk" else "Épicerie de quartier"
+                items.append(GeneratedListItem(
+                    product_name=ref.nom,
+                    product_id=None,
+                    quantity=qty,
+                    unit=ref.unite,
+                    estimated_price_unit=ref.prix,
+                    estimated_price_total=line_total,
+                    store_id=None,
+                    store_name=f"{lieu} (prix indicatif)",
+                    is_promo=False,
+                    reasoning=f"{reasoning} — prix indicatif, absent des catalogues : à vérifier sur place.",
+                    category=categorie_de(role, ref.nom),
+                ))
+                total += line_total
+                return True
+
             # Ajoute un article depuis un blueprint entry
             async def add_item(
+                role: str,
                 keywords: list[str],
                 qty_per_pers_week: float,
                 reasoning: str,
                 hs: int,
+                alimentaire: bool = True,
             ) -> bool:
                 nonlocal total
-                match = find_best_match(keywords)
-                if not match:
-                    return False
-                pid = match["product"].id
                 raw = qty_per_pers_week * hs * weeks
-                qty = max(1, round(raw))
+                match = find_best_match(keywords, role, alimentaire, besoin=raw)
+                if not match:
+                    return await add_fresh_item(role, raw, reasoning) if alimentaire else False
+                pid = match["product"].id
+                # Le besoin est en kg ou en litres : on le convertit en nombre
+                # d'articles selon leur contenance (17 L de lait = 3 packs de 6 L,
+                # pas 17 packs).
+                # L'hygiène se compte en articles (un tube, un flacon) : convertir
+                # « 1,3 tube » par la contenance donnerait 11 dentifrices de 125 ml.
+                qty = (nombre_d_unites(raw, match["product"].name, match["product"].unit_size)
+                       if alimentaire else max(1, round(raw)))
                 unit_price = match["price"]
                 line_total = round(unit_price * qty, 2)
                 # Si dépasse le budget : tenter demi-quantité
@@ -1832,22 +1937,48 @@ class ListGenerator:
                     store_name=sname,
                     is_promo=match["is_promo"],
                     reasoning=reasoning,
-                    category=resolve_category(match["product"].name),
+                    category=categorie_de(role, match["product"].name),
                 ))
                 total += line_total
                 return True
 
-            # ── Ajouter les articles nutritionnels (filtrés par tier) ──────────
-            for _role, kws, qty_base, reason, priority in NUTRITION_PLAN:
-                if priority <= tier:
-                    await add_item(kws, qty_base, reason, household_size)
+            # ── Ordre de remplissage ──────────────────────────────────────────
+            # Le budget est consommé dans l'ordre : ce qui vient en dernier est
+            # ce qui saute. Dans l'ordre du plan, la viande arrivait après le
+            # pain de mie et le fromage fondu — avec 2 000 MAD pour deux
+            # personnes, la liste n'en contenait plus du tout.
+            ORDRE: list[tuple[int, tuple[str, ...]]] = [
+                (1, ("Eau minérale", "Farine", "Levure", "Sel fin", "Huile végétale",
+                     "Sucre", "Thé vert", "Pois chiches", "Lentilles", "Tomates fraîches",
+                     "Oignons", "Pommes de terre", "Carottes", "Ail", "Herbes fraîches",
+                     "Concentré", "Harissa", "Cumin", "Paprika", "Lait", "Œufs frais")),
+                (2, ("Cuisses de poulet", "Viande hachée", "Sardines fraîches",
+                     "Sardines en boîte")),
+                (3, ("Savon", "Lessive", "Liquide vaisselle")),
+                (4, ("Courgettes", "Poivrons", "Aubergines", "Légumes verts",
+                     "Oranges", "Bananes")),
+                (5, ("Couscous", "Riz", "Pâtes", "Vermicelles", "Haricots blancs",
+                     "Fèves", "Pain de mie")),
+            ]
 
-            # ── Ajouter les articles hygiène (filtrés par tier) ───────────────
+            def rang(role: str, alimentaire: bool) -> int:
+                for n, prefixes in ORDRE:
+                    if role.startswith(prefixes):
+                        return n
+                return 6 if alimentaire else 7
+
             # Pour l'hygiène, la quantité est modulée par hyg_factor (semi-linéaire)
             eff_hs = max(1, round(household_size * hyg_factor / max(household_size, 1)))
-            for _role, kws, qty_base, reason, priority in HYGIENE_PLAN:
-                if priority <= tier:
-                    await add_item(kws, qty_base, reason, eff_hs)
+            a_traiter = [
+                (rang(role, True), role, kws, qty, reason, household_size, True)
+                for role, kws, qty, reason, priority in NUTRITION_PLAN if priority <= tier
+            ] + [
+                (rang(role, False), role, kws, qty, reason, eff_hs, False)
+                for role, kws, qty, reason, priority in HYGIENE_PLAN if priority <= tier
+            ]
+            # Tri stable : à rang égal, l'ordre du plan est conservé.
+            for _, role, kws, qty, reason, hs, alim in sorted(a_traiter, key=lambda t: t[0]):
+                await add_item(role, kws, qty, reason, hs, alimentaire=alim)
 
         # ── Résumé ─────────────────────────────────────────────────────────────
         stores_mentioned = list(dict.fromkeys(
