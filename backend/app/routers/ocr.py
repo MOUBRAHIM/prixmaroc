@@ -15,6 +15,7 @@ from app.models.store import Store
 from app.models.ocr_scan import ScanStatus
 from app.schemas import OcrScanRead
 from app.services.ocr_service import OcrService
+from app.services import ticket_vision
 from app.utils.deps import get_current_user, get_optional_user
 from app.utils.cache import cache
 
@@ -76,14 +77,48 @@ async def scan_receipt(
     await db.commit()
     await db.refresh(scan)
 
-    # ── Pipeline OCR ─────────────────────────────────────────────────────────
+    # ── Lecture du ticket ────────────────────────────────────────────────────
+    # Un modèle de vision d'abord : Tesseract rendait « PAIN DE MIE 12,00 » en
+    # « PANDEMIE 1200 » et mettait 47 s. Il reste le secours quand la clé
+    # manque ou que l'appel échoue.
     try:
-        # Load product catalog from DB for better fuzzy matching
-        catalog_result = await db.execute(select(Product.name).limit(500))
-        catalog = [row[0] for row in catalog_result.fetchall() if row[0]]
+        result = None
+        ticket = await ticket_vision.lire(image_data, file.content_type)
+        if ticket is not None:
+            result = {
+                "store": {
+                    "name": ticket.magasin,
+                    "chain": None,
+                    "display": ticket.magasin,
+                },
+                "date": ticket.date_achat.isoformat() if ticket.date_achat else None,
+                "items": [
+                    {
+                        "name": a.nom,
+                        "normalized_name": a.nom,
+                        "quantity": a.quantite,
+                        "unit_price": a.prix_unitaire,
+                        "total_price": a.prix_total,
+                        "match_confidence": None,
+                    }
+                    for a in ticket.articles
+                ],
+                "subtotal": None,
+                "total": ticket.total,
+                "currency": "MAD",
+                "item_count": len(ticket.articles),
+                "raw_text": "",
+                "moteur": "vision",
+            }
 
-        service = OcrService(catalog=catalog or None)
-        result = service.process_image(image_data, file.content_type)
+        if result is None:
+            # Load product catalog from DB for better fuzzy matching
+            catalog_result = await db.execute(select(Product.name).limit(500))
+            catalog = [row[0] for row in catalog_result.fetchall() if row[0]]
+
+            service = OcrService(catalog=catalog or None)
+            result = service.process_image(image_data, file.content_type)
+            result["moteur"] = "tesseract"
 
         scan.raw_text = result["raw_text"]
         scan.parsed_data = result

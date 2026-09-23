@@ -457,12 +457,16 @@ const ScannerScreen: React.FC = () => {
   const [isCapturing, setIsCapturing] = useState(false);
   const [captureStep, setCaptureStep] = useState<CaptureStep>(null);
   const [scanResult, setScanResult] = useState<OcrScan | null>(null);
+  // Alert.alert ne fait rien sur le web : l'échec s'affichait nulle part et
+  // l'écran revenait à la capture sans explication.
+  const [erreur, setErreur] = useState<string | null>(null);
   const cameraRef = useRef<CameraView>(null);
 
   const handleCapture = async () => {
     if (!cameraRef.current || isCapturing) return;
     setIsCapturing(true);
     setScanResult(null);
+    setErreur(null);
     setCaptureStep('photo');
 
     try {
@@ -485,7 +489,7 @@ const ScannerScreen: React.FC = () => {
           ?.detail ??
         (err as Error)?.message ??
         'Une erreur est survenue lors du scan.';
-      Alert.alert('Erreur de scan', msg);
+      setErreur(msg);
     } finally {
       setIsCapturing(false);
       setCaptureStep(null);
@@ -577,6 +581,12 @@ const ScannerScreen: React.FC = () => {
 
           {/* Bottom controls */}
           <View style={styles.overlayBottom}>
+            {erreur ? (
+              <View style={styles.erreurBandeau}>
+                <Ionicons name="alert-circle-outline" size={20} color="#FFFFFF" />
+                <Text style={styles.erreurTexte}>{erreur}</Text>
+              </View>
+            ) : null}
             {isCapturing ? (
               <CaptureProgress step={captureStep} />
             ) : (
@@ -666,6 +676,12 @@ const styles = StyleSheet.create({
   },
   topHint: { color: '#ffffff', fontSize: 16, fontWeight: '700' },
   topHintSub: { color: 'rgba(255,255,255,0.65)', fontSize: 13 },
+  erreurBandeau: {
+    flexDirection: 'row', alignItems: 'center', gap: 10,
+    backgroundColor: 'rgba(178,31,36,0.95)', borderRadius: 14,
+    paddingVertical: 12, paddingHorizontal: 16, marginBottom: 14,
+  },
+  erreurTexte: { color: '#FFFFFF', fontSize: 14, fontWeight: '600', flexShrink: 1 },
   basculeScan: {
     flexDirection: 'row', alignItems: 'center', alignSelf: 'center', gap: 7,
     marginTop: 14, paddingVertical: 9, paddingHorizontal: 16,
