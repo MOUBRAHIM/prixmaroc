@@ -21,8 +21,13 @@ import math
 import re
 import unicodedata
 from dataclasses import dataclass
+from functools import lru_cache
 
 
+# Ces fonctions sont appelées des centaines de milliers de fois par liste
+# (chaque besoin × chaque mot-clé × chaque produit) : sans cache, la
+# génération passait de deux à vingt secondes.
+@lru_cache(maxsize=8192)
 def normaliser(texte: str) -> str:
     """Minuscules, sans accents, « œ » développé : « Œufs » → « oeufs »."""
     t = texte.lower().replace("œ", "oe").replace("æ", "ae")
@@ -39,11 +44,17 @@ def contient_mot(nom: str, terme: str) -> bool:
     traité par le contrôle de type — mais surtout « ail » ne reconnaît plus
     « travail », ni « eau » « chapeau ».
     """
-    n, t = normaliser(nom), normaliser(terme).strip()
+    t = normaliser(terme).strip()
     if not t:
         return False
-    motif = r"\s+".join(re.escape(m) + "(?:s|x)?" for m in t.split())
-    return re.search(rf"(?<![a-z0-9]){motif}(?![a-z])", n) is not None
+    return _motif(t).search(normaliser(nom)) is not None
+
+
+@lru_cache(maxsize=2048)
+def _motif(terme_normalise: str) -> re.Pattern[str]:
+    """Motif « mots entiers, pluriel toléré », compilé une seule fois."""
+    corps = r"\s+".join(re.escape(m) + "(?:s|x)?" for m in terme_normalise.split())
+    return re.compile(rf"(?<![a-z0-9]){corps}(?![a-z])")
 
 
 # Noms de familles de produits. Un candidat qui porte une famille absente du
@@ -80,6 +91,7 @@ def familles_de(texte: str) -> set[str]:
     return {f for f in FAMILLES if contient_mot(texte, f)}
 
 
+@lru_cache(maxsize=8192)
 def famille_principale(nom: str) -> str | None:
     """
     Famille du nom principal : la première qui apparaît.
@@ -91,8 +103,7 @@ def famille_principale(nom: str) -> str | None:
     n = normaliser(nom)
     meilleure: tuple[int, str] | None = None
     for f in FAMILLES:
-        motif = r"\s+".join(re.escape(m) + "(?:s|x)?" for m in f.split())
-        m = re.search(rf"(?<![a-z0-9]){motif}(?![a-z])", n)
+        m = _motif(f).search(n)
         if m and (meilleure is None or m.start() < meilleure[0]):
             meilleure = (m.start(), f)
     return meilleure[1] if meilleure else None

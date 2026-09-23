@@ -293,6 +293,8 @@ export interface PurchaseHabit {
 }
 
 export interface GeneratedListItem {
+  /** Date du relevé de prix ; absente pour un prix indicatif. */
+  price_date?: string | null;
   product_name: string;
   product_id: number | null;
   quantity: number;

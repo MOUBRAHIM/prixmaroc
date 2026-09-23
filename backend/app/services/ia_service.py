@@ -98,6 +98,8 @@ class GeneratedListItem:
     is_promo: bool
     reasoning: str
     category: str = "Autres"              # Catégorie d'affichage (regroupement)
+    # Date du relevé de prix. None pour un prix indicatif, qui n'est pas un relevé.
+    price_date: str | None = None
 
 
 @dataclass
@@ -529,7 +531,15 @@ class ListGenerator:
             return None
         try:
             import anthropic
-            self._client = anthropic.AsyncAnthropic(api_key=settings.ANTHROPIC_API_KEY)
+            # Une seule tentative, et un délai court : l'utilisateur attend
+            # devant son écran, et une clé sans crédit ne se débloquera pas en
+            # réessayant. Mieux vaut basculer tout de suite sur la génération
+            # locale que faire patienter une minute pour le même résultat.
+            self._client = anthropic.AsyncAnthropic(
+                api_key=settings.ANTHROPIC_API_KEY,
+                max_retries=0,
+                timeout=25.0,
+            )
             return self._client
         except ImportError:
             logger.warning("[IA] Package 'anthropic' non installé — mode fallback activé")
@@ -1594,43 +1604,51 @@ class ListGenerator:
                 ),
             ]
 
-            # ── Charger tous les produits actifs avec meilleur prix ───────────
-            subq = (
-                select(
-                    Price.product_id,
-                    sqlfunc.min(Price.price).label("min_price"),
-                    Price.store_id,
-                    Price.is_promo,
-                )
-                .group_by(Price.product_id, Price.store_id, Price.is_promo)
-                .subquery()
-            )
-            stmt = (
-                select(Product, subq.c.min_price, subq.c.store_id, subq.c.is_promo)
-                .join(subq, subq.c.product_id == Product.id)
-                .where(Product.is_active == True)
-            )
-            rows = (await db.execute(stmt)).all()
+            # ── Charger tous les produits actifs avec leur meilleur prix ──────
+            # Une seule ligne par produit, choisie par la base : ramener toutes
+            # les combinaisons produit × magasin puis trier en Python coûtait
+            # une vingtaine de secondes. Le prix retenu est celui que le client
+            # paie réellement, promotion comprise.
+            from types import SimpleNamespace
 
-            # Index product_id → meilleur prix toutes sources confondues
-            best_prices: dict[int, dict] = {}
-            for prod, min_price, store_id, is_promo in rows:
-                if prod.id not in best_prices or float(min_price) < best_prices[prod.id]["price"]:
-                    best_prices[prod.id] = {
-                        "product": prod,
-                        "price": float(min_price),
-                        "store_id": store_id,
-                        "is_promo": bool(is_promo),
-                    }
+            from sqlalchemy import text as sqltext
 
-            # Cache noms de magasins
-            store_name_cache: dict[int, str] = {}
+            lignes = (await db.execute(sqltext("""
+                SELECT DISTINCT ON (pr.product_id)
+                       pr.product_id,
+                       LEAST(pr.price, COALESCE(pr.promo_price, pr.price))::float AS prix,
+                       pr.store_id,
+                       pr.is_promo,
+                       p.name,
+                       p.unit_size,
+                       p.unit,
+                       pr.recorded_at::date AS releve
+                  FROM prices pr
+                  JOIN products p ON p.id = pr.product_id
+                 WHERE p.is_active
+                 ORDER BY pr.product_id,
+                          LEAST(pr.price, COALESCE(pr.promo_price, pr.price)) ASC
+            """))).all()
+
+            best_prices: dict[int, dict] = {
+                pid: {
+                    "product": SimpleNamespace(id=pid, name=nom, unit_size=format_, unit=unite),
+                    "price": float(prix),
+                    "store_id": sid,
+                    "is_promo": bool(promo),
+                    "releve": releve.isoformat() if releve else None,
+                }
+                for pid, prix, sid, promo, nom, format_, unite, releve in lignes
+            }
+
+            # Noms des magasins en une requête plutôt qu'un aller-retour chacun.
+            store_name_cache: dict[int, str] = {
+                sid: nom
+                for sid, nom in (await db.execute(select(Store.id, Store.name))).all()
+            }
 
             async def get_store_name(sid: int) -> str:
-                if sid not in store_name_cache:
-                    s = await db.get(Store, sid)
-                    store_name_cache[sid] = s.name if s else "?"
-                return store_name_cache[sid]
+                return store_name_cache.get(sid, "?")
 
             # Cherche le produit le moins cher correspondant aux keywords.
             # Les keywords sont traités par ordre de priorité décroissante :
@@ -1938,6 +1956,7 @@ class ListGenerator:
                     is_promo=match["is_promo"],
                     reasoning=reasoning,
                     category=categorie_de(role, match["product"].name),
+                    price_date=match.get("releve"),
                 ))
                 total += line_total
                 return True

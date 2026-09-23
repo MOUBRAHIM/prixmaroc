@@ -16,6 +16,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
 import { IAAPI, ListsAPI } from '@services/api';
 import { C } from '@constants/colors';
+import { libelleFraicheur, niveauFraicheur } from '@utils/fraicheur';
 import type { ListesStackParamList, ListType, GeneratedList, GeneratedListItem } from '@types/models';
 
 type Props = NativeStackScreenProps<ListesStackParamList, 'NouvelleListeIA'>;
@@ -77,6 +78,15 @@ const GeneratedItemCard: React.FC<{ item: GeneratedListItem }> = ({ item }) => (
           <Ionicons name="storefront-outline" size={11} color="#8A9A92" /> {item.store_name}
         </Text>
       )}
+      {item.price_date ? (
+        <Text style={[
+          styles.itemStore,
+          niveauFraicheur(item.price_date) === 'perime' && styles.itemPerime,
+        ]}>
+          {niveauFraicheur(item.price_date) === 'perime' ? '⚠️ ' : ''}
+          {libelleFraicheur(item.price_date)}
+        </Text>
+      ) : null}
       {item.is_promo && (
         <View style={styles.promoBadge}><Text style={styles.promoBadgeText}>PROMO</Text></View>
       )}
@@ -497,6 +507,7 @@ const styles = StyleSheet.create({
   itemLeft: { flex: 1 },
   itemName: { fontSize: 14, fontWeight: '700', color: '#0B2019', marginBottom: 3 },
   itemStore: { fontSize: 12, color: '#8A9A92', marginBottom: 3 },
+  itemPerime: { color: '#C1272D', fontWeight: '600' },
   promoBadge: {
     alignSelf: 'flex-start', backgroundColor: '#FBEDEC', borderRadius: 4,
     paddingHorizontal: 5, paddingVertical: 1, marginBottom: 3,

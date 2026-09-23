@@ -64,6 +64,7 @@ class GeneratedListItemOut(BaseModel):
     is_promo: bool
     reasoning: str
     category: str = "🛒 Divers"
+    price_date: str | None = None
 
 
 class GeneratedListOut(BaseModel):
@@ -183,6 +184,7 @@ def _list_to_out(gl: GeneratedList) -> GeneratedListOut:
                 is_promo=i.is_promo,
                 reasoning=i.reasoning,
                 category=i.category,
+                price_date=i.price_date,
             )
             for i in gl.items
         ],
