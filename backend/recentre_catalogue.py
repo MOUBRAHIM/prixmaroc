@@ -54,6 +54,9 @@ ELECTROMENAGER = (
     "machine a pain", "expresso", "capsules fakir", "gaufrier", "sorbetiere",
     "apple watch", "smartwatch", "plaque gaz", "plaque de cuisson", "barbecue",
     "trancheuse", "yaourtiere", "deshydrateur", "purificateur", "humidificateur",
+    # « four » seul écarterait les « petits fours », qui sont des biscuits.
+    "mini four", "four electrique", "plaque chauffante", "moulin a cafe",
+    "brosse a dents electrique", "robot menager",
 )
 
 # Restes d'extraction : mentions de mise en page prises pour des produits.
@@ -71,7 +74,11 @@ VAISSELLE_RANGEMENT = (
     "organiseur", "chariot", "etagere", "rack", "cintre", "cintres",
     "louche", "spatule", "passoire", "rape", "moule", "bocal", "bocaux",
     "soupiere", "ramequin", "essoreuse", "planche a decouper", "tajine",
-    "balai", "serpilliere", "raclette", "pelle",
+    "balai", "serpilliere", "raclette", "pelle", "couscoussier", "menagere",
+    "brosse", "ustensile",
+    # Matière : aucun aliment ne s'appelle « inox ». C'est ce mot, et non
+    # « brochette », qui distingue les piques à brochettes des brochettes de bœuf.
+    "inox",
 )
 
 DECO_TEXTILE = (
@@ -81,7 +88,7 @@ DECO_TEXTILE = (
     "chemise", "chaussette", "peignoir", "bonnet", "echarpe", "cadre",
     "miroir", "vase", "bougie", "lampe", "guirlande", "decoration",
     "horloge", "tableau", "valise", "velo", "halteres", "jouet", "puzzle",
-    "poupee", "trottinette", "ballon",
+    "poupee", "trottinette", "ballon", "pistolet", "peluche",
 )
 
 # Zone grise : consommables non alimentaires du quotidien.
