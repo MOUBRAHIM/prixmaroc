@@ -50,6 +50,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
 from app.core.config import settings
+from app.services.reponse_claude import texte_de
 from recentre_catalogue import categorie
 
 engine = create_async_engine(settings.DATABASE_URL, echo=False, pool_pre_ping=True)
@@ -237,7 +238,7 @@ async def extraire(claude: anthropic.AsyncAnthropic, texte: str) -> list[dict]:
             anthropic.APIConnectionError):
         return []                      # incident passager : catalogue suivant
 
-    brut = reponse.content[0].text.strip()
+    brut = texte_de(reponse)
     brut = re.sub(r"^```(?:json)?|```$", "", brut, flags=re.MULTILINE).strip()
     try:
         donnees = json.loads(brut)

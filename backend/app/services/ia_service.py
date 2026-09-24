@@ -30,6 +30,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import settings
 from app.models import Category, OcrScan, Price, Product, Store, User
 from app.models.ocr_scan import ScanStatus
+from app.services.reponse_claude import texte_de
 from app.services.liste_courses import (
     candidat_acceptable,
     contenance,
@@ -736,7 +737,7 @@ class ListGenerator:
                 system=CLAUDE_SYSTEM_PROMPT,
                 messages=[{"role": "user", "content": user_message}],
             )
-            raw_response = message.content[0].text
+            raw_response = texte_de(message)
             logger.debug(f"[IA] Réponse Claude brute ({len(raw_response)} chars)")
 
             parsed = self._parse_claude_response(raw_response)

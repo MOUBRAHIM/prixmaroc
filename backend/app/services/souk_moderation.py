@@ -21,6 +21,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
+from app.services.reponse_claude import texte_de
 from app.models.souk_price import SoukCategory, SoukPrice, SoukStatus
 
 logger = logging.getLogger(__name__)
@@ -80,6 +81,7 @@ async def _claude_judgment(
         return None
     try:
         import anthropic
+
         client = anthropic.AsyncAnthropic(api_key=settings.ANTHROPIC_API_KEY)
         ctx = f"médiane récente du quartier : {median:.2f} MAD" if median else "aucun historique"
         prompt = (
@@ -96,7 +98,7 @@ async def _claude_judgment(
             messages=[{"role": "user", "content": prompt}],
         )
         import json
-        raw = msg.content[0].text.strip()
+        raw = texte_de(msg)
         start, end = raw.find("{"), raw.rfind("}")
         data = json.loads(raw[start:end + 1])
         verdict = str(data.get("verdict", "")).lower()

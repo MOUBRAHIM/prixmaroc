@@ -27,6 +27,7 @@ from datetime import date
 import anthropic
 
 from app.core.config import settings
+from app.services.reponse_claude import texte_de
 
 log = logging.getLogger(__name__)
 
@@ -166,7 +167,7 @@ async def lire(image: bytes, mime_type: str) -> Ticket | None:
         log.warning("Lecture Vision indisponible : %s", type(e).__name__)
         return None
 
-    brut = reponse.content[0].text.strip()
+    brut = texte_de(reponse)
     brut = re.sub(r"^```(?:json)?|```$", "", brut, flags=re.MULTILINE).strip()
     try:
         d = json.loads(brut)
