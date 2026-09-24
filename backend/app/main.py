@@ -101,4 +101,17 @@ async def root():
 
 @app.get("/health", tags=["health"])
 async def health():
-    return {"status": "healthy"}
+    """
+    État du service.
+
+    « ia_configuree » dit si la clé Anthropic est bien arrivée jusqu'au
+    serveur — sans elle, la lecture des tickets retombe sur Tesseract et les
+    listes sont générées localement. On n'expose que sa présence et sa
+    longueur : jamais la valeur, jamais un fragment.
+    """
+    cle = (settings.ANTHROPIC_API_KEY or "").strip()
+    return {
+        "status": "healthy",
+        "ia_configuree": bool(cle),
+        "longueur_cle": len(cle),
+    }
