@@ -566,7 +566,11 @@ class ListGenerator:
         active_promos = await self._fetch_active_promos(db, limit=self.MAX_PROMOS_IN_PROMPT)
 
         # ── Appel Claude ──────────────────────────────────────────────────────
-        client = self._get_client()
+        # Claude travaille à partir des habitudes d'achat. Sans ticket scanné,
+        # il n'a rien à analyser et renvoie une liste vide — alors que le plan
+        # nutritionnel, lui, couvre le foyer entier. On ne l'appelle donc que
+        # lorsqu'il y a un historique à exploiter.
+        client = self._get_client() if habits.habits else None
         if client:
             return await self._generate_via_claude(
                 client, user_id, list_type, budget_max,
@@ -741,10 +745,20 @@ class ListGenerator:
             logger.debug(f"[IA] Réponse Claude brute ({len(raw_response)} chars)")
 
             parsed = self._parse_claude_response(raw_response)
-            return self._build_generated_list(
+            liste = self._build_generated_list(
                 user_id, list_type, budget_max, parsed,
                 model=self.MODEL, fallback=False,
             )
+            # Filet de sécurité : une liste vide est pire qu'une liste
+            # imparfaite. L'utilisateur a demandé des courses, il doit en
+            # recevoir.
+            if not liste.items:
+                logger.warning("[IA] Claude a rendu une liste vide — plan nutritionnel utilisé")
+                return await self._generate_fallback(
+                    user_id, list_type, budget_max, habits, current_prices,
+                    db=db, household_size=household_size,
+                )
+            return liste
 
         except Exception as exc:
             logger.error(f"[IA] Erreur Claude API : {exc}", exc_info=True)
