@@ -516,7 +516,7 @@ class ListGenerator:
       5. Si Claude indisponible → fallback déterministe (top produits récurrents)
     """
 
-    MODEL = "claude-sonnet-4-6"
+    MODEL = "claude-sonnet-5"        # « claude-sonnet-4-6 » n'existe pas : tout échouait en repli
     MAX_HABITS_IN_PROMPT = 30          # Limite pour le contexte Claude
     MAX_PROMOS_IN_PROMPT = 20
 
@@ -1688,13 +1688,24 @@ class ListGenerator:
                         # Hygiène : on compte en articles, donc prix à l'article.
                         return min(candidates, key=lambda x: x["price"])
                     if besoin:
-                        # Pas de format démesuré : un sac de 5 kg de dattes pour
-                        # un besoin de 1,7 kg n'est pas une économie.
-                        raisonnables = [
-                            x for x in candidates
-                            if (contenance(x["product"].name, x["product"].unit_size) or 0) <= besoin * 2
-                        ]
-                        candidates = raisonnables or candidates
+                        # Ni format démesuré (un sac de 5 kg de dattes pour un
+                        # besoin de 1,7 kg), ni format dérisoire : un sachet
+                        # d'assaisonnement de 34 g donnait 38 sachets d'herbes.
+                        raisonnables = []
+                        for x in candidates:
+                            c = contenance(x["product"].name, x["product"].unit_size)
+                            if c is None:
+                                raisonnables.append(x)      # taille inconnue : on laisse sa chance
+                            elif besoin / 12 <= c <= besoin * 2:
+                                raisonnables.append(x)
+                        if not raisonnables:
+                            # Aucun format adapté. Si le besoin a un prix de
+                            # souk, mieux vaut cette ligne honnête que 38
+                            # sachets d'assaisonnement en guise d'herbes.
+                            if prix_indicatif(role) is not None:
+                                return None
+                            raisonnables = candidates
+                        candidates = raisonnables
                     return min(candidates, key=lambda x: prix_de_reference(
                         x["price"], x["product"].name, x["product"].unit_size))
                 return None
