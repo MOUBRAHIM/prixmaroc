@@ -84,6 +84,8 @@ NON_ALIMENTAIRE = (
 LEURRES = (
     "chocolat", "cacao", "beurre de cacahuete", "biscuit", "gaufrette", "cake",
     "noodle", "nouille", "chips", "soupe", "sauce", "bouillon", "snack",
+    # « Thé glacé » est une boisson sucrée, pas le thé vert du quotidien.
+    "glace", "surgele", "aromatise",
 )
 
 
