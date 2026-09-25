@@ -127,7 +127,7 @@ export default function CarteWeb({ centre, magasins, onBasculer, focus }: Props)
       points.push([s.lat, s.lng]);
       const marqueur = L.circleMarker([s.lat, s.lng], {
         radius: s.selectionne ? 12 : 9,
-        color: s.selectionne ? '#0B2019' : '#FFFFFF',
+        color: s.selectionne ? '#14211B' : '#FFFFFF',
         weight: s.selectionne ? 3 : 2,
         fillColor: s.couleur,
         fillOpacity: 0.95,
@@ -177,8 +177,8 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#EAF0E7',
+    backgroundColor: '#F3EDE3',
     paddingHorizontal: 24,
   },
-  voileTexte: { color: '#55655C', fontSize: 14, textAlign: 'center' },
+  voileTexte: { color: '#5A6A61', fontSize: 14, textAlign: 'center' },
 });

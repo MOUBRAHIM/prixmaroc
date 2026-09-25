@@ -48,17 +48,17 @@ const NutriScoreBadge: React.FC<{ score: string }> = ({ score }) => {
       <View style={nutri.badges}>
         {grades.map((g) => {
           const active = g === score.toUpperCase();
-          const color = NUTRISCORE_COLORS[g] ?? '#8A9A92';
+          const color = NUTRISCORE_COLORS[g] ?? '#93A09A';
           return (
             <View
               key={g}
               style={[
                 nutri.badge,
-                { backgroundColor: active ? color : '#E2E9DF' },
+                { backgroundColor: active ? color : '#EBE3D7' },
                 active && nutri.badgeActive,
               ]}
             >
-              <Text style={[nutri.badgeText, { color: active ? '#fff' : '#8A9A92' }]}>{g}</Text>
+              <Text style={[nutri.badgeText, { color: active ? '#fff' : '#93A09A' }]}>{g}</Text>
             </View>
           );
         })}
@@ -116,7 +116,7 @@ const NutritionSection: React.FC<NutritionSectionProps> = ({
           <Ionicons name="nutrition-outline" size={20} color={C.primary} />
           <Text style={nutri.headerTitle}>Infos nutritionnelles</Text>
           {nutriscore && (
-            <View style={[nutri.miniScore, { backgroundColor: NUTRISCORE_COLORS[nutriscore.toUpperCase()] ?? '#8A9A92' }]}>
+            <View style={[nutri.miniScore, { backgroundColor: NUTRISCORE_COLORS[nutriscore.toUpperCase()] ?? '#93A09A' }]}>
               <Text style={nutri.miniScoreText}>{nutriscore.toUpperCase()}</Text>
             </View>
           )}
@@ -124,7 +124,7 @@ const NutritionSection: React.FC<NutritionSectionProps> = ({
         <Ionicons
           name={expanded ? 'chevron-up' : 'chevron-down'}
           size={18}
-          color="#8A9A92"
+          color="#93A09A"
         />
       </TouchableOpacity>
 
@@ -145,13 +145,13 @@ const NutritionSection: React.FC<NutritionSectionProps> = ({
             <NutriBar label="Protéines" value={proteins} unit="g" max={30} color="#2E7D8F" />
           )}
           {lipids != null && (
-            <NutriBar label="Lipides" value={lipids} unit="g" max={40} color="#E8A020" />
+            <NutriBar label="Lipides" value={lipids} unit="g" max={40} color="#F2A93B" />
           )}
           {carbs != null && (
             <NutriBar label="Glucides" value={carbs} unit="g" max={80} color="#7A5AA6" />
           )}
           {fibers != null && (
-            <NutriBar label="Fibres" value={fibers} unit="g" max={15} color="#1E6B4F" />
+            <NutriBar label="Fibres" value={fibers} unit="g" max={15} color="#157155" />
           )}
         </View>
       )}
@@ -166,7 +166,7 @@ const nutri = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#E2E9DF',
+    borderColor: '#EBE3D7',
     overflow: 'hidden',
   },
   header: {
@@ -176,7 +176,7 @@ const nutri = StyleSheet.create({
     padding: 14,
   },
   headerLeft: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  headerTitle: { fontSize: 15, fontWeight: '700', color: '#0B2019' },
+  headerTitle: { fontSize: 15, fontWeight: '700', color: '#14211B' },
   miniScore: {
     width: 22,
     height: 22,
@@ -186,22 +186,22 @@ const nutri = StyleSheet.create({
   },
   miniScoreText: { fontSize: 12, fontWeight: '900', color: '#fff' },
   body: { paddingHorizontal: 14, paddingBottom: 14, gap: 10 },
-  per100g: { fontSize: 11, color: '#8A9A92', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 },
+  per100g: { fontSize: 11, color: '#93A09A', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 },
   caloriesRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: '#F2F6F0',
+    backgroundColor: '#FBF7F1',
     borderRadius: 8,
     padding: 10,
   },
-  caloriesLabel: { fontSize: 14, fontWeight: '600', color: '#3C4F47' },
-  caloriesValue: { fontSize: 18, fontWeight: '800', color: '#C1272D' },
+  caloriesLabel: { fontSize: 14, fontWeight: '600', color: '#47564F' },
+  caloriesValue: { fontSize: 18, fontWeight: '800', color: '#D0402F' },
   barRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  barLabel: { width: 72, fontSize: 12, fontWeight: '600', color: '#3C4F47' },
-  barTrack: { flex: 1, height: 8, backgroundColor: '#E9F0E6', borderRadius: 4, overflow: 'hidden' },
+  barLabel: { width: 72, fontSize: 12, fontWeight: '600', color: '#47564F' },
+  barTrack: { flex: 1, height: 8, backgroundColor: '#F3EDE3', borderRadius: 4, overflow: 'hidden' },
   barFill: { height: 8, borderRadius: 4 },
-  barValue: { width: 48, fontSize: 12, fontWeight: '700', color: '#3C4F47', textAlign: 'right' },
-  label: { fontSize: 13, fontWeight: '700', color: '#3C4F47', marginBottom: 8 },
+  barValue: { width: 48, fontSize: 12, fontWeight: '700', color: '#47564F', textAlign: 'right' },
+  label: { fontSize: 13, fontWeight: '700', color: '#47564F', marginBottom: 8 },
   row: { gap: 8 },
   badges: { flexDirection: 'row', gap: 4 },
   badge: { width: 32, height: 32, borderRadius: 6, alignItems: 'center', justifyContent: 'center' },
@@ -260,7 +260,7 @@ function SparklineChart({ points, minPrice, maxPrice }: SparklineChartProps) {
         y1={avgY}
         x2={SPARK_W - SPARK_PAD_X}
         y2={avgY}
-        stroke="#E2E9DF"
+        stroke="#EBE3D7"
         strokeWidth="1"
         strokeDasharray="4,3"
       />
@@ -275,13 +275,13 @@ function SparklineChart({ points, minPrice, maxPrice }: SparklineChartProps) {
       />
       {/* Points promo en rouge */}
       {coords.filter((c) => c.is_promo).map((c, i) => (
-        <Circle key={i} cx={c.x} cy={c.y} r={3} fill="#D6453F" />
+        <Circle key={i} cx={c.x} cy={c.y} r={3} fill="#D0402F" />
       ))}
       {/* Dernier point mis en avant */}
       <Circle cx={lastPt.x} cy={lastPt.y} r={4} fill={C.primary} stroke="#fff" strokeWidth="1.5" />
       {/* Labels dates */}
-      <SvgText x={SPARK_PAD_X} y={SPARK_H - 2} fontSize={9} fill="#8A9A92">{firstDate}</SvgText>
-      <SvgText x={SPARK_W - SPARK_PAD_X} y={SPARK_H - 2} fontSize={9} fill="#8A9A92" textAnchor="end">{lastDate}</SvgText>
+      <SvgText x={SPARK_PAD_X} y={SPARK_H - 2} fontSize={9} fill="#93A09A">{firstDate}</SvgText>
+      <SvgText x={SPARK_W - SPARK_PAD_X} y={SPARK_H - 2} fontSize={9} fill="#93A09A" textAnchor="end">{lastDate}</SvgText>
       {/* Label dernier prix */}
       <SvgText
         x={Math.min(lastPt.x + 6, SPARK_W - 36)}
@@ -328,8 +328,8 @@ const PriceSparklineSection: React.FC<PriceSparklineProps> = ({ productId }) => 
       <View style={spark.header}>
         <Ionicons name="trending-up-outline" size={16} color={C.primary} />
         <Text style={spark.title}>Évolution 30 jours</Text>
-        <View style={[spark.variationBadge, { backgroundColor: variation > 5 ? '#FBEDEC' : '#EEF6F1' }]}>
-          <Text style={[spark.variationText, { color: variation > 5 ? '#C1272D' : '#0F4C3A' }]}>
+        <View style={[spark.variationBadge, { backgroundColor: variation > 5 ? '#FCEDE9' : '#E4F1EA' }]}>
+          <Text style={[spark.variationText, { color: variation > 5 ? '#D0402F' : '#0E5C44' }]}>
             {variation > 0 ? '+' : ''}{variation.toFixed(1)}%
           </Text>
         </View>
@@ -350,7 +350,7 @@ const PriceSparklineSection: React.FC<PriceSparklineProps> = ({ productId }) => 
           <Text style={spark.legendLabel}>Dernier prix</Text>
         </View>
         <View style={spark.legendItem}>
-          <View style={[spark.legendDot, { backgroundColor: '#D6453F' }]} />
+          <View style={[spark.legendDot, { backgroundColor: '#D0402F' }]} />
           <Text style={spark.legendLabel}>Promotion</Text>
         </View>
         <View style={spark.legendItem}>
@@ -372,11 +372,11 @@ const spark = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#E2E9DF',
+    borderColor: '#EBE3D7',
     padding: 14,
   },
   header: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 12 },
-  title: { flex: 1, fontSize: 14, fontWeight: '700', color: '#0B2019' },
+  title: { flex: 1, fontSize: 14, fontWeight: '700', color: '#14211B' },
   variationBadge: {
     borderRadius: 6,
     paddingHorizontal: 7,
@@ -387,9 +387,9 @@ const spark = StyleSheet.create({
   legend: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 10, marginTop: 8 },
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   legendDot: { width: 8, height: 8, borderRadius: 4 },
-  legendDash: { width: 16, height: 2, backgroundColor: '#E2E9DF' },
-  legendLabel: { fontSize: 11, color: '#4A5B53' },
-  minMax: { fontSize: 11, color: '#8A9A92', marginLeft: 'auto' as any },
+  legendDash: { width: 16, height: 2, backgroundColor: '#EBE3D7' },
+  legendLabel: { fontSize: 11, color: '#5A6A61' },
+  minMax: { fontSize: 11, color: '#93A09A', marginLeft: 'auto' as any },
 });
 
 // ── Carte magasin / prix ──────────────────────────────────────────────────────
@@ -509,7 +509,7 @@ const ProduitDetailScreen: React.FC<Props> = ({ route, navigation }) => {
         {/* Erreur */}
         {isError && (
           <View style={styles.errorContainer}>
-            <Ionicons name="alert-circle-outline" size={44} color="#D6453F" />
+            <Ionicons name="alert-circle-outline" size={44} color="#D0402F" />
             <Text style={styles.errorTitle}>Impossible de charger le produit</Text>
             <Text style={styles.errorMsg}>{(error as Error)?.message}</Text>
             <TouchableOpacity style={styles.retryBtn} onPress={() => refetch()}>
@@ -559,7 +559,7 @@ const ProduitDetailScreen: React.FC<Props> = ({ route, navigation }) => {
               <View style={styles.priceDivider} />
               <View style={styles.priceStat}>
                 <Text style={styles.priceStatLabel}>Max</Text>
-                <Text style={[styles.priceStatValue, { color: '#D6453F' }]}>
+                <Text style={[styles.priceStatValue, { color: '#D0402F' }]}>
                   {data.highest_price?.toFixed(2) ?? '—'} MAD
                 </Text>
               </View>
@@ -598,7 +598,7 @@ const ProduitDetailScreen: React.FC<Props> = ({ route, navigation }) => {
 
             {sortedPrices.length === 0 ? (
               <View style={styles.noPricesContainer}>
-                <Ionicons name="storefront-outline" size={40} color="#B7C4B2" />
+                <Ionicons name="storefront-outline" size={40} color="#CFC4B3" />
                 <Text style={styles.noPricesText}>Aucun prix disponible pour le moment</Text>
               </View>
             ) : (
@@ -638,7 +638,7 @@ const ProduitDetailScreen: React.FC<Props> = ({ route, navigation }) => {
                 onChangeText={setAlertTarget}
                 keyboardType="decimal-pad"
                 placeholder="0.00"
-                placeholderTextColor="#8A9A92"
+                placeholderTextColor="#93A09A"
                 autoFocus
               />
               <Text style={styles.alerteDevise}>MAD</Text>
@@ -665,14 +665,14 @@ const ProduitDetailScreen: React.FC<Props> = ({ route, navigation }) => {
 // ── Styles ────────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#F2F6F0' },
+  safeArea: { flex: 1, backgroundColor: '#FBF7F1' },
   scroll: { flex: 1 },
   scrollContent: { paddingBottom: 32 },
   loadingContainer: { flex: 1, alignItems: 'center', paddingTop: 80, gap: 12 },
-  loadingText: { color: '#4A5B53', fontSize: 15 },
+  loadingText: { color: '#5A6A61', fontSize: 15 },
   errorContainer: { flex: 1, alignItems: 'center', paddingTop: 80, gap: 12, paddingHorizontal: 32 },
-  errorTitle: { fontSize: 16, fontWeight: '700', color: '#D6453F' },
-  errorMsg: { fontSize: 13, color: '#4A5B53', textAlign: 'center' },
+  errorTitle: { fontSize: 16, fontWeight: '700', color: '#D0402F' },
+  errorMsg: { fontSize: 13, color: '#5A6A61', textAlign: 'center' },
   retryBtn: {
     backgroundColor: C.primary,
     borderRadius: 10,
@@ -688,41 +688,41 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingBottom: 24,
     borderBottomWidth: 1,
-    borderBottomColor: '#E2E9DF',
+    borderBottomColor: '#EBE3D7',
     gap: 16,
   },
   productImage: {
     width: 96,
     height: 96,
     borderRadius: 16,
-    backgroundColor: '#E9F0E6',
+    backgroundColor: '#F3EDE3',
     borderWidth: 1,
-    borderColor: '#E2E9DF',
+    borderColor: '#EBE3D7',
   },
   productImagePlaceholder: {
     width: 96,
     height: 96,
     borderRadius: 16,
-    backgroundColor: '#E9F0E6',
+    backgroundColor: '#F3EDE3',
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: '#E2E9DF',
+    borderColor: '#EBE3D7',
   },
   productMeta: { flex: 1 },
-  productName: { fontSize: 18, fontWeight: '800', color: '#0B2019', marginBottom: 4, lineHeight: 24 },
-  productBrand: { fontSize: 14, color: '#4A5B53', marginBottom: 2, fontWeight: '500' },
-  productUnit: { fontSize: 12, color: '#8A9A92', marginBottom: 8 },
+  productName: { fontSize: 18, fontWeight: '800', color: '#14211B', marginBottom: 4, lineHeight: 24 },
+  productBrand: { fontSize: 14, color: '#5A6A61', marginBottom: 2, fontWeight: '500' },
+  productUnit: { fontSize: 12, color: '#93A09A', marginBottom: 8 },
   categoryBadge: {
     alignSelf: 'flex-start',
-    backgroundColor: '#EEF6F1',
+    backgroundColor: '#E4F1EA',
     borderRadius: 20,
     paddingHorizontal: 10,
     paddingVertical: 3,
     borderWidth: 1,
-    borderColor: '#A7D1BA',
+    borderColor: '#95CEB4',
   },
-  categoryText: { fontSize: 11, color: '#0F4C3A', fontWeight: '700', letterSpacing: 0.2 },
+  categoryText: { fontSize: 11, color: '#0E5C44', fontWeight: '700', letterSpacing: 0.2 },
   pricesSummary: {
     flexDirection: 'row',
     backgroundColor: '#ffffff',
@@ -738,12 +738,12 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 3,
     borderWidth: 1,
-    borderColor: '#E2E9DF',
+    borderColor: '#EBE3D7',
   },
   priceStat: { flex: 1, alignItems: 'center', paddingVertical: 14 },
-  priceStatLabel: { fontSize: 11, color: '#8A9A92', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.7, fontWeight: '600' },
-  priceStatValue: { fontSize: 15, fontWeight: '800', color: '#0B2019' },
-  priceDivider: { width: 1, backgroundColor: '#E2E9DF', marginVertical: 12 },
+  priceStatLabel: { fontSize: 11, color: '#93A09A', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.7, fontWeight: '600' },
+  priceStatValue: { fontSize: 15, fontWeight: '800', color: '#14211B' },
+  priceDivider: { width: 1, backgroundColor: '#EBE3D7', marginVertical: 12 },
   actionsRow: {
     flexDirection: 'row',
     paddingHorizontal: 16,
@@ -756,9 +756,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: '#EEF6F1',
+    backgroundColor: '#E4F1EA',
     borderWidth: 1.5,
-    borderColor: '#A7D1BA',
+    borderColor: '#95CEB4',
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 12,
@@ -767,7 +767,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#4A5B53',
+    color: '#5A6A61',
     marginHorizontal: 16,
     marginTop: 16,
     marginBottom: 8,
@@ -786,13 +786,13 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 3,
     borderWidth: 1,
-    borderColor: '#E2E9DF',
+    borderColor: '#EBE3D7',
   },
   storeCardBest: {
     borderColor: C.primary,
     borderWidth: 2,
-    backgroundColor: '#EEF6F1',
-    shadowColor: '#0F4C3A',
+    backgroundColor: '#E4F1EA',
+    shadowColor: '#0E5C44',
     shadowOpacity: 0.15,
     shadowRadius: 12,
     elevation: 5,
@@ -811,9 +811,9 @@ const styles = StyleSheet.create({
   bestBadgeText: { color: '#ffffff', fontSize: 11, fontWeight: '700', letterSpacing: 0.3 },
   storeCardRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   storeInfo: { flex: 1 },
-  storeName: { fontSize: 15, fontWeight: '700', color: '#0B2019' },
-  storeCity: { fontSize: 12, color: '#4A5B53', marginTop: 3 },
-  storeSource: { fontSize: 11, color: '#8A9A92', marginTop: 2, textTransform: 'capitalize' },
+  storeName: { fontSize: 15, fontWeight: '700', color: '#14211B' },
+  storeCity: { fontSize: 12, color: '#5A6A61', marginTop: 3 },
+  storeSource: { fontSize: 11, color: '#93A09A', marginTop: 2, textTransform: 'capitalize' },
   fraicheurRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 3 },
   alerteFond: {
     flex: 1, backgroundColor: 'rgba(11,32,25,0.55)',
@@ -823,10 +823,10 @@ const styles = StyleSheet.create({
     width: '100%', maxWidth: 380, backgroundColor: '#FFFFFF',
     borderRadius: 20, padding: 22, gap: 10,
   },
-  alerteTitre: { fontSize: 18, fontWeight: '800', color: '#0B2019' },
+  alerteTitre: { fontSize: 18, fontWeight: '800', color: '#14211B' },
   alerteTexte: { fontSize: 13.5, color: '#55655C' },
   alerteLabel: {
-    fontSize: 11.5, fontWeight: '700', color: '#8A9A92',
+    fontSize: 11.5, fontWeight: '700', color: '#93A09A',
     textTransform: 'uppercase', letterSpacing: 0.6, marginTop: 6,
   },
   alerteChampRangee: {
@@ -834,8 +834,8 @@ const styles = StyleSheet.create({
     borderWidth: 1, borderColor: '#DCE3D8', borderRadius: 14,
     paddingHorizontal: 14, paddingVertical: 4,
   },
-  alerteChamp: { flex: 1, fontSize: 20, fontWeight: '700', color: '#0B2019', paddingVertical: 10 },
-  alerteDevise: { fontSize: 13, fontWeight: '700', color: '#8A9A92' },
+  alerteChamp: { flex: 1, fontSize: 20, fontWeight: '700', color: '#14211B', paddingVertical: 10 },
+  alerteDevise: { fontSize: 13, fontWeight: '700', color: '#93A09A' },
   alerteBoutons: { flexDirection: 'row', gap: 10, marginTop: 10 },
   alerteAnnuler: { flex: 1, paddingVertical: 14, alignItems: 'center' },
   alerteAnnulerTexte: { fontSize: 15, fontWeight: '600', color: '#55655C' },
@@ -847,12 +847,12 @@ const styles = StyleSheet.create({
   fraicheurText: { fontSize: 11, color: C.textMuted },
   fraicheurPerime: { color: C.promo, fontWeight: '600' },
   priceBox: { alignItems: 'flex-end' },
-  regularPrice: { fontSize: 20, fontWeight: '800', color: '#0B2019' },
+  regularPrice: { fontSize: 20, fontWeight: '800', color: '#14211B' },
   bestPrice: { color: C.primary },
-  promoPrice: { fontSize: 20, fontWeight: '800', color: '#C1272D' },
-  regularPriceStrike: { fontSize: 13, color: '#8A9A92', textDecorationLine: 'line-through' },
+  promoPrice: { fontSize: 20, fontWeight: '800', color: '#D0402F' },
+  regularPriceStrike: { fontSize: 13, color: '#93A09A', textDecorationLine: 'line-through' },
   promoBadge: {
-    backgroundColor: '#FBEDEC',
+    backgroundColor: '#FCEDE9',
     borderRadius: 8,
     paddingHorizontal: 8,
     paddingVertical: 3,
@@ -860,23 +860,23 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#F3C9C6',
   },
-  promoBadgeText: { color: '#C1272D', fontSize: 11, fontWeight: '700' },
+  promoBadgeText: { color: '#D0402F', fontSize: 11, fontWeight: '700' },
   noPricesContainer: { alignItems: 'center', paddingVertical: 40, gap: 12 },
-  noPricesText: { color: '#8A9A92', fontSize: 14 },
+  noPricesText: { color: '#93A09A', fontSize: 14 },
   descriptionCard: {
     marginHorizontal: 16,
     backgroundColor: '#ffffff',
     borderRadius: 14,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#E2E9DF',
+    borderColor: '#EBE3D7',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 4,
     elevation: 1,
   },
-  descriptionText: { fontSize: 14, color: '#3C4F47', lineHeight: 22 },
+  descriptionText: { fontSize: 14, color: '#47564F', lineHeight: 22 },
 });
 
 export default ProduitDetailScreen;

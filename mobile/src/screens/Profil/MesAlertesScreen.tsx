@@ -48,7 +48,7 @@ const AlertCard: React.FC<{
 
         {alert.store && (
           <View style={styles.alertStoreRow}>
-            <Ionicons name="storefront-outline" size={12} color="#8A9A92" />
+            <Ionicons name="storefront-outline" size={12} color="#93A09A" />
             <Text style={styles.alertStore}>{alert.store.name}</Text>
           </View>
         )}
@@ -78,7 +78,7 @@ const AlertCard: React.FC<{
         onPress={onDelete}
         hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
       >
-        <Ionicons name="trash-outline" size={18} color="#D6453F" />
+        <Ionicons name="trash-outline" size={18} color="#D0402F" />
       </TouchableOpacity>
     </View>
   );
@@ -123,7 +123,7 @@ const MesAlertesScreen: React.FC<Props> = () => {
 
       {isError && (
         <View style={styles.centered}>
-          <Ionicons name="alert-circle-outline" size={44} color="#D6453F" />
+          <Ionicons name="alert-circle-outline" size={44} color="#D0402F" />
           <Text style={styles.errorText}>Impossible de charger les alertes</Text>
           <TouchableOpacity style={styles.retryBtn} onPress={() => refetch()}>
             <Text style={styles.retryBtnText}>Réessayer</Text>
@@ -159,7 +159,7 @@ const MesAlertesScreen: React.FC<Props> = () => {
           }
           ListEmptyComponent={
             <View style={styles.emptyState}>
-              <Ionicons name="notifications-off-outline" size={72} color="#B7C4B2" />
+              <Ionicons name="notifications-off-outline" size={72} color="#CFC4B3" />
               <Text style={styles.emptyTitle}>Aucune alerte</Text>
               <Text style={styles.emptySubtitle}>
                 Créez des alertes depuis la fiche d'un produit pour être notifié quand son prix baisse.
@@ -173,15 +173,15 @@ const MesAlertesScreen: React.FC<Props> = () => {
 };
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#F2F6F0' },
+  safeArea: { flex: 1, backgroundColor: '#FBF7F1' },
   centered: { flex: 1, alignItems: 'center', paddingTop: 80, gap: 12 },
-  loadingText: { color: '#4A5B53', fontSize: 15 },
-  errorText: { color: '#D6453F', fontSize: 15, fontWeight: '600' },
+  loadingText: { color: '#5A6A61', fontSize: 15 },
+  errorText: { color: '#D0402F', fontSize: 15, fontWeight: '600' },
   retryBtn: { backgroundColor: C.primary, borderRadius: 10, paddingHorizontal: 24, paddingVertical: 10 },
   retryBtnText: { color: '#fff', fontWeight: '700', fontSize: 14 },
   listContent: { padding: 16, paddingBottom: 32 },
   sectionHeader: {
-    fontSize: 13, fontWeight: '700', color: '#8A9A92',
+    fontSize: 13, fontWeight: '700', color: '#93A09A',
     textTransform: 'uppercase', letterSpacing: 0.8,
     marginBottom: 8, marginTop: 8,
   },
@@ -189,32 +189,32 @@ const styles = StyleSheet.create({
     flexDirection: 'row', alignItems: 'flex-start',
     backgroundColor: '#fff', borderRadius: 14, padding: 14, marginBottom: 8,
     shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.06, shadowRadius: 4, elevation: 2,
-    borderWidth: 1, borderColor: '#E2E9DF',
+    borderWidth: 1, borderColor: '#EBE3D7',
   },
-  alertCardTriggered: { borderColor: '#A7D1BA', backgroundColor: '#EEF6F1' },
+  alertCardTriggered: { borderColor: '#95CEB4', backgroundColor: '#E4F1EA' },
   alertLeft: { marginRight: 12 },
   alertIcon: {
     width: 40, height: 40, borderRadius: 12,
-    backgroundColor: '#EEF6F1', alignItems: 'center', justifyContent: 'center',
+    backgroundColor: '#E4F1EA', alignItems: 'center', justifyContent: 'center',
   },
   alertIconTriggered: { backgroundColor: C.primary },
   alertContent: { flex: 1 },
-  alertProductName: { fontSize: 15, fontWeight: '700', color: '#0B2019', marginBottom: 4 },
+  alertProductName: { fontSize: 15, fontWeight: '700', color: '#14211B', marginBottom: 4 },
   alertStoreRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 6 },
-  alertStore: { fontSize: 12, color: '#8A9A92' },
+  alertStore: { fontSize: 12, color: '#93A09A' },
   alertPriceRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginBottom: 4 },
   alertPriceBadge: {
     flexDirection: 'row', alignItems: 'center', gap: 4,
-    backgroundColor: '#E9F0E6', borderRadius: 8, paddingHorizontal: 8, paddingVertical: 4,
+    backgroundColor: '#F3EDE3', borderRadius: 8, paddingHorizontal: 8, paddingVertical: 4,
   },
-  alertTriggeredBadge: { backgroundColor: '#EEF6F1' },
-  alertPriceBadgeLabel: { fontSize: 11, color: '#4A5B53', fontWeight: '600' },
-  alertPriceBadgeValue: { fontSize: 13, fontWeight: '800', color: '#0B2019' },
-  alertStatus: { fontSize: 12, color: '#8A9A92', fontStyle: 'italic' },
+  alertTriggeredBadge: { backgroundColor: '#E4F1EA' },
+  alertPriceBadgeLabel: { fontSize: 11, color: '#5A6A61', fontWeight: '600' },
+  alertPriceBadgeValue: { fontSize: 13, fontWeight: '800', color: '#14211B' },
+  alertStatus: { fontSize: 12, color: '#93A09A', fontStyle: 'italic' },
   deleteBtn: { padding: 4, marginLeft: 4 },
   emptyState: { alignItems: 'center', paddingTop: 60, paddingHorizontal: 40, gap: 12 },
-  emptyTitle: { fontSize: 20, fontWeight: '700', color: '#3C4F47' },
-  emptySubtitle: { fontSize: 14, color: '#8A9A92', textAlign: 'center', lineHeight: 20 },
+  emptyTitle: { fontSize: 20, fontWeight: '700', color: '#47564F' },
+  emptySubtitle: { fontSize: 14, color: '#93A09A', textAlign: 'center', lineHeight: 20 },
 });
 
 export default MesAlertesScreen;

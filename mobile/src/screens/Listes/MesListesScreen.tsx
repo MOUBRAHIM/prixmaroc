@@ -101,7 +101,7 @@ const ListCard: React.FC<{
         onPress={onDelete}
         hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
       >
-        <Ionicons name="trash-outline" size={18} color="#D6453F" />
+        <Ionicons name="trash-outline" size={18} color="#D0402F" />
       </TouchableOpacity>
     </TouchableOpacity>
   );
@@ -140,7 +140,7 @@ const NewListModal: React.FC<{
           <TextInput
             style={modal.input}
             placeholder="Ex : Courses semaine"
-            placeholderTextColor="#8A9A92"
+            placeholderTextColor="#93A09A"
             value={name}
             onChangeText={setName}
             autoFocus
@@ -149,7 +149,7 @@ const NewListModal: React.FC<{
           <TextInput
             style={[modal.input, { height: 72, textAlignVertical: 'top' }]}
             placeholder="Courses pour la semaine du…"
-            placeholderTextColor="#8A9A92"
+            placeholderTextColor="#93A09A"
             value={desc}
             onChangeText={setDesc}
             multiline
@@ -171,12 +171,12 @@ const NewListModal: React.FC<{
 const modal = StyleSheet.create({
   overlay: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.4)' },
   sheet: { backgroundColor: '#ffffff', borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, paddingBottom: 40 },
-  title: { fontSize: 20, fontWeight: '800', color: '#0B2019', marginBottom: 20 },
-  label: { fontSize: 13, fontWeight: '600', color: '#4A5B53', marginBottom: 6 },
-  input: { backgroundColor: '#E9F0E6', borderRadius: 10, padding: 12, fontSize: 15, color: '#0B2019', marginBottom: 14 },
+  title: { fontSize: 20, fontWeight: '800', color: '#14211B', marginBottom: 20 },
+  label: { fontSize: 13, fontWeight: '600', color: '#5A6A61', marginBottom: 6 },
+  input: { backgroundColor: '#F3EDE3', borderRadius: 10, padding: 12, fontSize: 15, color: '#14211B', marginBottom: 14 },
   actions: { flexDirection: 'row', gap: 12, marginTop: 8 },
-  cancelBtn: { flex: 1, paddingVertical: 12, borderRadius: 10, backgroundColor: '#E9F0E6', alignItems: 'center' },
-  cancelText: { color: '#4A5B53', fontWeight: '700', fontSize: 15 },
+  cancelBtn: { flex: 1, paddingVertical: 12, borderRadius: 10, backgroundColor: '#F3EDE3', alignItems: 'center' },
+  cancelText: { color: '#5A6A61', fontWeight: '700', fontSize: 15 },
   submitBtn: { flex: 2, paddingVertical: 12, borderRadius: 10, backgroundColor: C.primary, alignItems: 'center' },
   submitText: { color: '#ffffff', fontWeight: '700', fontSize: 15 },
 });
@@ -303,7 +303,7 @@ const MesListesScreen: React.FC<Props> = ({ navigation }) => {
       )}
       {isError && (
         <View style={styles.centered}>
-          <Ionicons name="alert-circle-outline" size={44} color="#D6453F" />
+          <Ionicons name="alert-circle-outline" size={44} color="#D0402F" />
           <Text style={styles.errorText}>Impossible de charger les listes</Text>
           <TouchableOpacity style={styles.retryBtn} onPress={() => refetch()}>
             <Text style={styles.retryBtnText}>Réessayer</Text>
@@ -328,7 +328,7 @@ const MesListesScreen: React.FC<Props> = ({ navigation }) => {
           ListEmptyComponent={
             activeTab === 'toutes' ? (
               <View style={styles.emptyState}>
-                <Ionicons name="list-outline" size={72} color="#B7C4B2" />
+                <Ionicons name="list-outline" size={72} color="#CFC4B3" />
                 <Text style={styles.emptyTitle}>Aucune liste</Text>
                 <Text style={styles.emptySubtitle}>
                   Créez votre première liste ou laissez l'IA en générer une.
@@ -361,10 +361,10 @@ const MesListesScreen: React.FC<Props> = ({ navigation }) => {
 // ── Styles ────────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#E9F0E6' },
+  safeArea: { flex: 1, backgroundColor: '#F3EDE3' },
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    backgroundColor: '#0C3F30', paddingHorizontal: 20, paddingTop: 16, paddingBottom: 18,
+    backgroundColor: '#0A4835', paddingHorizontal: 20, paddingTop: 16, paddingBottom: 18,
   },
   headerTitle: { fontSize: 22, fontWeight: '800', color: '#ffffff' },
   headerSub: { fontSize: 13, color: 'rgba(255,255,255,0.7)', marginTop: 2 },
@@ -385,7 +385,7 @@ const styles = StyleSheet.create({
   // Onglets
   tabBar: {
     flexDirection: 'row', backgroundColor: '#fff',
-    borderBottomWidth: 1, borderBottomColor: '#E2E9DF',
+    borderBottomWidth: 1, borderBottomColor: '#EBE3D7',
     paddingHorizontal: 8,
     shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 4, elevation: 2,
   },
@@ -393,26 +393,26 @@ const styles = StyleSheet.create({
     flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
     gap: 4, paddingVertical: 12, borderBottomWidth: 2, borderBottomColor: 'transparent',
   },
-  tabActive: { borderBottomColor: '#0C3F30' },
+  tabActive: { borderBottomColor: '#0A4835' },
   tabIcon: { fontSize: 13 },
-  tabLabel: { fontSize: 12, fontWeight: '600', color: '#8A9A92' },
-  tabLabelActive: { color: '#0C3F30' },
+  tabLabel: { fontSize: 12, fontWeight: '600', color: '#93A09A' },
+  tabLabelActive: { color: '#0A4835' },
   tabBadge: {
     width: 16, height: 16, borderRadius: 8,
-    backgroundColor: '#E9F0E6', alignItems: 'center', justifyContent: 'center',
+    backgroundColor: '#F3EDE3', alignItems: 'center', justifyContent: 'center',
   },
-  tabBadgeActive: { backgroundColor: '#0C3F30' },
-  tabBadgeText: { fontSize: 10, fontWeight: '700', color: '#4A5B53' },
+  tabBadgeActive: { backgroundColor: '#0A4835' },
+  tabBadgeText: { fontSize: 10, fontWeight: '700', color: '#5A6A61' },
   tabAddBtn: {
     width: 16, height: 16, borderRadius: 8,
-    backgroundColor: '#EEF6F1', borderWidth: 1, borderColor: C.primary,
+    backgroundColor: '#E4F1EA', borderWidth: 1, borderColor: C.primary,
     alignItems: 'center', justifyContent: 'center',
   },
 
   quickCreate: {
     flexDirection: 'row', alignItems: 'center', gap: 8,
-    margin: 16, padding: 14, backgroundColor: '#EEF6F1',
-    borderRadius: 14, borderWidth: 1.5, borderColor: '#A7D1BA', borderStyle: 'dashed',
+    margin: 16, padding: 14, backgroundColor: '#E4F1EA',
+    borderRadius: 14, borderWidth: 1.5, borderColor: '#95CEB4', borderStyle: 'dashed',
   },
   quickCreateText: { color: C.primary, fontWeight: '600', fontSize: 14 },
 
@@ -424,34 +424,34 @@ const styles = StyleSheet.create({
   },
   listCardLeft: { marginRight: 14 },
   listIconWrap: {
-    width: 50, height: 50, borderRadius: 14, backgroundColor: '#EEF6F1',
+    width: 50, height: 50, borderRadius: 14, backgroundColor: '#E4F1EA',
     alignItems: 'center', justifyContent: 'center',
-    borderWidth: 1, borderColor: '#D3E8DC',
+    borderWidth: 1, borderColor: '#C6E5D6',
   },
   listCardContent: { flex: 1 },
-  listName: { fontSize: 16, fontWeight: '700', color: '#0B2019', marginBottom: 3 },
-  listDesc: { fontSize: 13, color: '#4A5B53', marginBottom: 4 },
+  listName: { fontSize: 16, fontWeight: '700', color: '#14211B', marginBottom: 3 },
+  listDesc: { fontSize: 13, color: '#5A6A61', marginBottom: 4 },
   listMeta: { flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 7 },
-  listItemCount: { fontSize: 12, color: '#8A9A92' },
-  listDate: { fontSize: 12, color: '#8A9A92' },
-  listBudget: { fontSize: 12, color: '#0C3F30', fontWeight: '700' },
-  progressBar: { height: 5, backgroundColor: '#E2E9DF', borderRadius: 3, overflow: 'hidden' },
-  progressFill: { height: 5, backgroundColor: '#0F4C3A', borderRadius: 3 },
+  listItemCount: { fontSize: 12, color: '#93A09A' },
+  listDate: { fontSize: 12, color: '#93A09A' },
+  listBudget: { fontSize: 12, color: '#0A4835', fontWeight: '700' },
+  progressBar: { height: 5, backgroundColor: '#EBE3D7', borderRadius: 3, overflow: 'hidden' },
+  progressFill: { height: 5, backgroundColor: '#0E5C44', borderRadius: 3 },
   deleteBtn: { padding: 8 },
 
   centered: { flex: 1, alignItems: 'center', paddingTop: 80, gap: 12 },
-  loadingText: { color: '#4A5B53', fontSize: 15 },
-  errorText: { color: '#D6453F', fontSize: 15, fontWeight: '600' },
+  loadingText: { color: '#5A6A61', fontSize: 15 },
+  errorText: { color: '#D0402F', fontSize: 15, fontWeight: '600' },
   retryBtn: { backgroundColor: C.primary, borderRadius: 12, paddingHorizontal: 24, paddingVertical: 12 },
   retryBtnText: { color: '#ffffff', fontWeight: '700', fontSize: 14 },
 
   emptyState: { alignItems: 'center', paddingTop: 60, paddingHorizontal: 40, gap: 12 },
-  emptyTitle: { fontSize: 20, fontWeight: '700', color: '#3C4F47' },
-  emptySubtitle: { fontSize: 14, color: '#8A9A92', textAlign: 'center', lineHeight: 20 },
+  emptyTitle: { fontSize: 20, fontWeight: '700', color: '#47564F' },
+  emptySubtitle: { fontSize: 14, color: '#93A09A', textAlign: 'center', lineHeight: 20 },
   quickButtons: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, justifyContent: 'center', marginTop: 8 },
   quickBtn: {
-    paddingHorizontal: 14, paddingVertical: 9, backgroundColor: '#EEF6F1',
-    borderRadius: 20, borderWidth: 1.5, borderColor: '#A7D1BA',
+    paddingHorizontal: 14, paddingVertical: 9, backgroundColor: '#E4F1EA',
+    borderRadius: 20, borderWidth: 1.5, borderColor: '#95CEB4',
   },
   quickBtnText: { color: C.primary, fontWeight: '600', fontSize: 13 },
 });

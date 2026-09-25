@@ -67,7 +67,7 @@ const FilterModal: React.FC<{
           <View style={fm.sheetHeader}>
             <Text style={fm.sheetTitle}>Filtres</Text>
             <TouchableOpacity onPress={onClose} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-              <Ionicons name="close" size={24} color="#3C4F47" />
+              <Ionicons name="close" size={24} color="#47564F" />
             </TouchableOpacity>
           </View>
 
@@ -76,7 +76,7 @@ const FilterModal: React.FC<{
           <TextInput
             style={fm.input}
             placeholder="Ex : Danone, Nestlé, Lesieur…"
-            placeholderTextColor="#8A9A92"
+            placeholderTextColor="#93A09A"
             value={local.brand}
             onChangeText={(v) => setLocal((f) => ({ ...f, brand: v }))}
             autoCorrect={false}
@@ -106,7 +106,7 @@ const FilterModal: React.FC<{
             <Ionicons
               name={local.promoOnly ? 'checkmark-circle' : 'ellipse-outline'}
               size={22}
-              color={local.promoOnly ? C.primary : '#8A9A92'}
+              color={local.promoOnly ? C.primary : '#93A09A'}
             />
             <Text style={[fm.promoToggleText, local.promoOnly && { color: C.primary }]}>
               Promotions uniquement
@@ -139,32 +139,32 @@ const fm = StyleSheet.create({
     gap: 12,
   },
   sheetHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 },
-  sheetTitle: { fontSize: 20, fontWeight: '800', color: '#0B2019' },
-  label: { fontSize: 13, fontWeight: '700', color: '#4A5B53', textTransform: 'uppercase', letterSpacing: 0.5 },
+  sheetTitle: { fontSize: 20, fontWeight: '800', color: '#14211B' },
+  label: { fontSize: 13, fontWeight: '700', color: '#5A6A61', textTransform: 'uppercase', letterSpacing: 0.5 },
   input: {
-    backgroundColor: '#E9F0E6', borderRadius: 10, padding: 12,
-    fontSize: 15, color: '#0B2019',
+    backgroundColor: '#F3EDE3', borderRadius: 10, padding: 12,
+    fontSize: 15, color: '#14211B',
   },
   budgetRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   budgetBtn: {
     paddingHorizontal: 12, paddingVertical: 8, borderRadius: 10,
-    borderWidth: 1.5, borderColor: '#E2E9DF', backgroundColor: '#F2F6F0',
+    borderWidth: 1.5, borderColor: '#EBE3D7', backgroundColor: '#FBF7F1',
   },
-  budgetBtnActive: { borderColor: C.primary, backgroundColor: '#EEF6F1' },
-  budgetText: { fontSize: 13, fontWeight: '600', color: '#4A5B53' },
+  budgetBtnActive: { borderColor: C.primary, backgroundColor: '#E4F1EA' },
+  budgetText: { fontSize: 13, fontWeight: '600', color: '#5A6A61' },
   budgetTextActive: { color: C.primary },
   promoToggle: {
     flexDirection: 'row', alignItems: 'center', gap: 10,
-    padding: 12, borderRadius: 10, borderWidth: 1.5, borderColor: '#E2E9DF',
+    padding: 12, borderRadius: 10, borderWidth: 1.5, borderColor: '#EBE3D7',
   },
-  promoToggleActive: { borderColor: C.primary, backgroundColor: '#EEF6F1' },
-  promoToggleText: { fontSize: 14, fontWeight: '600', color: '#4A5B53' },
+  promoToggleActive: { borderColor: C.primary, backgroundColor: '#E4F1EA' },
+  promoToggleText: { fontSize: 14, fontWeight: '600', color: '#5A6A61' },
   actions: { flexDirection: 'row', gap: 12, marginTop: 8 },
   resetBtn: {
     flex: 1, paddingVertical: 14, borderRadius: 12,
-    backgroundColor: '#E9F0E6', alignItems: 'center',
+    backgroundColor: '#F3EDE3', alignItems: 'center',
   },
-  resetText: { color: '#4A5B53', fontWeight: '700', fontSize: 15 },
+  resetText: { color: '#5A6A61', fontWeight: '700', fontSize: 15 },
   applyBtn: {
     flex: 2, paddingVertical: 14, borderRadius: 12,
     backgroundColor: C.primary, alignItems: 'center',
@@ -179,7 +179,7 @@ const ImageWithFallback: React.FC<{ uri: string }> = ({ uri }) => {
   if (errored) {
     return (
       <View style={styles.productImagePlaceholder}>
-        <Ionicons name="image-outline" size={22} color="#C9D5C4" />
+        <Ionicons name="image-outline" size={22} color="#DBD0BF" />
         <Text style={styles.productImagePlaceholderText}>Photo{'\n'}à venir</Text>
       </View>
     );
@@ -234,7 +234,7 @@ const ProductCard: React.FC<{
     </View>
 
     <View style={styles.productActions}>
-      <Ionicons name="chevron-forward" size={20} color="#B7C4B2" />
+      <Ionicons name="chevron-forward" size={20} color="#CFC4B3" />
       <TouchableOpacity
         style={styles.historiqueBtn}
         onPress={(e) => { e.stopPropagation(); onHistorique(); }}
@@ -326,12 +326,12 @@ const RechercheScreen: React.FC<Props> = ({ navigation, route }) => {
           {isLoading ? (
             <ActivityIndicator size="small" color={C.primary} style={{ marginRight: 8 }} />
           ) : (
-            <Ionicons name="search-outline" size={18} color="#8A9A92" style={{ marginRight: 8 }} />
+            <Ionicons name="search-outline" size={18} color="#93A09A" style={{ marginRight: 8 }} />
           )}
           <TextInput
             style={styles.searchInput}
             placeholder="Tapez un produit ou une marque…"
-            placeholderTextColor="#8A9A92"
+            placeholderTextColor="#93A09A"
             value={query}
             onChangeText={setQuery}
             onSubmitEditing={handleSearch}
@@ -341,7 +341,7 @@ const RechercheScreen: React.FC<Props> = ({ navigation, route }) => {
           />
           {query.length > 0 ? (
             <TouchableOpacity onPress={clearSearch} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-              <Ionicons name="close-circle" size={18} color="#8A9A92" />
+              <Ionicons name="close-circle" size={18} color="#93A09A" />
             </TouchableOpacity>
           ) : (
             /* Scanner un code-barres est une façon de trouver un produit :
@@ -364,7 +364,7 @@ const RechercheScreen: React.FC<Props> = ({ navigation, route }) => {
           <Ionicons
             name="options-outline"
             size={20}
-            color={hasActiveFilters ? '#0C3F30' : 'rgba(255,255,255,0.9)'}
+            color={hasActiveFilters ? '#0A4835' : 'rgba(255,255,255,0.9)'}
           />
           {activeCount > 0 && (
             <View style={styles.filterBadge}>
@@ -414,7 +414,7 @@ const RechercheScreen: React.FC<Props> = ({ navigation, route }) => {
       {/* État vide (avant recherche) */}
       {searchTerm.length < 2 && query.length < 2 && !isLoading && (
         <View style={styles.emptyState}>
-          <Ionicons name="search-circle-outline" size={72} color="#B7C4B2" />
+          <Ionicons name="search-circle-outline" size={72} color="#CFC4B3" />
           <Text style={styles.emptyTitle}>Comparez les prix</Text>
           <Text style={styles.emptySubtitle}>
             Les résultats apparaissent au fur et à mesure que vous tapez.{'\n'}
@@ -426,7 +426,7 @@ const RechercheScreen: React.FC<Props> = ({ navigation, route }) => {
       {/* Erreur */}
       {isError && (
         <View style={styles.errorContainer}>
-          <Ionicons name="alert-circle-outline" size={44} color="#D6453F" />
+          <Ionicons name="alert-circle-outline" size={44} color="#D0402F" />
           <Text style={styles.errorText}>Erreur lors de la recherche</Text>
           <TouchableOpacity style={styles.retryBtn} onPress={() => refetch()}>
             <Text style={styles.retryBtnText}>Réessayer</Text>
@@ -458,7 +458,7 @@ const RechercheScreen: React.FC<Props> = ({ navigation, route }) => {
           }
           ListEmptyComponent={
             <View style={styles.emptyState}>
-              <Ionicons name="cube-outline" size={64} color="#B7C4B2" />
+              <Ionicons name="cube-outline" size={64} color="#CFC4B3" />
               <Text style={styles.emptyTitle}>Aucun résultat</Text>
               <Text style={styles.emptySubtitle}>
                 {hasActiveFilters
@@ -492,14 +492,14 @@ const RechercheScreen: React.FC<Props> = ({ navigation, route }) => {
 // ── Styles ────────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#E9F0E6' },
+  safeArea: { flex: 1, backgroundColor: '#F3EDE3' },
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingTop: 14,
     paddingBottom: 14,
-    backgroundColor: '#0C3F30',
+    backgroundColor: '#0A4835',
     gap: 8,
   },
   searchInputWrap: {
@@ -516,7 +516,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
-  searchInput: { flex: 1, fontSize: 15, color: '#0B2019' },
+  searchInput: { flex: 1, fontSize: 15, color: '#14211B' },
   filterBtn: {
     width: 42,
     height: 42,
@@ -534,7 +534,7 @@ const styles = StyleSheet.create({
     width: 18,
     height: 18,
     borderRadius: 9,
-    backgroundColor: '#C1272D',
+    backgroundColor: '#D0402F',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -544,18 +544,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: '#EEF6F1',
+    backgroundColor: '#E4F1EA',
     borderRadius: 20,
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderWidth: 1,
-    borderColor: '#A7D1BA',
+    borderColor: '#95CEB4',
   },
   chipText: { fontSize: 12, fontWeight: '600', color: C.primary },
   listContent: { paddingVertical: 10, paddingHorizontal: 14 },
   resultsHeader: {
     fontSize: 13,
-    color: '#4A5B53',
+    color: '#5A6A61',
     marginBottom: 10,
     marginTop: 2,
     fontWeight: '500',
@@ -567,7 +567,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 14,
     marginBottom: 10,
-    shadowColor: '#0B2019',
+    shadowColor: '#14211B',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.06,
     shadowRadius: 14,
@@ -578,11 +578,11 @@ const styles = StyleSheet.create({
     height: 68,
     borderRadius: 12,
     // pas d'overflow:hidden — la pastille promo déborde volontairement
-    backgroundColor: '#E9F0E6',
+    backgroundColor: '#F3EDE3',
     marginRight: 14,
     position: 'relative',
     borderWidth: 1,
-    borderColor: '#E2E9DF',
+    borderColor: '#EBE3D7',
   },
   productImage: { width: 68, height: 68 },
   productImagePlaceholder: {
@@ -590,12 +590,12 @@ const styles = StyleSheet.create({
     height: 68,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#F2F6F0',
+    backgroundColor: '#FBF7F1',
     gap: 2,
   },
   productImagePlaceholderText: {
     fontSize: 9,
-    color: '#C9D5C4',
+    color: '#DBD0BF',
     textAlign: 'center',
     lineHeight: 12,
     fontWeight: '500',
@@ -605,7 +605,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -5,
     right: -5,
-    backgroundColor: '#C1272D',
+    backgroundColor: '#D0402F',
     borderRadius: 999,
     paddingHorizontal: 7,
     paddingVertical: 2,
@@ -614,27 +614,31 @@ const styles = StyleSheet.create({
   },
   promoBadgeText: { color: '#ffffff', fontSize: 9, fontWeight: '800', letterSpacing: 0.3 },
   productInfo: { flex: 1 },
-  productName: { fontSize: 14, fontWeight: '700', color: '#0B2019', marginBottom: 3, lineHeight: 19 },
-  productBrand: { fontSize: 12, color: '#4A5B53', marginBottom: 2 },
-  productUnit: { fontSize: 11, color: '#8A9A92', marginBottom: 6 },
+  productName: { fontSize: 14, fontWeight: '700', color: '#14211B', marginBottom: 3, lineHeight: 19 },
+  productBrand: { fontSize: 12, color: '#5A6A61', marginBottom: 2 },
+  productUnit: { fontSize: 11, color: '#93A09A', marginBottom: 6 },
   priceRow: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 6 },
-  priceFrom: { fontSize: 13, color: '#3C4F47' },
-  priceValue: { fontWeight: '800', color: C.primary, fontSize: 15 },
-  priceUnavailable: { fontSize: 12, color: '#8A9A92', fontStyle: 'italic' },
+  priceFrom: { fontSize: 13, color: '#47564F' },
+  priceValue: {
+    fontWeight: '800', color: '#8A5A06', fontSize: 15.5,
+    backgroundColor: C.safranPale, paddingHorizontal: 8, paddingVertical: 3,
+    borderRadius: 8, overflow: 'hidden',
+  },
+  priceUnavailable: { fontSize: 12, color: '#93A09A', fontStyle: 'italic' },
   storeCount: {
-    fontSize: 11, color: '#4A5B53', fontWeight: '600',
-    backgroundColor: '#E9F0E6', borderRadius: 8, paddingHorizontal: 7, paddingVertical: 2,
+    fontSize: 11, color: '#5A6A61', fontWeight: '600',
+    backgroundColor: '#F3EDE3', borderRadius: 8, paddingHorizontal: 7, paddingVertical: 2,
   },
   productActions: { alignItems: 'center', gap: 10, marginLeft: 6 },
   historiqueBtn: {
     width: 34,
     height: 34,
     borderRadius: 10,
-    backgroundColor: '#EEF6F1',
+    backgroundColor: '#E4F1EA',
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: '#A7D1BA',
+    borderColor: '#95CEB4',
   },
   emptyState: {
     flex: 1,
@@ -644,8 +648,8 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     gap: 12,
   },
-  emptyTitle: { fontSize: 20, fontWeight: '700', color: '#3C4F47', marginTop: 16, marginBottom: 6 },
-  emptySubtitle: { fontSize: 14, color: '#8A9A92', textAlign: 'center', lineHeight: 22 },
+  emptyTitle: { fontSize: 20, fontWeight: '700', color: '#47564F', marginTop: 16, marginBottom: 6 },
+  emptySubtitle: { fontSize: 14, color: '#93A09A', textAlign: 'center', lineHeight: 22 },
   resetFiltersBtn: {
     backgroundColor: C.primary,
     borderRadius: 12,
@@ -655,9 +659,9 @@ const styles = StyleSheet.create({
   },
   resetFiltersBtnText: { color: '#fff', fontWeight: '700', fontSize: 14 },
   loadingContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12 },
-  loadingText: { color: '#4A5B53', fontSize: 15 },
+  loadingText: { color: '#5A6A61', fontSize: 15 },
   errorContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12 },
-  errorText: { color: '#D6453F', fontSize: 15, fontWeight: '600' },
+  errorText: { color: '#D0402F', fontSize: 15, fontWeight: '600' },
   retryBtn: {
     backgroundColor: C.primary,
     borderRadius: 12,

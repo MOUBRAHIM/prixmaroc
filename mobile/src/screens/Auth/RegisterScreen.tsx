@@ -69,7 +69,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
               <TextInput
                 style={styles.input}
                 placeholder="Mohammed Alami"
-                placeholderTextColor="#8A9A92"
+                placeholderTextColor="#93A09A"
                 value={name}
                 onChangeText={setName}
                 autoCapitalize="words"
@@ -82,7 +82,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
               <TextInput
                 style={styles.input}
                 placeholder="votre@email.com"
-                placeholderTextColor="#8A9A92"
+                placeholderTextColor="#93A09A"
                 value={email}
                 onChangeText={setEmail}
                 autoCapitalize="none"
@@ -96,7 +96,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
               <TextInput
                 style={styles.input}
                 placeholder="mon_pseudo"
-                placeholderTextColor="#8A9A92"
+                placeholderTextColor="#93A09A"
                 value={username}
                 onChangeText={setUsername}
                 autoCapitalize="none"
@@ -109,7 +109,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
               <TextInput
                 style={styles.input}
                 placeholder="••••••••"
-                placeholderTextColor="#8A9A92"
+                placeholderTextColor="#93A09A"
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry
@@ -146,7 +146,7 @@ const RegisterScreen: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#EEF6F1',
+    backgroundColor: '#E4F1EA',
   },
   keyboardAvoid: {
     flex: 1,
@@ -164,12 +164,12 @@ const styles = StyleSheet.create({
   logo: {
     fontSize: 40,
     fontWeight: '800',
-    color: '#0F4C3A',
+    color: '#0E5C44',
     letterSpacing: -1,
   },
   subtitle: {
     fontSize: 16,
-    color: '#4A5B53',
+    color: '#5A6A61',
     marginTop: 6,
   },
   card: {
@@ -185,16 +185,16 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 22,
     fontWeight: '700',
-    color: '#0B2019',
+    color: '#14211B',
     marginBottom: 20,
   },
   errorBox: {
-    backgroundColor: '#FBEDEC',
+    backgroundColor: '#FCEDE9',
     borderRadius: 8,
     padding: 12,
     marginBottom: 16,
     borderLeftWidth: 4,
-    borderLeftColor: '#D6453F',
+    borderLeftColor: '#D0402F',
   },
   errorText: {
     color: '#9E2A25',
@@ -206,28 +206,28 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#3C4F47',
+    color: '#47564F',
     marginBottom: 6,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#B7C4B2',
+    borderColor: '#CFC4B3',
     borderRadius: 10,
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 16,
-    color: '#0B2019',
+    color: '#14211B',
     backgroundColor: '#F5F8F3',
   },
   button: {
-    backgroundColor: '#0F4C3A',
+    backgroundColor: '#0E5C44',
     borderRadius: 10,
     paddingVertical: 14,
     alignItems: 'center',
     marginTop: 8,
   },
   buttonDisabled: {
-    backgroundColor: '#6FB294',
+    backgroundColor: '#5CB393',
   },
   buttonText: {
     color: '#ffffff',
@@ -240,11 +240,11 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   footerText: {
-    color: '#4A5B53',
+    color: '#5A6A61',
     fontSize: 15,
   },
   footerLink: {
-    color: '#0F4C3A',
+    color: '#0E5C44',
     fontSize: 15,
     fontWeight: '700',
   },

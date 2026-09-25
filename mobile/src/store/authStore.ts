@@ -44,8 +44,23 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
       set({ token: tokenData.access_token, user, isAuthenticated: true, isLoading: false });
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { detail?: string } } })
-        ?.response?.data?.detail || 'Identifiants incorrects';
+      // Sans réponse du serveur, ce n'est pas le mot de passe qui est en
+      // cause : c'est le réseau, ou le service encore endormi. Le dire
+      // « identifiants incorrects » envoyait l'utilisateur sur une fausse piste.
+      const e = err as {
+        response?: { status?: number; data?: { detail?: string } };
+        code?: string;
+      };
+      let msg: string;
+      if (!e.response) {
+        msg = e.code === 'ECONNABORTED'
+          ? "Le serveur met trop de temps à répondre. Il se réveille : réessayez dans une minute."
+          : 'Serveur injoignable. Vérifiez votre connexion.';
+      } else if (e.response.status === 401) {
+        msg = 'Adresse e-mail ou mot de passe incorrect.';
+      } else {
+        msg = e.response.data?.detail || 'Connexion impossible. Réessayez.';
+      }
       set({ error: msg, isLoading: false });
       throw err;
     }

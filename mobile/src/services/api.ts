@@ -68,7 +68,10 @@ export async function initApiUrl(): Promise<void> {
 
 const api: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 15_000,
+  // L'hébergement gratuit endort le service ; son réveil prend une
+  // cinquantaine de secondes. À 15 s, la première requête de la journée
+  // échouait toujours.
+  timeout: 60_000,
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',

@@ -76,7 +76,7 @@ const GeneratedItemCard: React.FC<{ item: GeneratedListItem }> = ({ item }) => (
       <Text style={styles.itemName} numberOfLines={2}>{item.product_name}</Text>
       {item.store_name && (
         <Text style={styles.itemStore}>
-          <Ionicons name="storefront-outline" size={11} color="#8A9A92" /> {item.store_name}
+          <Ionicons name="storefront-outline" size={11} color="#93A09A" /> {item.store_name}
         </Text>
       )}
       {item.price_date ? (
@@ -122,7 +122,7 @@ const CategorySection: React.FC<{
           <Ionicons
             name={open ? 'chevron-up' : 'chevron-down'}
             size={16}
-            color="#4A5B53"
+            color="#5A6A61"
           />
         </View>
       </TouchableOpacity>
@@ -232,7 +232,7 @@ const NouvelleListeIAScreen: React.FC<Props> = ({ navigation }) => {
   const budgetStatus = generatedList?.budget_status;
   const budgetColor =
     budgetStatus === 'dans_budget' ? C.primary :
-    budgetStatus === 'dépasse_budget' ? '#D6453F' : '#8A9A92';
+    budgetStatus === 'dépasse_budget' ? '#D0402F' : '#93A09A';
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['bottom']}>
@@ -292,7 +292,7 @@ const NouvelleListeIAScreen: React.FC<Props> = ({ navigation }) => {
           <TextInput
             style={styles.budgetField}
             placeholder="Ex : 500"
-            placeholderTextColor="#8A9A92"
+            placeholderTextColor="#93A09A"
             value={budgetText}
             onChangeText={setBudgetText}
             keyboardType="decimal-pad"
@@ -348,7 +348,7 @@ const NouvelleListeIAScreen: React.FC<Props> = ({ navigation }) => {
             {/* Magasins conseillés */}
             {generatedList.recommended_stores.length > 0 && (
               <View style={styles.storesRow}>
-                <Ionicons name="storefront-outline" size={14} color="#4A5B53" />
+                <Ionicons name="storefront-outline" size={14} color="#5A6A61" />
                 <Text style={styles.storesLabel}>Conseillé : </Text>
                 <Text style={styles.storesValue}>
                   {generatedList.recommended_stores.join(', ')}
@@ -359,7 +359,7 @@ const NouvelleListeIAScreen: React.FC<Props> = ({ navigation }) => {
             {/* Raisonnement global */}
             {generatedList.global_reasoning && (
               <View style={styles.reasoningCard}>
-                <Ionicons name="information-circle-outline" size={16} color="#4A5B53" />
+                <Ionicons name="information-circle-outline" size={16} color="#5A6A61" />
                 <Text style={styles.reasoningText}>{generatedList.global_reasoning}</Text>
               </View>
             )}
@@ -409,70 +409,70 @@ const NouvelleListeIAScreen: React.FC<Props> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#F2F6F0' },
+  safeArea: { flex: 1, backgroundColor: '#FBF7F1' },
   content: { padding: 20, paddingBottom: 40 },
   iaHeader: { alignItems: 'center', paddingVertical: 24, gap: 8 },
   iaIconWrap: {
-    width: 72, height: 72, borderRadius: 36, backgroundColor: '#EEF6F1',
+    width: 72, height: 72, borderRadius: 36, backgroundColor: '#E4F1EA',
     alignItems: 'center', justifyContent: 'center', marginBottom: 4,
   },
-  iaTitle: { fontSize: 22, fontWeight: '800', color: '#0B2019' },
-  iaSubtitle: { fontSize: 14, color: '#4A5B53', textAlign: 'center', lineHeight: 20, paddingHorizontal: 16 },
-  sectionTitle: { fontSize: 15, fontWeight: '700', color: '#0B2019', marginBottom: 10, marginTop: 8 },
+  iaTitle: { fontSize: 22, fontWeight: '800', color: '#14211B' },
+  iaSubtitle: { fontSize: 14, color: '#5A6A61', textAlign: 'center', lineHeight: 20, paddingHorizontal: 16 },
+  sectionTitle: { fontSize: 15, fontWeight: '700', color: '#14211B', marginBottom: 10, marginTop: 8 },
   typeGrid: { flexDirection: 'row', gap: 8, marginBottom: 20 },
   typeCard: {
     flex: 1, backgroundColor: '#fff', borderRadius: 14, padding: 12, alignItems: 'center',
-    borderWidth: 2, borderColor: '#E2E9DF', gap: 4,
+    borderWidth: 2, borderColor: '#EBE3D7', gap: 4,
   },
-  typeCardActive: { borderColor: C.primary, backgroundColor: '#EEF6F1' },
+  typeCardActive: { borderColor: C.primary, backgroundColor: '#E4F1EA' },
   typeIcon: { fontSize: 22 },
-  typeLabel: { fontSize: 12, fontWeight: '700', color: '#3C4F47', textAlign: 'center' },
-  typeDesc: { fontSize: 10, color: '#8A9A92', textAlign: 'center' },
+  typeLabel: { fontSize: 12, fontWeight: '700', color: '#47564F', textAlign: 'center' },
+  typeDesc: { fontSize: 10, color: '#93A09A', textAlign: 'center' },
   householdRow: {
     flexDirection: 'row', gap: 8, marginBottom: 20,
   },
   householdBtn: {
     flex: 1, alignItems: 'center', justifyContent: 'center',
     backgroundColor: '#fff', borderRadius: 12, paddingVertical: 10,
-    borderWidth: 2, borderColor: '#E2E9DF',
+    borderWidth: 2, borderColor: '#EBE3D7',
   },
-  householdBtnActive: { borderColor: C.primary, backgroundColor: '#EEF6F1' },
-  householdNum: { fontSize: 18, fontWeight: '800', color: '#3C4F47' },
-  householdLabel: { fontSize: 9, color: '#8A9A92', marginTop: 1 },
+  householdBtnActive: { borderColor: C.primary, backgroundColor: '#E4F1EA' },
+  householdNum: { fontSize: 18, fontWeight: '800', color: '#47564F' },
+  householdLabel: { fontSize: 9, color: '#93A09A', marginTop: 1 },
   budgetInput: {
     flexDirection: 'row', alignItems: 'center',
-    backgroundColor: '#fff', borderRadius: 12, borderWidth: 1, borderColor: '#E2E9DF',
+    backgroundColor: '#fff', borderRadius: 12, borderWidth: 1, borderColor: '#EBE3D7',
     paddingHorizontal: 14, marginBottom: 20,
   },
-  budgetField: { flex: 1, fontSize: 16, color: '#0B2019', paddingVertical: 14 },
-  budgetCurrency: { fontSize: 15, fontWeight: '700', color: '#4A5B53' },
+  budgetField: { flex: 1, fontSize: 16, color: '#14211B', paddingVertical: 14 },
+  budgetCurrency: { fontSize: 15, fontWeight: '700', color: '#5A6A61' },
   generateBtn: {
     backgroundColor: C.primary, borderRadius: 14, paddingVertical: 16,
     marginBottom: 8,
     shadowColor: C.primary, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 6,
   },
-  generateBtnDisabled: { backgroundColor: '#8A9A92' },
+  generateBtnDisabled: { backgroundColor: '#93A09A' },
   generateBtnInner: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 },
   generateBtnText: { color: '#fff', fontSize: 16, fontWeight: '800' },
   resultSummary: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
     backgroundColor: '#fff', borderRadius: 16, padding: 16, marginBottom: 8,
-    borderWidth: 1, borderColor: '#E2E9DF',
+    borderWidth: 1, borderColor: '#EBE3D7',
   },
   resultSummaryLeft: {},
-  resultSummaryLabel: { fontSize: 13, color: '#4A5B53', marginBottom: 4 },
-  resultSummaryValue: { fontSize: 26, fontWeight: '900', color: '#0B2019' },
+  resultSummaryLabel: { fontSize: 13, color: '#5A6A61', marginBottom: 4 },
+  resultSummaryValue: { fontSize: 26, fontWeight: '900', color: '#14211B' },
   resultSummaryRight: { alignItems: 'flex-end', gap: 6 },
   budgetBadge: { borderRadius: 8, paddingHorizontal: 10, paddingVertical: 4 },
   budgetBadgeText: { fontSize: 12, fontWeight: '700' },
-  resultItemCount: { fontSize: 13, color: '#8A9A92' },
+  resultItemCount: { fontSize: 13, color: '#93A09A' },
   storesRow: {
     flexDirection: 'row', alignItems: 'center', gap: 4,
     backgroundColor: '#fff', borderRadius: 10, padding: 10, marginBottom: 8,
-    borderWidth: 1, borderColor: '#E2E9DF',
+    borderWidth: 1, borderColor: '#EBE3D7',
   },
-  storesLabel: { fontSize: 13, color: '#4A5B53' },
-  storesValue: { fontSize: 13, fontWeight: '600', color: '#0B2019', flex: 1 },
+  storesLabel: { fontSize: 13, color: '#5A6A61' },
+  storesValue: { fontSize: 13, fontWeight: '600', color: '#14211B', flex: 1 },
   reasoningCard: {
     flexDirection: 'row', gap: 8, backgroundColor: '#EEF6F8',
     borderRadius: 12, padding: 12, marginBottom: 12,
@@ -484,11 +484,11 @@ const styles = StyleSheet.create({
   },
   catHeader: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    backgroundColor: '#E9F0E6', borderRadius: 12, paddingHorizontal: 14, paddingVertical: 10,
+    backgroundColor: '#F3EDE3', borderRadius: 12, paddingHorizontal: 14, paddingVertical: 10,
     marginBottom: 4,
   },
   catTitle: {
-    fontSize: 14, fontWeight: '700', color: '#0B2019', flex: 1,
+    fontSize: 14, fontWeight: '700', color: '#14211B', flex: 1,
   },
   catHeaderRight: {
     flexDirection: 'row', alignItems: 'center', gap: 8,
@@ -497,7 +497,7 @@ const styles = StyleSheet.create({
     fontSize: 13, fontWeight: '800', color: C.primary,
   },
   catCount: {
-    fontSize: 11, color: '#8A9A92', fontWeight: '600',
+    fontSize: 11, color: '#93A09A', fontWeight: '600',
   },
   itemCard: {
     flexDirection: 'row', backgroundColor: '#fff', borderRadius: 12, padding: 12, marginBottom: 4,
@@ -505,18 +505,18 @@ const styles = StyleSheet.create({
     shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 3, elevation: 1,
   },
   itemLeft: { flex: 1 },
-  itemName: { fontSize: 14, fontWeight: '700', color: '#0B2019', marginBottom: 3 },
-  itemStore: { fontSize: 12, color: '#8A9A92', marginBottom: 3 },
-  itemPerime: { color: '#C1272D', fontWeight: '600' },
+  itemName: { fontSize: 14, fontWeight: '700', color: '#14211B', marginBottom: 3 },
+  itemStore: { fontSize: 12, color: '#93A09A', marginBottom: 3 },
+  itemPerime: { color: '#D0402F', fontWeight: '600' },
   promoBadge: {
-    alignSelf: 'flex-start', backgroundColor: '#FBEDEC', borderRadius: 4,
+    alignSelf: 'flex-start', backgroundColor: '#FCEDE9', borderRadius: 4,
     paddingHorizontal: 5, paddingVertical: 1, marginBottom: 3,
     borderWidth: 1, borderColor: '#F3C9C6',
   },
-  promoBadgeText: { color: '#C1272D', fontSize: 9, fontWeight: '700' },
-  itemReasoning: { fontSize: 11, color: '#8A9A92', fontStyle: 'italic', lineHeight: 16 },
+  promoBadgeText: { color: '#D0402F', fontSize: 9, fontWeight: '700' },
+  itemReasoning: { fontSize: 11, color: '#93A09A', fontStyle: 'italic', lineHeight: 16 },
   itemRight: { alignItems: 'flex-end', gap: 4, marginLeft: 12 },
-  itemQty: { fontSize: 12, color: '#4A5B53', fontWeight: '600' },
+  itemQty: { fontSize: 12, color: '#5A6A61', fontWeight: '600' },
   itemPrice: { fontSize: 15, fontWeight: '800', color: C.primary },
   resultActions: { flexDirection: 'row', gap: 8, marginTop: 8 },
   regenerateBtn: {
@@ -527,9 +527,9 @@ const styles = StyleSheet.create({
   whatsappBtn: {
     flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
     gap: 6, borderWidth: 1.5, borderColor: '#25D366', borderRadius: 12, paddingVertical: 14,
-    backgroundColor: '#EEF6F1',
+    backgroundColor: '#E4F1EA',
   },
-  whatsappBtnText: { color: '#0F4C3A', fontWeight: '700', fontSize: 13 },
+  whatsappBtnText: { color: '#0E5C44', fontWeight: '700', fontSize: 13 },
   saveBtn: {
     flex: 1.5, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
     gap: 6, backgroundColor: C.primary, borderRadius: 12, paddingVertical: 14,

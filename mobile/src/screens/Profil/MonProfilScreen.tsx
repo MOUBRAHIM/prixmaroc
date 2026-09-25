@@ -60,7 +60,7 @@ const MenuItem: React.FC<{
   onPress: () => void;
   color?: string;
   value?: string;
-}> = ({ icon, label, onPress, color = '#0B2019', value }) => (
+}> = ({ icon, label, onPress, color = '#14211B', value }) => (
   <TouchableOpacity style={styles.menuItem} onPress={onPress} activeOpacity={0.7}>
     <View style={[styles.menuIconWrap, { backgroundColor: `${color}15` }]}>
       <Ionicons name={icon} size={20} color={color} />
@@ -69,7 +69,7 @@ const MenuItem: React.FC<{
     {value ? (
       <Text style={styles.menuValue}>{value}</Text>
     ) : (
-      <Ionicons name="chevron-forward" size={16} color="#B7C4B2" />
+      <Ionicons name="chevron-forward" size={16} color="#CFC4B3" />
     )}
   </TouchableOpacity>
 );
@@ -88,7 +88,7 @@ const EditField: React.FC<{
       value={value}
       onChangeText={onChangeText}
       placeholder={placeholder}
-      placeholderTextColor="#8A9A92"
+      placeholderTextColor="#93A09A"
       keyboardType={keyboardType}
       autoCapitalize="none"
     />
@@ -152,9 +152,9 @@ const AgeCounter: React.FC<{
 // ── Admin Section ─────────────────────────────────────────────────────────────
 
 const SCRAPERS = [
-  { slug: 'marjane',   label: 'Marjane',    color: '#C1272D' },
+  { slug: 'marjane',   label: 'Marjane',    color: '#D0402F' },
   { slug: 'carrefour', label: 'Carrefour',  color: '#256B7A' },
-  { slug: 'labelvie',  label: "Label'Vie",  color: '#0F4C3A' },
+  { slug: 'labelvie',  label: "Label'Vie",  color: '#0E5C44' },
   { slug: 'bim',       label: 'BIM',        color: '#ca8a04' },
   { slug: 'kazyon',    label: 'Kazyon',     color: '#C4620F' },
   { slug: 'sopreco',   label: 'Sopreco',    color: '#7c3aed' },
@@ -377,8 +377,8 @@ const MonProfilScreen: React.FC<Props> = ({ navigation }) => {
             )}
             <View style={styles.avatarEditBadge}>
               {uploadingAvatar
-                ? <ActivityIndicator size="small" color="#0C3F30" />
-                : <Ionicons name="camera" size={14} color="#0C3F30" />
+                ? <ActivityIndicator size="small" color="#0A4835" />
+                : <Ionicons name="camera" size={14} color="#0A4835" />
               }
             </View>
           </Pressable>
@@ -386,7 +386,7 @@ const MonProfilScreen: React.FC<Props> = ({ navigation }) => {
           <Text style={styles.email}>{user?.email}</Text>
           {user?.city && (
             <View style={styles.cityRow}>
-              <Ionicons name="location-outline" size={14} color="#4A5B53" />
+              <Ionicons name="location-outline" size={14} color="#5A6A61" />
               <Text style={styles.cityText}>{user.city}</Text>
             </View>
           )}
@@ -408,10 +408,10 @@ const MonProfilScreen: React.FC<Props> = ({ navigation }) => {
                 style={[styles.editInput, styles.editInputRow]}
                 onPress={() => setShowCityPicker(!showCityPicker)}
               >
-                <Text style={{ color: city ? '#0B2019' : '#8A9A92', fontSize: 15, flex: 1 }}>
+                <Text style={{ color: city ? '#14211B' : '#93A09A', fontSize: 15, flex: 1 }}>
                   {city || 'Sélectionnez votre ville'}
                 </Text>
-                <Ionicons name={showCityPicker ? 'chevron-up' : 'chevron-down'} size={16} color="#8A9A92" />
+                <Ionicons name={showCityPicker ? 'chevron-up' : 'chevron-down'} size={16} color="#93A09A" />
               </TouchableOpacity>
               {showCityPicker && (
                 <View style={styles.cityDropdown}>
@@ -513,7 +513,7 @@ const MonProfilScreen: React.FC<Props> = ({ navigation }) => {
             </View>
 
             <View style={styles.infoRow}>
-              <Ionicons name="information-circle-outline" size={14} color="#4A5B53" />
+              <Ionicons name="information-circle-outline" size={14} color="#5A6A61" />
               <Text style={styles.infoText}>
                 Ces données personnalisent vos listes IA et recommandations.
               </Text>
@@ -532,7 +532,7 @@ const MonProfilScreen: React.FC<Props> = ({ navigation }) => {
               <TextInput
                 style={styles.budgetInput}
                 placeholder="Ex : 3000"
-                placeholderTextColor="#8A9A92"
+                placeholderTextColor="#93A09A"
                 value={budgetMensuel}
                 onChangeText={(v) => { setBudgetMensuel(v); saveFoyer({ budgetMensuel: v }); }}
                 keyboardType="decimal-pad"
@@ -546,7 +546,7 @@ const MonProfilScreen: React.FC<Props> = ({ navigation }) => {
               <TextInput
                 style={styles.budgetInput}
                 placeholder="Ex : 400"
-                placeholderTextColor="#8A9A92"
+                placeholderTextColor="#93A09A"
                 value={objectifEconomies}
                 onChangeText={(v) => { setObjectifEconomies(v); saveFoyer({ objectifEconomies: v }); }}
                 keyboardType="decimal-pad"
@@ -573,7 +573,7 @@ const MonProfilScreen: React.FC<Props> = ({ navigation }) => {
               <Ionicons
                 name={showBudgetCats ? 'chevron-up' : 'chevron-down'}
                 size={16}
-                color="#8A9A92"
+                color="#93A09A"
               />
             </TouchableOpacity>
 
@@ -586,7 +586,7 @@ const MonProfilScreen: React.FC<Props> = ({ navigation }) => {
                       <TextInput
                         style={styles.catBudgetField}
                         placeholder="—"
-                        placeholderTextColor="#B7C4B2"
+                        placeholderTextColor="#CFC4B3"
                         value={budgetCategories[cat.key] ?? ''}
                         onChangeText={(v) => {
                           const next = { ...budgetCategories, [cat.key]: v };
@@ -628,7 +628,7 @@ const MonProfilScreen: React.FC<Props> = ({ navigation }) => {
               <Text style={styles.statLabel}>Scans</Text>
             </View>
             <View style={styles.statCard}>
-              <Ionicons name="list-outline" size={24} color="#E8A020" />
+              <Ionicons name="list-outline" size={24} color="#F2A93B" />
               <Text style={styles.statValue}>{statsData?.listes ?? '—'}</Text>
               <Text style={styles.statLabel}>Listes</Text>
             </View>
@@ -650,7 +650,7 @@ const MonProfilScreen: React.FC<Props> = ({ navigation }) => {
         {/* Déconnexion */}
         <View style={styles.section}>
           <View style={styles.card}>
-            <MenuItem icon="log-out-outline" label="Déconnexion" onPress={handleLogout} color="#D6453F" />
+            <MenuItem icon="log-out-outline" label="Déconnexion" onPress={handleLogout} color="#D0402F" />
           </View>
         </View>
 
@@ -663,11 +663,11 @@ const MonProfilScreen: React.FC<Props> = ({ navigation }) => {
 // ── Styles ────────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#E9F0E6' },
+  safeArea: { flex: 1, backgroundColor: '#F3EDE3' },
   content: { paddingBottom: 40 },
 
   profileHeader: {
-    alignItems: 'center', backgroundColor: '#0C3F30', paddingTop: 28, paddingBottom: 32,
+    alignItems: 'center', backgroundColor: '#0A4835', paddingTop: 28, paddingBottom: 32,
   },
   avatarContainer: { position: 'relative', marginBottom: 14 },
   avatar: {
@@ -681,7 +681,7 @@ const styles = StyleSheet.create({
     position: 'absolute', bottom: 0, right: 0,
     width: 28, height: 28, borderRadius: 14,
     backgroundColor: '#ffffff', alignItems: 'center', justifyContent: 'center',
-    borderWidth: 2, borderColor: '#0C3F30',
+    borderWidth: 2, borderColor: '#0A4835',
   },
   displayName: { fontSize: 21, fontWeight: '800', color: '#ffffff', marginBottom: 4 },
   email: { fontSize: 14, color: 'rgba(255,255,255,0.75)', marginBottom: 6 },
@@ -700,24 +700,24 @@ const styles = StyleSheet.create({
     shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 6, elevation: 3,
   },
   editField: { marginBottom: 14 },
-  editLabel: { fontSize: 13, fontWeight: '600', color: '#4A5B53', marginBottom: 6 },
-  editInput: { backgroundColor: '#E9F0E6', borderRadius: 10, padding: 12, fontSize: 15, color: '#0B2019' },
+  editLabel: { fontSize: 13, fontWeight: '600', color: '#5A6A61', marginBottom: 6 },
+  editInput: { backgroundColor: '#F3EDE3', borderRadius: 10, padding: 12, fontSize: 15, color: '#14211B' },
   editInputRow: { flexDirection: 'row', alignItems: 'center' },
   cityDropdown: {
-    backgroundColor: '#fff', borderRadius: 10, borderWidth: 1, borderColor: '#E2E9DF', marginTop: 4, overflow: 'hidden',
+    backgroundColor: '#fff', borderRadius: 10, borderWidth: 1, borderColor: '#EBE3D7', marginTop: 4, overflow: 'hidden',
     shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 6, elevation: 4,
   },
-  cityOption: { paddingVertical: 10, paddingHorizontal: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: '#E9F0E6' },
-  cityOptionActive: { backgroundColor: '#EEF6F1' },
-  cityOptionText: { fontSize: 14, color: '#0B2019' },
+  cityOption: { paddingVertical: 10, paddingHorizontal: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: '#F3EDE3' },
+  cityOptionActive: { backgroundColor: '#E4F1EA' },
+  cityOptionText: { fontSize: 14, color: '#14211B' },
 
   section: { paddingHorizontal: 16, marginTop: 16 },
-  sectionTitle: { fontSize: 13, fontWeight: '700', color: '#8A9A92', textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 8 },
+  sectionTitle: { fontSize: 13, fontWeight: '700', color: '#93A09A', textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 8 },
   card: {
     backgroundColor: '#fff', borderRadius: 16, overflow: 'hidden',
     shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.07, shadowRadius: 8, elevation: 3, padding: 16,
   },
-  fieldLabel: { fontSize: 14, fontWeight: '600', color: '#0B2019', marginBottom: 10 },
+  fieldLabel: { fontSize: 14, fontWeight: '600', color: '#14211B', marginBottom: 10 },
 
   // Slider 1-10
   sliderWrap: { gap: 8 },
@@ -725,50 +725,50 @@ const styles = StyleSheet.create({
   sliderBtn: {
     alignItems: 'center', justifyContent: 'center',
     width: 52, paddingVertical: 10,
-    backgroundColor: '#F2F6F0', borderRadius: 10, borderWidth: 1.5, borderColor: '#E2E9DF',
+    backgroundColor: '#FBF7F1', borderRadius: 10, borderWidth: 1.5, borderColor: '#EBE3D7',
   },
   sliderBtnActive: { borderColor: C.primary, backgroundColor: C.primary },
-  sliderNum: { fontSize: 17, fontWeight: '800', color: '#3C4F47' },
-  sliderLabel: { fontSize: 8, color: '#8A9A92', marginTop: 1 },
-  sliderHint: { fontSize: 12, color: '#4A5B53', fontStyle: 'italic' },
+  sliderNum: { fontSize: 17, fontWeight: '800', color: '#47564F' },
+  sliderLabel: { fontSize: 8, color: '#93A09A', marginTop: 1 },
+  sliderHint: { fontSize: 12, color: '#5A6A61', fontStyle: 'italic' },
 
   // Tranches d'âge
   ageCats: { gap: 8 },
   ageRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   ageIcon: { fontSize: 20 },
-  ageLabel: { flex: 1, fontSize: 14, color: '#3C4F47', fontWeight: '500' },
-  ageControls: { flexDirection: 'row', alignItems: 'center', gap: 0, backgroundColor: '#E9F0E6', borderRadius: 10, overflow: 'hidden' },
+  ageLabel: { flex: 1, fontSize: 14, color: '#47564F', fontWeight: '500' },
+  ageControls: { flexDirection: 'row', alignItems: 'center', gap: 0, backgroundColor: '#F3EDE3', borderRadius: 10, overflow: 'hidden' },
   ageBtn: { padding: 10, paddingHorizontal: 14 },
-  ageValue: { fontSize: 17, fontWeight: '800', color: '#0B2019', minWidth: 28, textAlign: 'center' },
+  ageValue: { fontSize: 17, fontWeight: '800', color: '#14211B', minWidth: 28, textAlign: 'center' },
 
   // Budget
   budgetRow: {
     flexDirection: 'row', alignItems: 'center',
-    backgroundColor: '#F2F6F0', borderRadius: 10, borderWidth: 1.5, borderColor: '#E2E9DF', paddingHorizontal: 12,
+    backgroundColor: '#FBF7F1', borderRadius: 10, borderWidth: 1.5, borderColor: '#EBE3D7', paddingHorizontal: 12,
   },
-  budgetInput: { flex: 1, fontSize: 16, color: '#0B2019', paddingVertical: 12 },
-  budgetCurrency: { fontSize: 13, fontWeight: '600', color: '#4A5B53' },
+  budgetInput: { flex: 1, fontSize: 16, color: '#14211B', paddingVertical: 12 },
+  budgetCurrency: { fontSize: 13, fontWeight: '600', color: '#5A6A61' },
 
   // Objectif économies
   objectifBar: { marginTop: 8, gap: 4 },
-  objectifTrack: { height: 6, backgroundColor: '#E2E9DF', borderRadius: 3, overflow: 'hidden' },
-  objectifFill: { height: 6, backgroundColor: '#1E6B4F', borderRadius: 3 },
-  objectifPct: { fontSize: 12, color: '#0F4C3A', fontWeight: '600' },
+  objectifTrack: { height: 6, backgroundColor: '#EBE3D7', borderRadius: 3, overflow: 'hidden' },
+  objectifFill: { height: 6, backgroundColor: '#157155', borderRadius: 3 },
+  objectifPct: { fontSize: 12, color: '#0E5C44', fontWeight: '600' },
 
   // Budget par catégorie
   catsBudgetToggle: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 14 },
   catsBudgetList: { marginTop: 8, gap: 8 },
   catBudgetRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  catBudgetLabel: { flex: 1, fontSize: 13, color: '#3C4F47' },
-  catBudgetInput: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#E9F0E6', borderRadius: 8, paddingHorizontal: 10, paddingVertical: 6 },
-  catBudgetField: { width: 64, fontSize: 14, fontWeight: '700', color: '#0B2019', textAlign: 'right' },
-  catBudgetUnit: { fontSize: 12, color: '#4A5B53', marginLeft: 4 },
+  catBudgetLabel: { flex: 1, fontSize: 13, color: '#47564F' },
+  catBudgetInput: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#F3EDE3', borderRadius: 8, paddingHorizontal: 10, paddingVertical: 6 },
+  catBudgetField: { width: 64, fontSize: 14, fontWeight: '700', color: '#14211B', textAlign: 'right' },
+  catBudgetUnit: { fontSize: 12, color: '#5A6A61', marginLeft: 4 },
 
   // Magasins
   storeGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  storeChip: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 12, paddingVertical: 7, backgroundColor: '#E9F0E6', borderRadius: 20, borderWidth: 1.5, borderColor: '#E2E9DF' },
-  storeChipActive: { borderColor: C.primary, backgroundColor: '#EEF6F1' },
-  storeChipText: { fontSize: 13, fontWeight: '600', color: '#3C4F47' },
+  storeChip: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 12, paddingVertical: 7, backgroundColor: '#F3EDE3', borderRadius: 20, borderWidth: 1.5, borderColor: '#EBE3D7' },
+  storeChipActive: { borderColor: C.primary, backgroundColor: '#E4F1EA' },
+  storeChipText: { fontSize: 13, fontWeight: '600', color: '#47564F' },
 
   infoRow: { flexDirection: 'row', gap: 6, marginTop: 12, backgroundColor: '#EEF6F8', borderRadius: 8, padding: 10, borderWidth: 1, borderColor: '#CBE4EA' },
   infoText: { flex: 1, fontSize: 12, color: '#1F5F6B', lineHeight: 16 },
@@ -776,32 +776,32 @@ const styles = StyleSheet.create({
   menuItem: { flexDirection: 'row', alignItems: 'center', paddingVertical: 14, paddingHorizontal: 0, gap: 12 },
   menuIconWrap: { width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
   menuLabel: { flex: 1, fontSize: 15, fontWeight: '600' },
-  menuValue: { fontSize: 14, color: '#8A9A92' },
-  separator: { height: 1, backgroundColor: '#E9F0E6', marginLeft: 48 },
+  menuValue: { fontSize: 14, color: '#93A09A' },
+  separator: { height: 1, backgroundColor: '#F3EDE3', marginLeft: 48 },
 
   saveBtn: { backgroundColor: C.primary, borderRadius: 12, paddingVertical: 14, alignItems: 'center', marginTop: 4 },
   saveBtnText: { color: '#fff', fontWeight: '700', fontSize: 15 },
 
   statsGrid: { flexDirection: 'row', gap: 10 },
   statCard: { flex: 1, backgroundColor: '#fff', borderRadius: 14, padding: 16, alignItems: 'center', gap: 6, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.06, shadowRadius: 4, elevation: 2 },
-  statValue: { fontSize: 20, fontWeight: '800', color: '#0B2019' },
-  statLabel: { fontSize: 12, color: '#8A9A92' },
-  version: { textAlign: 'center', fontSize: 12, color: '#B7C4B2', marginTop: 24 },
+  statValue: { fontSize: 20, fontWeight: '800', color: '#14211B' },
+  statLabel: { fontSize: 12, color: '#93A09A' },
+  version: { textAlign: 'center', fontSize: 12, color: '#CFC4B3', marginTop: 24 },
 
   // Guest mode
   guestContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 32 },
   guestEmoji: { fontSize: 64, marginBottom: 16 },
-  guestTitle: { fontSize: 24, fontWeight: '800', color: '#0B2019', marginBottom: 10 },
-  guestSubtitle: { fontSize: 15, color: '#4A5B53', textAlign: 'center', lineHeight: 22, marginBottom: 28 },
-  guestLoginBtn: { backgroundColor: '#0C3F30', borderRadius: 14, paddingVertical: 16, paddingHorizontal: 32, marginBottom: 28 },
+  guestTitle: { fontSize: 24, fontWeight: '800', color: '#14211B', marginBottom: 10 },
+  guestSubtitle: { fontSize: 15, color: '#5A6A61', textAlign: 'center', lineHeight: 22, marginBottom: 28 },
+  guestLoginBtn: { backgroundColor: '#0A4835', borderRadius: 14, paddingVertical: 16, paddingHorizontal: 32, marginBottom: 28 },
   guestLoginBtnText: { color: '#fff', fontSize: 16, fontWeight: '700' },
-  guestFeatures: { fontSize: 14, color: '#3C4F47', lineHeight: 26, textAlign: 'left' },
+  guestFeatures: { fontSize: 14, color: '#47564F', lineHeight: 26, textAlign: 'left' },
 
   // Rayon de recherche
   rayonRow: { flexDirection: 'row', gap: 8, flexWrap: 'wrap' },
-  rayonBtn: { paddingHorizontal: 16, paddingVertical: 9, borderRadius: 20, borderWidth: 1.5, borderColor: '#E2E9DF', backgroundColor: '#F2F6F0' },
-  rayonBtnActive: { borderColor: C.primary, backgroundColor: '#EEF6F1' },
-  rayonBtnText: { fontSize: 13, fontWeight: '600', color: '#3C4F47' },
+  rayonBtn: { paddingHorizontal: 16, paddingVertical: 9, borderRadius: 20, borderWidth: 1.5, borderColor: '#EBE3D7', backgroundColor: '#FBF7F1' },
+  rayonBtnActive: { borderColor: C.primary, backgroundColor: '#E4F1EA' },
+  rayonBtnText: { fontSize: 13, fontWeight: '600', color: '#47564F' },
   rayonBtnTextActive: { color: C.primary },
 
   // Admin section

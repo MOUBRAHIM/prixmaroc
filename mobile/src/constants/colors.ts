@@ -1,26 +1,32 @@
 /**
  * Palette PrixMaroc
  *
- * Direction : vert forêt profond (sérieux, premium) sur fond menthe chaud,
- * relevé d'un citron vert pour les mises en avant et d'un ambre pour les
- * économies. La terre cuite reste réservée au souk (identité marocaine).
+ * Direction : émeraude profond sur ivoire chaud, relevé de safran.
  *
- * Le vert profond porte les surfaces d'action (boutons, en-têtes) ; le vert
- * vif est conservé pour les signaux positifs (baisse de prix, validation).
+ * Le fond était un vert menthe froid — la teinte des applications
+ * administratives, pas celle d'une application de courses. L'ivoire réchauffe
+ * l'ensemble et fait ressortir les produits, qui sont l'essentiel.
+ *
+ * Le safran porte ce qui doit attirer l'œil : les prix, les promotions, les
+ * boutons secondaires. C'est la couleur de l'épice marocaine la plus connue,
+ * et celle qui donne faim. L'émeraude reste l'identité : en-têtes, boutons
+ * d'action, navigation.
+ *
+ * La terre cuite signale la baisse de prix et le souk.
  */
 export const Colors = {
   // ── Primaire — Vert forêt ──────────────────────────────────────────────────
   primary: {
-    50:  '#EEF6F1',
-    100: '#D3E8DC',
-    200: '#A7D1BA',
-    300: '#6FB294',
-    400: '#3D8F6E',
-    500: '#1E6B4F',
-    600: '#0F4C3A',   // ← couleur principale (boutons, en-têtes)
-    700: '#0C3F30',
-    800: '#093126',
-    900: '#06231B',
+    50:  '#E4F1EA',
+    100: '#C6E5D6',
+    200: '#95CEB4',
+    300: '#5CB393',
+    400: '#2E9670',
+    500: '#157155',
+    600: '#0E5C44',   // ← couleur principale (boutons, en-têtes)
+    700: '#0A4835',
+    800: '#073A2B',
+    900: '#052A1F',
   },
 
   // ── Accent — Citron vert (mises en avant, "meilleur prix") ─────────────────
@@ -40,55 +46,55 @@ export const Colors = {
 
   // ── Or / Économies ─────────────────────────────────────────────────────────
   gold: {
-    400: '#F5C25B',
-    500: '#E8A020',
-    600: '#C4820F',
+    400: '#F8C874',
+    500: '#F2A93B',
+    600: '#CE8B18',
   },
 
   // ── Référence drapeau marocain ─────────────────────────────────────────────
   maroc: {
-    vert: '#0F4C3A',
-    rouge: '#C1272D',
-    or: '#E8A020',
+    vert: '#0E5C44',
+    rouge: '#D0402F',
+    or: '#F2A93B',
   },
 
   // ── Surfaces ───────────────────────────────────────────────────────────────
   surface: {
     white: '#FFFFFF',
-    secondary: '#F2F6F0',   // fond général — menthe très pâle, chaud
-    tertiary: '#E9F0E6',    // aplats, vignettes produit
+    secondary: '#FBF7F1',   // fond général — menthe très pâle, chaud
+    tertiary: '#F3EDE3',    // aplats, vignettes produit
     card: '#FFFFFF',
-    overlay: 'rgba(6,35,27,0.55)',
+    overlay: 'rgba(10,45,34,0.55)',
   },
 
   // ── Bordures ───────────────────────────────────────────────────────────────
   border: {
-    light: '#E2E9DF',
-    default: '#C9D5C4',
-    strong: '#93A28D',
+    light: '#EBE3D7',
+    default: '#DBD0BF',
+    strong: '#B3A692',
   },
 
   // ── Texte ─────────────────────────────────────────────────────────────────
   text: {
-    primary:   '#0B2019',
-    secondary: '#4A5B53',
-    tertiary:  '#8A9A92',
+    primary:   '#14211B',
+    secondary: '#5A6A61',
+    tertiary:  '#93A09A',
     inverse:   '#FFFFFF',
-    link:      '#0F4C3A',
+    link:      '#0E5C44',
   },
 
   // ── Sémantiques ────────────────────────────────────────────────────────────
   success: '#16A34A',
-  warning: '#E8A020',
+  warning: '#F2A93B',
   error:   '#DC2626',
   info:    '#2563EB',
-  promo:   '#C1272D',
+  promo:   '#D0402F',
 
   // ── Ombres ─────────────────────────────────────────────────────────────────
   shadow: {
-    light: 'rgba(11,32,25,0.05)',
-    medium: 'rgba(11,32,25,0.09)',
-    strong: 'rgba(11,32,25,0.16)',
+    light: 'rgba(20,33,27,0.05)',
+    medium: 'rgba(20,33,27,0.08)',
+    strong: 'rgba(20,33,27,0.14)',
   },
 } as const;
 
@@ -111,6 +117,11 @@ export const C = {
   gold: Colors.gold[500],
   goldSoft: '#FDF3DE',
   success: Colors.success,
+  /** Safran — prix, promotions, boutons secondaires. */
+  safran: '#F2A93B',
+  safranPale: '#FDF0DA',
+  /** Terre cuite — baisse de prix, souk. */
+  terre: '#D0402F',
 } as const;
 
 /** Rayons de coin — cartes très arrondies, dans l'esprit des apps de courses. */

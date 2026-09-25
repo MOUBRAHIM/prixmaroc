@@ -21,10 +21,10 @@ import type { ProfilStackParamList, OcrScanItem } from '@types/models';
 type Props = NativeStackScreenProps<ProfilStackParamList, 'DetailScan'>;
 
 const STATUTS: Record<string, { libelle: string; couleur: string; fond: string; icone: string }> = {
-  done:       { libelle: 'Analysé',       couleur: '#0F4C3A', fond: '#EEF6F1', icone: 'checkmark-circle' },
+  done:       { libelle: 'Analysé',       couleur: '#0E5C44', fond: '#E4F1EA', icone: 'checkmark-circle' },
   processing: { libelle: 'En cours',      couleur: '#8A6410', fond: '#FDF3DE', icone: 'time' },
   pending:    { libelle: 'En attente',    couleur: '#8A6410', fond: '#FDF3DE', icone: 'hourglass' },
-  failed:     { libelle: 'Échec',         couleur: '#C1272D', fond: '#FBE9E6', icone: 'alert-circle' },
+  failed:     { libelle: 'Échec',         couleur: '#D0402F', fond: '#FBE9E6', icone: 'alert-circle' },
 };
 
 const prix = (v: number | null | undefined) => (v == null ? '—' : `${v.toFixed(2)} MAD`);
@@ -65,7 +65,7 @@ const DetailScanScreen: React.FC<Props> = ({ route }) => {
   if (isError || !scan) {
     return (
       <View style={s.centre}>
-        <Ionicons name="cloud-offline-outline" size={40} color="#8A9A92" />
+        <Ionicons name="cloud-offline-outline" size={40} color="#93A09A" />
         <Text style={s.videTitre}>Ticket introuvable</Text>
         <TouchableOpacity style={s.boutonReessayer} onPress={() => refetch()}>
           <Text style={s.boutonReessayerTexte}>Réessayer</Text>
@@ -121,7 +121,7 @@ const DetailScanScreen: React.FC<Props> = ({ route }) => {
 
         {donnees?.confirmed && (
           <View style={s.confirme}>
-            <Ionicons name="shield-checkmark" size={14} color="#0F4C3A" />
+            <Ionicons name="shield-checkmark" size={14} color="#0E5C44" />
             <Text style={s.confirmeTexte}>
               Ticket confirmé · {donnees.prices_saved ?? 0} prix enregistrés
             </Text>
@@ -132,7 +132,7 @@ const DetailScanScreen: React.FC<Props> = ({ route }) => {
       {/* Erreur éventuelle */}
       {scan.status === 'failed' && scan.error_message && (
         <View style={s.carteErreur}>
-          <Ionicons name="alert-circle-outline" size={18} color="#C1272D" />
+          <Ionicons name="alert-circle-outline" size={18} color="#D0402F" />
           <Text style={s.erreurTexte}>{scan.error_message}</Text>
         </View>
       )}
@@ -193,52 +193,52 @@ const DetailScanScreen: React.FC<Props> = ({ route }) => {
 };
 
 const s = StyleSheet.create({
-  racine: { flex: 1, backgroundColor: '#F2F6F0' },
+  racine: { flex: 1, backgroundColor: '#FBF7F1' },
   contenu: { padding: 16 },
-  centre: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F2F6F0', gap: 10, padding: 24 },
-  chargement: { fontSize: 14, color: '#4A5B53' },
+  centre: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#FBF7F1', gap: 10, padding: 24 },
+  chargement: { fontSize: 14, color: '#5A6A61' },
 
   carteEntete: {
     backgroundColor: '#fff', borderRadius: Radius.lg, padding: 16,
-    shadowColor: '#0B2019', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.06, shadowRadius: 14, elevation: 2,
+    shadowColor: '#14211B', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.06, shadowRadius: 14, elevation: 2,
   },
   enteteHaut: { flexDirection: 'row', alignItems: 'flex-start', gap: 10 },
-  magasin: { fontSize: 17, fontWeight: '800', color: '#0B2019' },
-  dateTexte: { fontSize: 12.5, color: '#8A9A92', marginTop: 3 },
+  magasin: { fontSize: 17, fontWeight: '800', color: '#14211B' },
+  dateTexte: { fontSize: 12.5, color: '#93A09A', marginTop: 3 },
   badge: { flexDirection: 'row', alignItems: 'center', gap: 5, borderRadius: Radius.pill, paddingHorizontal: 10, paddingVertical: 4 },
   badgeTexte: { fontSize: 11.5, fontWeight: '700' },
-  separateur: { height: 1, backgroundColor: '#E2E9DF', marginVertical: 14 },
+  separateur: { height: 1, backgroundColor: '#EBE3D7', marginVertical: 14 },
   totauxRangee: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' },
-  totalLabel: { fontSize: 11.5, color: '#8A9A92', fontWeight: '600', textTransform: 'uppercase', letterSpacing: 0.3 },
+  totalLabel: { fontSize: 11.5, color: '#93A09A', fontWeight: '600', textTransform: 'uppercase', letterSpacing: 0.3 },
   totalValeur: { fontSize: 26, fontWeight: '900', color: C.primary, marginTop: 4, letterSpacing: -0.5 },
-  articlesNombre: { fontSize: 22, fontWeight: '800', color: '#0B2019', marginTop: 4 },
-  confirme: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: '#EEF6F1', borderRadius: Radius.sm, padding: 9, marginTop: 12 },
-  confirmeTexte: { fontSize: 12.5, color: '#0F4C3A', fontWeight: '600' },
+  articlesNombre: { fontSize: 22, fontWeight: '800', color: '#14211B', marginTop: 4 },
+  confirme: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: '#E4F1EA', borderRadius: Radius.sm, padding: 9, marginTop: 12 },
+  confirmeTexte: { fontSize: 12.5, color: '#0E5C44', fontWeight: '600' },
 
   carteErreur: {
     flexDirection: 'row', gap: 9, alignItems: 'flex-start',
     backgroundColor: '#FBE9E6', borderRadius: Radius.md, padding: 12, marginTop: 12,
   },
-  erreurTexte: { flex: 1, fontSize: 13, color: '#C1272D', lineHeight: 18 },
+  erreurTexte: { flex: 1, fontSize: 13, color: '#D0402F', lineHeight: 18 },
 
-  sectionTitre: { fontSize: 15, fontWeight: '800', color: '#0B2019', marginTop: 20, marginBottom: 10 },
+  sectionTitre: { fontSize: 15, fontWeight: '800', color: '#14211B', marginTop: 20, marginBottom: 10 },
   carteArticles: {
     backgroundColor: '#fff', borderRadius: Radius.lg, padding: 4,
-    shadowColor: '#0B2019', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.06, shadowRadius: 14, elevation: 2,
+    shadowColor: '#14211B', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.06, shadowRadius: 14, elevation: 2,
   },
   ligne: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 12, paddingVertical: 11 },
-  ligneNom: { fontSize: 14, fontWeight: '600', color: '#0B2019', lineHeight: 19 },
-  ligneDetail: { fontSize: 12, color: '#8A9A92', marginTop: 2 },
+  ligneNom: { fontSize: 14, fontWeight: '600', color: '#14211B', lineHeight: 19 },
+  ligneDetail: { fontSize: 12, color: '#93A09A', marginTop: 2 },
   lignePrix: { fontSize: 15, fontWeight: '800', color: C.primary },
   sommeRangee: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 12, paddingBottom: 12 },
-  sommeLabel: { fontSize: 13, color: '#4A5B53', fontWeight: '600' },
-  sommeValeur: { fontSize: 15, fontWeight: '800', color: '#0B2019' },
+  sommeLabel: { fontSize: 13, color: '#5A6A61', fontWeight: '600' },
+  sommeValeur: { fontSize: 15, fontWeight: '800', color: '#14211B' },
   avertissement: { fontSize: 11.5, color: '#8A6410', backgroundColor: '#FDF3DE', borderRadius: Radius.sm, padding: 9, margin: 8, lineHeight: 16 },
 
   vide: { alignItems: 'center', backgroundColor: '#fff', borderRadius: Radius.lg, padding: 26, gap: 8 },
   videEmoji: { fontSize: 36 },
-  videTitre: { fontSize: 15, fontWeight: '700', color: '#0B2019' },
-  videTexte: { fontSize: 13, color: '#4A5B53', textAlign: 'center', lineHeight: 19 },
+  videTitre: { fontSize: 15, fontWeight: '700', color: '#14211B' },
+  videTexte: { fontSize: 13, color: '#5A6A61', textAlign: 'center', lineHeight: 19 },
 
   basculeTexte: {
     flexDirection: 'row', alignItems: 'center', gap: 8, justifyContent: 'center',
@@ -247,7 +247,7 @@ const s = StyleSheet.create({
   },
   basculeTexteLabel: { flex: 1, fontSize: 13.5, fontWeight: '700', color: C.primary },
   carteTexte: { backgroundColor: '#fff', borderRadius: Radius.md, padding: 14, marginTop: 8 },
-  texteBrut: { fontSize: 12, color: '#3C4F47', lineHeight: 18, fontFamily: 'monospace' },
+  texteBrut: { fontSize: 12, color: '#47564F', lineHeight: 18, fontFamily: 'monospace' },
 
   boutonReessayer: { borderWidth: 1.5, borderColor: C.primary, borderRadius: Radius.md, paddingHorizontal: 18, paddingVertical: 9, marginTop: 6 },
   boutonReessayerTexte: { color: C.primary, fontWeight: '700', fontSize: 13.5 },

@@ -75,7 +75,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <View style={styles.root}>
-      <StatusBar barStyle="light-content" backgroundColor="#0C3F30" />
+      <StatusBar barStyle="light-content" backgroundColor="#0A4835" />
 
       {/* ── Green background layers ─────────────────────────────────────── */}
       <View style={styles.bgTop} />
@@ -223,7 +223,7 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
                     value={urlInput}
                     onChangeText={setUrlInput}
                     placeholder="https://xxx.trycloudflare.com"
-                    placeholderTextColor="#8A9A92"
+                    placeholderTextColor="#93A09A"
                     autoCapitalize="none"
                     autoCorrect={false}
                     keyboardType="url"
@@ -264,12 +264,12 @@ const styles = StyleSheet.create({
   // Background layers to simulate a green gradient
   bgTop: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: '#0C3F30',
+    backgroundColor: '#0A4835',
     bottom: '45%',
   },
   bgBottom: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: '#EEF6F1',
+    backgroundColor: '#E4F1EA',
     top: '55%',
   },
 
@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 22,
     fontWeight: '800',
-    color: '#0B2019',
+    color: '#14211B',
     marginBottom: 22,
     letterSpacing: -0.3,
   },
@@ -342,12 +342,12 @@ const styles = StyleSheet.create({
   errorBox: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    backgroundColor: '#FBEDEC',
+    backgroundColor: '#FCEDE9',
     borderRadius: 10,
     padding: 12,
     marginBottom: 18,
     borderLeftWidth: 4,
-    borderLeftColor: '#D6453F',
+    borderLeftColor: '#D0402F',
     gap: 8,
   },
   errorIcon: {
@@ -369,16 +369,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1.5,
-    borderColor: '#E2E9DF',
+    borderColor: '#EBE3D7',
     borderRadius: 14,
-    backgroundColor: '#F2F6F0',
+    backgroundColor: '#FBF7F1',
     paddingHorizontal: 14,
     paddingVertical: 4,
     gap: 8,
   },
   inputWrapFocused: {
-    borderColor: '#0F4C3A',
-    backgroundColor: '#EEF6F1',
+    borderColor: '#0E5C44',
+    backgroundColor: '#E4F1EA',
   },
   inputWrapError: {
     borderColor: '#fca5a5',
@@ -392,30 +392,30 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
-    color: '#0B2019',
+    color: '#14211B',
     paddingVertical: 13,
   },
 
   // Button
   button: {
-    backgroundColor: '#0F4C3A',
+    backgroundColor: '#0E5C44',
     borderRadius: 14,
     paddingVertical: 16,
     alignItems: 'center',
     marginTop: 6,
-    shadowColor: '#0F4C3A',
+    shadowColor: '#0E5C44',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.35,
     shadowRadius: 10,
     elevation: 6,
   },
   buttonDisabled: {
-    backgroundColor: '#3D8F6E',
+    backgroundColor: '#2E9670',
     shadowOpacity: 0.1,
     elevation: 2,
   },
   buttonInactive: {
-    backgroundColor: '#6FB294',
+    backgroundColor: '#5CB393',
     shadowOpacity: 0.08,
     elevation: 1,
   },
@@ -434,11 +434,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   registerText: {
-    color: '#4A5B53',
+    color: '#5A6A61',
     fontSize: 15,
   },
   registerLink: {
-    color: '#0F4C3A',
+    color: '#0E5C44',
     fontSize: 15,
     fontWeight: '700',
   },
@@ -449,7 +449,7 @@ const styles = StyleSheet.create({
     marginTop: 28,
   },
   tagline: {
-    color: '#4A5B53',
+    color: '#5A6A61',
     fontSize: 13,
     textAlign: 'center',
     lineHeight: 18,
@@ -479,7 +479,7 @@ const styles = StyleSheet.create({
   },
   guestBtnText: {
     fontSize: 14,
-    color: '#0C3F30',
+    color: '#0A4835',
     fontWeight: '600',
   },
 
@@ -500,23 +500,23 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#0B2019',
+    color: '#14211B',
     marginBottom: 6,
   },
   modalHint: {
     fontSize: 13,
-    color: '#4A5B53',
+    color: '#5A6A61',
     marginBottom: 16,
     lineHeight: 18,
   },
   modalInput: {
     borderWidth: 1.5,
-    borderColor: '#E2E9DF',
+    borderColor: '#EBE3D7',
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: 12,
     fontSize: 14,
-    color: '#0B2019',
+    color: '#14211B',
     marginBottom: 20,
   },
   modalActions: {
@@ -528,15 +528,15 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 12,
     borderWidth: 1.5,
-    borderColor: '#E2E9DF',
+    borderColor: '#EBE3D7',
     alignItems: 'center',
   },
-  modalCancelText: { fontSize: 15, color: '#4A5B53', fontWeight: '600' },
+  modalCancelText: { fontSize: 15, color: '#5A6A61', fontWeight: '600' },
   modalSave: {
     flex: 1,
     paddingVertical: 12,
     borderRadius: 12,
-    backgroundColor: '#0C3F30',
+    backgroundColor: '#0A4835',
     alignItems: 'center',
   },
   modalSaveText: { fontSize: 15, color: '#fff', fontWeight: '700' },

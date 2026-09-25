@@ -146,7 +146,7 @@ const QuickActions: React.FC = () => {
 
 // ── Alerts list ───────────────────────────────────────────────────────────────
 
-const ALERT_COLORS = ['#0F4C3A', '#2E7D8F', '#E8A020', '#D6453F', '#7A5AA6'];
+const ALERT_COLORS = ['#0E5C44', '#2E7D8F', '#F2A93B', '#D0402F', '#7A5AA6'];
 
 const AlertesList: React.FC<{ alertes: DashboardAlerte[] }> = ({ alertes }) => {
   if (alertes.length === 0) {
@@ -178,7 +178,7 @@ const AlertesList: React.FC<{ alertes: DashboardAlerte[] }> = ({ alertes }) => {
                 {alerte.current_price != null ? ` · Actuel : ${alerte.current_price.toFixed(2)} MAD` : ''}
               </Text>
               {alerte.is_triggered ? (
-                <Text style={[styles.alertePrix, { color: '#0F4C3A' }]}>
+                <Text style={[styles.alertePrix, { color: '#0E5C44' }]}>
                   🎉 Prix atteint !
                 </Text>
               ) : null}
@@ -291,7 +291,7 @@ const DashboardScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
 
   return (
     <View style={styles.root}>
-      <StatusBar barStyle="light-content" backgroundColor="#0C3F30" />
+      <StatusBar barStyle="light-content" backgroundColor="#0A4835" />
       <SafeAreaView style={styles.safeArea} edges={['top']}>
         <DashboardHeader />
       </SafeAreaView>
@@ -407,14 +407,14 @@ const DashboardScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
 // ── Styles ────────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: '#E9F0E6' },
-  safeArea: { backgroundColor: '#0C3F30' },
+  root: { flex: 1, backgroundColor: '#F3EDE3' },
+  safeArea: { backgroundColor: '#0A4835' },
   scroll: { flex: 1, marginTop: -1 },
   scrollContent: { paddingBottom: 40 },
 
   // Header
   header: {
-    backgroundColor: '#0C3F30',
+    backgroundColor: '#0A4835',
     paddingHorizontal: 20,
     paddingTop: 8,
     paddingBottom: 0,
@@ -447,7 +447,7 @@ const styles = StyleSheet.create({
   },
   headerWave: {
     height: 20,
-    backgroundColor: '#E9F0E6',
+    backgroundColor: '#F3EDE3',
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     marginTop: -2,
@@ -466,7 +466,7 @@ const styles = StyleSheet.create({
 
   // Loading / Error
   loadingContainer: { alignItems: 'center', paddingVertical: 64 },
-  loadingText: { marginTop: 14, color: '#4A5B53', fontSize: 15 },
+  loadingText: { marginTop: 14, color: '#5A6A61', fontSize: 15 },
   errorContainer: {
     margin: 20,
     padding: 28,
@@ -480,8 +480,8 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   errorEmoji: { fontSize: 40, marginBottom: 12 },
-  errorTitle: { fontSize: 17, fontWeight: '700', color: '#0B2019', marginBottom: 8 },
-  errorMessage: { fontSize: 14, color: '#4A5B53', textAlign: 'center', marginBottom: 20, lineHeight: 20 },
+  errorTitle: { fontSize: 17, fontWeight: '700', color: '#14211B', marginBottom: 8 },
+  errorMessage: { fontSize: 14, color: '#5A6A61', textAlign: 'center', marginBottom: 20, lineHeight: 20 },
   retryButton: {
     backgroundColor: C.primary,
     paddingHorizontal: 28,
@@ -496,9 +496,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 8,
     marginBottom: 4,
-    backgroundColor: '#0C3F30',
+    backgroundColor: '#0A4835',
     borderRadius: 20,
-    shadowColor: '#0C3F30',
+    shadowColor: '#0A4835',
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.30,
     shadowRadius: 14,
@@ -561,11 +561,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 16, marginTop: 14, marginBottom: 4,
     backgroundColor: C.white, borderRadius: 16,
     paddingLeft: 16, paddingRight: 6, paddingVertical: 6,
-    shadowColor: '#0B2019', shadowOpacity: 0.08, shadowRadius: 12,
+    shadowColor: '#14211B', shadowOpacity: 0.08, shadowRadius: 12,
     shadowOffset: { width: 0, height: 4 }, elevation: 3,
   },
   rechercheZone: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10 },
-  recherchePlaceholder: { flex: 1, fontSize: 15, color: '#8A9A92', paddingVertical: 10 },
+  recherchePlaceholder: { flex: 1, fontSize: 15, color: '#93A09A', paddingVertical: 10 },
   rechercheScan: {
     width: 38, height: 38, borderRadius: 12, backgroundColor: C.primary,
     alignItems: 'center', justifyContent: 'center',
@@ -577,20 +577,20 @@ const styles = StyleSheet.create({
     alignItems: 'center', justifyContent: 'center',
   },
   rayonEmoji: { fontSize: 26 },
-  rayonLibelle: { fontSize: 11.5, fontWeight: '600', color: '#3C4F47', textAlign: 'center' },
+  rayonLibelle: { fontSize: 11.5, fontWeight: '600', color: '#47564F', textAlign: 'center' },
   sectionTitle: {
     fontSize: 16,
     fontWeight: '800',
-    color: '#0B2019',
+    color: '#14211B',
     letterSpacing: -0.2,
   },
   voirTout: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#0F4C3A',
+    color: '#0E5C44',
     paddingHorizontal: 10,
     paddingVertical: 4,
-    backgroundColor: '#EEF6F1',
+    backgroundColor: '#E4F1EA',
     borderRadius: 12,
   },
 
@@ -616,9 +616,9 @@ const styles = StyleSheet.create({
   statValue: { fontSize: 22, fontWeight: '800', letterSpacing: -0.5 },
   statLabel: { fontSize: 11, marginTop: 3, fontWeight: '600', textAlign: 'center' },
 
-  statCardGreen: { backgroundColor: '#EEF6F1', borderWidth: 1, borderColor: '#A7D1BA' },
-  statValueGreen: { color: '#0C3F30' },
-  statLabelGreen: { color: '#0F4C3A' },
+  statCardGreen: { backgroundColor: '#E4F1EA', borderWidth: 1, borderColor: '#95CEB4' },
+  statValueGreen: { color: '#0A4835' },
+  statLabelGreen: { color: '#0E5C44' },
 
   statCardBlue: { backgroundColor: '#EAF3F5', borderWidth: 1, borderColor: '#bfdbfe' },
   statValueBlue: { color: '#1d4ed8' },
@@ -648,24 +648,24 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 4,
     borderWidth: 1,
-    borderColor: '#E9F0E6',
+    borderColor: '#F3EDE3',
   },
   actionIconWrap: {
     width: 48,
     height: 48,
     borderRadius: 14,
-    backgroundColor: '#EEF6F1',
+    backgroundColor: '#E4F1EA',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 8,
     borderWidth: 1,
-    borderColor: '#D3E8DC',
+    borderColor: '#C6E5D6',
   },
   actionEmoji: { fontSize: 24 },
   actionLabel: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#3C4F47',
+    color: '#47564F',
     textAlign: 'center',
   },
 
@@ -688,13 +688,13 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 4,
     borderWidth: 1,
-    borderColor: '#E9F0E6',
+    borderColor: '#F3EDE3',
   },
   shortcutEmoji: { fontSize: 32, marginBottom: 10 },
   shortcutLabel: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#3C4F47',
+    color: '#47564F',
   },
 
   // Alerts
@@ -712,8 +712,8 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   alertesEmptyEmoji: { fontSize: 32, marginBottom: 10 },
-  alertesEmptyText: { color: '#3C4F47', fontSize: 15, fontWeight: '600', marginBottom: 4 },
-  alertesEmptyHint: { color: '#8A9A92', fontSize: 13, textAlign: 'center' },
+  alertesEmptyText: { color: '#47564F', fontSize: 15, fontWeight: '600', marginBottom: 4 },
+  alertesEmptyHint: { color: '#93A09A', fontSize: 13, textAlign: 'center' },
   alerteItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -732,10 +732,10 @@ const styles = StyleSheet.create({
   alerteProduit: {
     fontSize: 15,
     fontWeight: '700',
-    color: '#0B2019',
+    color: '#14211B',
     marginBottom: 3,
   },
-  alerteMessage: { fontSize: 13, color: '#4A5B53', lineHeight: 18 },
+  alerteMessage: { fontSize: 13, color: '#5A6A61', lineHeight: 18 },
   alertePrix: {
     fontSize: 14,
     fontWeight: '700',
@@ -743,7 +743,7 @@ const styles = StyleSheet.create({
   },
   alerteChevron: {
     fontSize: 22,
-    color: '#C9D5C4',
+    color: '#DBD0BF',
     marginLeft: 8,
     fontWeight: '300',
   },

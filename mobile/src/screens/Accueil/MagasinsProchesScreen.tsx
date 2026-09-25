@@ -69,8 +69,8 @@ const PANEL_HEIGHT = SCREEN_HEIGHT * 0.60;
 const DEFAULT_RADIUS = 10;
 
 const MARKER_GREEN  = C.primary;      // product_count > 20
-const MARKER_ORANGE = '#E8A020';      // product_count 5–20
-const MARKER_GRAY   = '#8A9A92';      // product_count < 5
+const MARKER_ORANGE = '#F2A93B';      // product_count 5–20
+const MARKER_GRAY   = '#93A09A';      // product_count < 5
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -1036,7 +1036,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   tabActive: {
-    backgroundColor: C.primaryLight ?? '#D3E8DC',
+    backgroundColor: C.primaryLight ?? '#C6E5D6',
   },
   tabText: {
     fontSize: 13,
@@ -1085,7 +1085,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   storeRowSelected: {
-    backgroundColor: '#EEF6F1',
+    backgroundColor: '#E4F1EA',
   },
   checkbox: {
     width: 22,
@@ -1341,12 +1341,12 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   productChip: {
-    backgroundColor: '#EEF6F1',
+    backgroundColor: '#E4F1EA',
     borderRadius: 8,
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderWidth: 1,
-    borderColor: '#A7D1BA',
+    borderColor: '#95CEB4',
   },
   productChipText: {
     fontSize: 11,

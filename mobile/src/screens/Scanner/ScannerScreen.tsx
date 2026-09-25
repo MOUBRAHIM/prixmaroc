@@ -163,7 +163,7 @@ const EditableItemRow: React.FC<{
           value={name}
           onChangeText={setName}
           placeholder="Nom du produit"
-          placeholderTextColor="#8A9A92"
+          placeholderTextColor="#93A09A"
           returnKeyType="next"
         />
         <View style={editStyles.priceRow}>
@@ -173,7 +173,7 @@ const EditableItemRow: React.FC<{
             onChangeText={setPrice}
             keyboardType="decimal-pad"
             placeholder="0.00"
-            placeholderTextColor="#8A9A92"
+            placeholderTextColor="#93A09A"
           />
           <Text style={editStyles.priceCurrency}>MAD</Text>
           <TouchableOpacity style={editStyles.saveBtn} onPress={handleSave}>
@@ -204,7 +204,7 @@ const EditableItemRow: React.FC<{
         <Text style={styles.itemPriceUnit}>MAD</Text>
       </View>
       <TouchableOpacity style={editStyles.editBtn} onPress={onEdit}>
-        <Ionicons name="pencil-outline" size={15} color="#8A9A92" />
+        <Ionicons name="pencil-outline" size={15} color="#93A09A" />
       </TouchableOpacity>
     </View>
   );
@@ -239,8 +239,8 @@ const ResultsView: React.FC<{ scan: OcrScan; onReset: () => void }> = ({
     scan.status === 'done'
       ? C.primary
       : scan.status === 'failed'
-      ? '#D6453F'
-      : '#E8A020';
+      ? '#D0402F'
+      : '#F2A93B';
 
   const statusLabel =
     scan.status === 'done'
@@ -326,7 +326,7 @@ const ResultsView: React.FC<{ scan: OcrScan; onReset: () => void }> = ({
 
           {storeName ? (
             <View style={styles.infoRow}>
-              <Ionicons name="storefront-outline" size={16} color="#4A5B53" />
+              <Ionicons name="storefront-outline" size={16} color="#5A6A61" />
               <Text style={styles.infoLabel}>Magasin</Text>
               <Text style={styles.infoValue}>{storeName}</Text>
             </View>
@@ -334,7 +334,7 @@ const ResultsView: React.FC<{ scan: OcrScan; onReset: () => void }> = ({
 
           {date ? (
             <View style={styles.infoRow}>
-              <Ionicons name="calendar-outline" size={16} color="#4A5B53" />
+              <Ionicons name="calendar-outline" size={16} color="#5A6A61" />
               <Text style={styles.infoLabel}>Date</Text>
               <Text style={styles.infoValue}>{date}</Text>
             </View>
@@ -429,7 +429,7 @@ const ResultsView: React.FC<{ scan: OcrScan; onReset: () => void }> = ({
         {/* Déjà confirmé */}
         {(isAlreadyConfirmed || confirmState === 'done') && (
           <View style={styles.confirmedBanner}>
-            <Ionicons name="shield-checkmark-outline" size={16} color="#0C3F30" />
+            <Ionicons name="shield-checkmark-outline" size={16} color="#0A4835" />
             <Text style={styles.confirmedBannerText}>
               Prix enregistrés — ils améliorent la précision de l'application pour tous
             </Text>
@@ -618,7 +618,7 @@ const ScannerScreen: React.FC = () => {
 // ── Styles ────────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#0B2019' },
+  safeArea: { flex: 1, backgroundColor: '#14211B' },
   centered: {
     flex: 1,
     alignItems: 'center',
@@ -645,7 +645,7 @@ const styles = StyleSheet.create({
   },
   permissionText: {
     fontSize: 15,
-    color: '#8A9A92',
+    color: '#93A09A',
     textAlign: 'center',
     marginBottom: 32,
     lineHeight: 22,
@@ -748,7 +748,7 @@ const styles = StyleSheet.create({
     gap: 14,
   },
   scanHint: {
-    color: '#B7C4B2',
+    color: '#CFC4B3',
     fontSize: 13,
     textAlign: 'center',
     paddingHorizontal: 40,
@@ -811,7 +811,7 @@ const styles = StyleSheet.create({
     backgroundColor: C.primary,
   },
   progressDotDone: {
-    backgroundColor: '#0C3F30',
+    backgroundColor: '#0A4835',
   },
   progressDotInner: {
     width: 8,
@@ -840,7 +840,7 @@ const styles = StyleSheet.create({
   // Retry guide
   retryGuideWrap: {
     flex: 1,
-    backgroundColor: '#F2F6F0',
+    backgroundColor: '#FBF7F1',
     justifyContent: 'center',
     padding: 20,
   },
@@ -859,31 +859,31 @@ const styles = StyleSheet.create({
     width: 76,
     height: 76,
     borderRadius: 38,
-    backgroundColor: '#EEF6F1',
+    backgroundColor: '#E4F1EA',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
     borderWidth: 2,
-    borderColor: '#A7D1BA',
+    borderColor: '#95CEB4',
   },
   retryIconEmoji: { fontSize: 38 },
   retryGuideTitle: {
     fontSize: 20,
     fontWeight: '800',
-    color: '#0B2019',
+    color: '#14211B',
     marginBottom: 8,
     textAlign: 'center',
   },
   retryGuideSubtitle: {
     fontSize: 14,
-    color: '#4A5B53',
+    color: '#5A6A61',
     textAlign: 'center',
     marginBottom: 22,
     lineHeight: 20,
   },
   tipsList: {
     alignSelf: 'stretch',
-    backgroundColor: '#F2F6F0',
+    backgroundColor: '#FBF7F1',
     borderRadius: 12,
     padding: 16,
     gap: 10,
@@ -892,7 +892,7 @@ const styles = StyleSheet.create({
   tipRow: {},
   tipText: {
     fontSize: 14,
-    color: '#3C4F47',
+    color: '#47564F',
     lineHeight: 20,
   },
   retryBtn: {
@@ -915,13 +915,13 @@ const styles = StyleSheet.create({
   retryBtnText: { color: '#ffffff', fontSize: 17, fontWeight: '700' },
   manualLink: { paddingVertical: 6 },
   manualLinkText: {
-    color: '#4A5B53',
+    color: '#5A6A61',
     fontSize: 14,
     textDecorationLine: 'underline',
   },
 
   // Results
-  resultsScroll: { flex: 1, backgroundColor: '#F2F6F0' },
+  resultsScroll: { flex: 1, backgroundColor: '#FBF7F1' },
   resultsContent: { padding: 16, paddingBottom: 40 },
   resultsHeader: { alignItems: 'center', paddingVertical: 28, gap: 10 },
   resultsIconWrap: {
@@ -941,7 +941,7 @@ const styles = StyleSheet.create({
   resultsTitle: {
     fontSize: 22,
     fontWeight: '800',
-    color: '#0B2019',
+    color: '#14211B',
   },
   statusBadge: {
     flexDirection: 'row',
@@ -969,7 +969,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#8A9A92',
+    color: '#93A09A',
     marginBottom: 14,
     textTransform: 'uppercase',
     letterSpacing: 1,
@@ -980,14 +980,14 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#E9F0E6',
+    borderBottomColor: '#F3EDE3',
   },
   totalRow: { borderBottomWidth: 0, paddingTop: 14 },
-  infoLabel: { flex: 1, fontSize: 14, color: '#4A5B53', fontWeight: '500' },
-  infoValue: { fontSize: 14, fontWeight: '600', color: '#0B2019' },
+  infoLabel: { flex: 1, fontSize: 14, color: '#5A6A61', fontWeight: '500' },
+  infoValue: { fontSize: 14, fontWeight: '600', color: '#14211B' },
   totalValue: { fontSize: 22, fontWeight: '800', color: C.primary },
   noInfoText: {
-    color: '#8A9A92',
+    color: '#93A09A',
     fontSize: 14,
     fontStyle: 'italic',
     textAlign: 'center',
@@ -1002,17 +1002,17 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   articlesBadge: {
-    backgroundColor: '#EEF6F1',
+    backgroundColor: '#E4F1EA',
     borderRadius: 10,
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderWidth: 1,
-    borderColor: '#A7D1BA',
+    borderColor: '#95CEB4',
   },
   articlesBadgeText: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#0F4C3A',
+    color: '#0E5C44',
   },
   itemRow: {
     flexDirection: 'row',
@@ -1020,19 +1020,19 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     gap: 10,
   },
-  itemRowBorder: { borderBottomWidth: 1, borderBottomColor: '#E9F0E6' },
+  itemRowBorder: { borderBottomWidth: 1, borderBottomColor: '#F3EDE3' },
   itemInfo: { flex: 1 },
   itemName: {
     fontSize: 14,
-    color: '#0B2019',
+    color: '#14211B',
     fontWeight: '600',
     marginBottom: 3,
     lineHeight: 19,
   },
-  itemQty: { fontSize: 12, color: '#8A9A92', marginBottom: 3 },
+  itemQty: { fontSize: 12, color: '#93A09A', marginBottom: 3 },
   promoBadge: {
     alignSelf: 'flex-start',
-    backgroundColor: '#FBEDEC',
+    backgroundColor: '#FCEDE9',
     borderRadius: 5,
     paddingHorizontal: 6,
     paddingVertical: 2,
@@ -1040,17 +1040,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#F3C9C6',
   },
-  promoBadgeText: { color: '#C1272D', fontSize: 9, fontWeight: '800' },
+  promoBadgeText: { color: '#D0402F', fontSize: 9, fontWeight: '800' },
   itemPriceWrap: { alignItems: 'flex-end' },
   itemPrice: {
     fontSize: 15,
     fontWeight: '700',
-    color: '#0B2019',
+    color: '#14211B',
     textAlign: 'right',
   },
   itemPriceUnit: {
     fontSize: 10,
-    color: '#8A9A92',
+    color: '#93A09A',
     fontWeight: '600',
     textAlign: 'right',
   },
@@ -1061,10 +1061,10 @@ const styles = StyleSheet.create({
     paddingTop: 14,
     marginTop: 4,
     borderTopWidth: 1,
-    borderTopColor: '#E2E9DF',
+    borderTopColor: '#EBE3D7',
   },
-  subtotalLabel: { fontSize: 13, color: '#4A5B53', fontWeight: '600' },
-  subtotalValue: { fontSize: 15, fontWeight: '800', color: '#0B2019' },
+  subtotalLabel: { fontSize: 13, color: '#5A6A61', fontWeight: '600' },
+  subtotalValue: { fontSize: 15, fontWeight: '800', color: '#14211B' },
 
   // Confirm button
   confirmBtn: {
@@ -1082,7 +1082,7 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 6,
   },
-  confirmBtnDone: { backgroundColor: '#0C3F30' },
+  confirmBtnDone: { backgroundColor: '#0A4835' },
   confirmBtnLoading: { opacity: 0.7 },
   confirmBtnText: { color: '#ffffff', fontSize: 16, fontWeight: '700' },
 
@@ -1090,18 +1090,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    backgroundColor: '#EEF6F1',
+    backgroundColor: '#E4F1EA',
     borderRadius: 10,
     paddingHorizontal: 14,
     paddingVertical: 10,
     marginBottom: 12,
     borderWidth: 1,
-    borderColor: '#A7D1BA',
+    borderColor: '#95CEB4',
   },
   confirmedBannerText: {
     flex: 1,
     fontSize: 13,
-    color: '#0C3F30',
+    color: '#0A4835',
     lineHeight: 18,
   },
 
@@ -1131,7 +1131,7 @@ const editStyles = StyleSheet.create({
     flex: 1,
     textAlign: 'right',
     fontSize: 11,
-    color: '#8A9A92',
+    color: '#93A09A',
     fontStyle: 'italic',
   },
   editRow: {
@@ -1139,14 +1139,14 @@ const editStyles = StyleSheet.create({
     gap: 8,
   },
   nameInput: {
-    backgroundColor: '#F2F6F0',
+    backgroundColor: '#FBF7F1',
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#C9D5C4',
+    borderColor: '#DBD0BF',
     paddingHorizontal: 10,
     paddingVertical: 8,
     fontSize: 14,
-    color: '#0B2019',
+    color: '#14211B',
   },
   priceRow: {
     flexDirection: 'row',
@@ -1155,20 +1155,20 @@ const editStyles = StyleSheet.create({
   },
   priceInput: {
     flex: 1,
-    backgroundColor: '#F2F6F0',
+    backgroundColor: '#FBF7F1',
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#C9D5C4',
+    borderColor: '#DBD0BF',
     paddingHorizontal: 10,
     paddingVertical: 8,
     fontSize: 14,
-    color: '#0B2019',
+    color: '#14211B',
     textAlign: 'right',
   },
   priceCurrency: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#4A5B53',
+    color: '#5A6A61',
   },
   saveBtn: {
     backgroundColor: C.primary,
@@ -1187,7 +1187,7 @@ const editStyles = StyleSheet.create({
     padding: 6,
     marginLeft: 4,
     borderRadius: 6,
-    backgroundColor: '#E9F0E6',
+    backgroundColor: '#F3EDE3',
   },
 });
 

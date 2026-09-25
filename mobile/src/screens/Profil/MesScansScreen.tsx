@@ -20,9 +20,9 @@ type Props = NativeStackScreenProps<ProfilStackParamList, 'MesScans'>;
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; icon: React.ComponentProps<typeof Ionicons>['name'] }> = {
   done:       { label: 'Traité',          color: C.primary,  icon: 'checkmark-circle' },
-  pending:    { label: 'En attente',       color: '#E8A020',  icon: 'hourglass' },
+  pending:    { label: 'En attente',       color: '#F2A93B',  icon: 'hourglass' },
   processing: { label: 'En cours',         color: '#2E7D8F',  icon: 'sync' },
-  failed:     { label: 'Échec',            color: '#D6453F',  icon: 'close-circle' },
+  failed:     { label: 'Échec',            color: '#D0402F',  icon: 'close-circle' },
 };
 
 // ── Carte scan ────────────────────────────────────────────────────────────────
@@ -56,7 +56,7 @@ const ScanCard: React.FC<{ scan: OcrScan; onPress: () => void }> = ({ scan, onPr
 
         {storeName && (
           <Text style={styles.scanStore}>
-            <Ionicons name="storefront-outline" size={12} color="#8A9A92" /> {storeName}
+            <Ionicons name="storefront-outline" size={12} color="#93A09A" /> {storeName}
           </Text>
         )}
 
@@ -69,7 +69,7 @@ const ScanCard: React.FC<{ scan: OcrScan; onPress: () => void }> = ({ scan, onPr
           )}
           {itemCount > 0 && (
             <View style={styles.scanStat}>
-              <Ionicons name="list-outline" size={13} color="#4A5B53" />
+              <Ionicons name="list-outline" size={13} color="#5A6A61" />
               <Text style={styles.scanStatText}>{itemCount} article{itemCount > 1 ? 's' : ''}</Text>
             </View>
           )}
@@ -79,7 +79,7 @@ const ScanCard: React.FC<{ scan: OcrScan; onPress: () => void }> = ({ scan, onPr
           <Text style={styles.errorMsg} numberOfLines={1}>{scan.error_message}</Text>
         )}
       </View>
-      <Ionicons name="chevron-forward" size={18} color="#8A9A92" />
+      <Ionicons name="chevron-forward" size={18} color="#93A09A" />
     </TouchableOpacity>
   );
 };
@@ -107,7 +107,7 @@ const MesScansScreen: React.FC<Props> = ({ navigation }) => {
 
       {isError && (
         <View style={styles.centered}>
-          <Ionicons name="alert-circle-outline" size={44} color="#D6453F" />
+          <Ionicons name="alert-circle-outline" size={44} color="#D0402F" />
           <Text style={styles.errorText}>Impossible de charger les scans</Text>
           <TouchableOpacity style={styles.retryBtn} onPress={() => refetch()}>
             <Text style={styles.retryBtnText}>Réessayer</Text>
@@ -135,7 +135,7 @@ const MesScansScreen: React.FC<Props> = ({ navigation }) => {
           }
           ListEmptyComponent={
             <View style={styles.emptyState}>
-              <Ionicons name="scan-outline" size={72} color="#B7C4B2" />
+              <Ionicons name="scan-outline" size={72} color="#CFC4B3" />
               <Text style={styles.emptyTitle}>Aucun scan</Text>
               <Text style={styles.emptySubtitle}>
                 Scannez vos tickets de caisse depuis l'onglet Scanner pour les retrouver ici.
@@ -149,15 +149,15 @@ const MesScansScreen: React.FC<Props> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#F2F6F0' },
+  safeArea: { flex: 1, backgroundColor: '#FBF7F1' },
   centered: { flex: 1, alignItems: 'center', paddingTop: 80, gap: 12 },
-  loadingText: { color: '#4A5B53', fontSize: 15 },
-  errorText: { color: '#D6453F', fontSize: 15, fontWeight: '600' },
+  loadingText: { color: '#5A6A61', fontSize: 15 },
+  errorText: { color: '#D0402F', fontSize: 15, fontWeight: '600' },
   retryBtn: { backgroundColor: C.primary, borderRadius: 10, paddingHorizontal: 24, paddingVertical: 10 },
   retryBtnText: { color: '#fff', fontWeight: '700', fontSize: 14 },
   listContent: { padding: 16, paddingBottom: 32 },
   listHeader: {
-    fontSize: 13, color: '#8A9A92', fontStyle: 'italic', marginBottom: 10,
+    fontSize: 13, color: '#93A09A', fontStyle: 'italic', marginBottom: 10,
   },
   scanCard: {
     flexDirection: 'row', alignItems: 'flex-start',
@@ -168,18 +168,18 @@ const styles = StyleSheet.create({
   scanIcon: { width: 44, height: 44, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
   scanContent: { flex: 1 },
   scanHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 },
-  scanDate: { fontSize: 13, fontWeight: '600', color: '#0B2019' },
+  scanDate: { fontSize: 13, fontWeight: '600', color: '#14211B' },
   statusBadge: { borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3 },
   statusText: { fontSize: 11, fontWeight: '700' },
-  scanStore: { fontSize: 12, color: '#8A9A92', marginBottom: 6 },
+  scanStore: { fontSize: 12, color: '#93A09A', marginBottom: 6 },
   scanStats: { flexDirection: 'row', gap: 12 },
   scanStat: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   scanStatValue: { fontSize: 14, fontWeight: '800', color: C.primary },
-  scanStatText: { fontSize: 13, color: '#4A5B53' },
-  errorMsg: { fontSize: 12, color: '#D6453F', marginTop: 4, fontStyle: 'italic' },
+  scanStatText: { fontSize: 13, color: '#5A6A61' },
+  errorMsg: { fontSize: 12, color: '#D0402F', marginTop: 4, fontStyle: 'italic' },
   emptyState: { alignItems: 'center', paddingTop: 60, paddingHorizontal: 40, gap: 12 },
-  emptyTitle: { fontSize: 20, fontWeight: '700', color: '#3C4F47' },
-  emptySubtitle: { fontSize: 14, color: '#8A9A92', textAlign: 'center', lineHeight: 20 },
+  emptyTitle: { fontSize: 20, fontWeight: '700', color: '#47564F' },
+  emptySubtitle: { fontSize: 14, color: '#93A09A', textAlign: 'center', lineHeight: 20 },
 });
 
 export default MesScansScreen;
