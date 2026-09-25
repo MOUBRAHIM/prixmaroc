@@ -8,6 +8,7 @@ import axios, {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from 'axios';
+import { Platform } from 'react-native';
 import * as SecureStore from './secureStorage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_BASE_URL, STORAGE_KEYS } from '@constants/index';
@@ -365,15 +366,12 @@ export const SoukAPI = {
 
 export const OcrAPI = {
   scan: async (imageUri: string): Promise<OcrScan> => {
-    const form = new FormData();
-    form.append('file', {
-      uri: imageUri,
-      type: 'image/jpeg',
-      name: 'receipt.jpg',
-    } as unknown as Blob);
+    const { form, headers } = await preparerEnvoi(imageUri, 'receipt.jpg');
     const { data } = await api.post<OcrScan>('/ocr/scan', form, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-      timeout: 60_000,
+      headers,
+      // La lecture d'un ticket prend une dizaine de secondes ; le réveil du
+      // serveur peut en ajouter cinquante.
+      timeout: 120_000,
     });
     return data;
   },
@@ -502,17 +500,37 @@ export const ProfileAPI = {
   },
 
   uploadAvatar: async (imageUri: string): Promise<{ avatar_url: string }> => {
-    const form = new FormData();
-    form.append('file', {
-      uri: imageUri,
-      type: 'image/jpeg',
-      name: 'avatar.jpg',
-    } as unknown as Blob);
-    const { data } = await api.post<{ avatar_url: string }>('/utilisateurs/me/avatar', form, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
+    const { form, headers } = await preparerEnvoi(imageUri, 'avatar.jpg');
+    const { data } = await api.post<{ avatar_url: string }>(
+      '/utilisateurs/me/avatar', form, { headers },
+    );
     return data;
   },
 };
+
+/**
+ * Prépare l'envoi d'un fichier, sur mobile comme dans le navigateur.
+ *
+ * React Native accepte `{ uri, type, name }` dans un FormData ; un navigateur
+ * n'en fait rien et y écrit « [object Object] ». Le serveur recevait donc une
+ * chaîne au lieu d'une image, et le scan de ticket échouait sur le web.
+ *
+ * Le Content-Type ne doit pas non plus être fixé à la main dans un
+ * navigateur : sans la frontière multipart qu'il génère lui-même, la requête
+ * est illisible côté serveur.
+ */
+async function preparerEnvoi(
+  uri: string,
+  nom: string,
+): Promise<{ form: FormData; headers: Record<string, string> }> {
+  const form = new FormData();
+  if (Platform.OS === 'web') {
+    const blob = await (await fetch(uri)).blob();
+    form.append('file', blob, nom);
+    return { form, headers: {} };
+  }
+  form.append('file', { uri, type: 'image/jpeg', name: nom } as unknown as Blob);
+  return { form, headers: { 'Content-Type': 'multipart/form-data' } };
+}
 
 export default api;
