@@ -56,13 +56,17 @@ ELECTROMENAGER = (
     "trancheuse", "yaourtiere", "deshydrateur", "purificateur", "humidificateur",
     # « four » seul écarterait les « petits fours », qui sont des biscuits.
     "mini four", "four electrique", "plaque chauffante", "moulin a cafe",
-    "brosse a dents electrique", "robot menager",
+    "brosse a dents electrique", "robot menager", "table de cuisson",
+    "chauffe-eau", "chauffe eau", "climatiseur", "ventilateur",
+    "oppo", "realme", "infinix", "tecno", "huawei", "cable", "usb", "adaptateur",
+    "power bank", "clavier", "souris", "manette",
 )
 
 # Restes d'extraction : mentions de mise en page prises pour des produits.
 FRAGMENTS = (
     "a partir de", "economie", "promotionnel", "prix promotion", "au lieu de",
     "offre speciale", "des le", "soit", "valeur", "remise",
+    "capacite", "dimensions", "garantie", "disponible en", "coloris",
 )
 
 VAISSELLE_RANGEMENT = (
@@ -75,7 +79,11 @@ VAISSELLE_RANGEMENT = (
     "louche", "spatule", "passoire", "rape", "moule", "bocal", "bocaux",
     "soupiere", "ramequin", "essoreuse", "planche a decouper", "tajine",
     "balai", "serpilliere", "raclette", "pelle", "couscoussier", "menagere",
-    "brosse", "ustensile",
+    "brosse", "ustensile", "service a epices", "porte-bouteille", "support",
+    "egouttoir", "distributeur", "boite a pain", "poubelle",
+    "plat de presentation", "porcelaine", "faience", "argile",
+    "film alimentaire", "papier aluminium", "sac congelation", "service",
+    "tirelire", "kit", "coffre-fort",
     # Matière : aucun aliment ne s'appelle « inox ». C'est ce mot, et non
     # « brochette », qui distingue les piques à brochettes des brochettes de bœuf.
     "inox",
@@ -88,7 +96,20 @@ DECO_TEXTILE = (
     "chemise", "chaussette", "peignoir", "bonnet", "echarpe", "cadre",
     "miroir", "vase", "bougie", "lampe", "guirlande", "decoration",
     "horloge", "tableau", "valise", "velo", "halteres", "jouet", "puzzle",
-    "poupee", "trottinette", "ballon", "pistolet", "peluche",
+    "poupee", "trottinette", "ballon", "pistolet", "peluche", "helicoptere",
+    "telecommande", "drone", "voiture rc",
+    # Textile marocain et literie : hors périmètre au même titre que le reste.
+    "jabador", "gandora", "djellaba", "caftan", "kaftan", "matelas", "banc",
+    "sac de sport", "sac a dos", "cartable", "parasol", "transat", "piscine",
+    # Cosmétique : ni nourriture, ni hygiène de base du foyer.
+    "rouge a levres", "maquillage", "vernis", "mascara", "fond de teint",
+    "eyeliner", "fard", "henne cheveux", "teinture",
+)
+
+# Objets, malgré un nom de consommable dans leur intitulé.
+OBJETS_DE_SALLE_DE_BAIN = (
+    "distributeur de savon", "porte-savon", "porte savon", "boite a savon",
+    "porte-brosse", "porte-serviette", "derouleur",
 )
 
 # Zone grise : consommables non alimentaires du quotidien.
@@ -97,6 +118,8 @@ HYGIENE_ENTRETIEN = (
     "deodorant", "lessive", "detergent", "javel", "nettoyant", "desinfectant",
     "liquide vaisselle", "adoucissant", "papier toilette", "essuie-tout",
     "mouchoir", "couche", "couches", "lingette", "lingettes", "coton",
+    # Marques de lessive : sans elles, « Pack Tide » passait pour un aliment.
+    "tide", "ariel", "omo", "persil lessive", "ajax", "mr propre", "paic",
     "brosse a dents", "rasoir jetable", "serviette hygienique", "parfum",
     "creme", "lait corporel", "cologne", "insecticide", "desodorisant",
 )
@@ -130,8 +153,16 @@ def categorie(nom: str) -> str:
     depouille = re.sub(r"[^a-z ]", " ", s).strip()
     if any(depouille.startswith(f) or depouille == f for f in FRAGMENTS):
         return "fragment"
+    # Nom coupé à l'extraction : « Biscuit chocolat à », « Lben à ». Une
+    # préposition en fin de nom signale une phrase tronquée, pas un produit.
+    if depouille.endswith((" a", " de", " en", " pour", " avec", " sur", " au")):
+        return "fragment"
     if contient_mot(s, ELECTROMENAGER):
         return "electromenager"
+    # L'hygiène passe avant la vaisselle pour la brosse à dents, ce qui ferait
+    # du distributeur de savon un consommable. On tranche ces objets d'abord.
+    if contient_mot(s, OBJETS_DE_SALLE_DE_BAIN):
+        return "vaisselle"
     if contient_mot(s, HYGIENE_ENTRETIEN):
         return "hygiene"          # testé avant la vaisselle : « brosse à dents »
     if contient_mot(s, VAISSELLE_RANGEMENT):
