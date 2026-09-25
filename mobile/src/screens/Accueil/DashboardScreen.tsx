@@ -216,20 +216,32 @@ const SectionHeader: React.FC<{ title: string; onVoirTout?: () => void }> = ({
  * qui a le clavier, l'historique et les filtres. C'est le geste d'ouverture
  * des applications de courses — on arrive, on cherche.
  */
-const BarreRecherche: React.FC<{ onPress: () => void }> = ({ onPress }) => (
-  <TouchableOpacity
-    style={styles.rechercheBarre}
-    onPress={onPress}
-    activeOpacity={0.85}
-    accessibilityRole="search"
-    accessibilityLabel="Rechercher un produit"
-  >
-    <Ionicons name="search" size={19} color={C.primary} />
-    <Text style={styles.recherchePlaceholder}>Rechercher un produit…</Text>
-    <View style={styles.rechercheScan}>
+const BarreRecherche: React.FC<{
+  onChercher: () => void;
+  onScanner: () => void;
+}> = ({ onChercher, onScanner }) => (
+  <View style={styles.rechercheBarre}>
+    <TouchableOpacity
+      style={styles.rechercheZone}
+      onPress={onChercher}
+      activeOpacity={0.7}
+      accessibilityRole="search"
+      accessibilityLabel="Rechercher un produit"
+    >
+      <Ionicons name="search" size={19} color={C.primary} />
+      <Text style={styles.recherchePlaceholder}>Rechercher un produit…</Text>
+    </TouchableOpacity>
+    {/* Le scan a sa propre zone : il ouvre la caméra, pas la recherche. */}
+    <TouchableOpacity
+      style={styles.rechercheScan}
+      onPress={onScanner}
+      activeOpacity={0.85}
+      accessibilityRole="button"
+      accessibilityLabel="Scanner le code-barres d'un produit"
+    >
       <Ionicons name="barcode-outline" size={17} color={C.white} />
-    </View>
-  </TouchableOpacity>
+    </TouchableOpacity>
+  </View>
 );
 
 /** Rayons du magasin : le second geste, quand on ne sait pas quoi chercher. */
@@ -324,7 +336,12 @@ const DashboardScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
         )}
 
         {/* Chercher d'abord : c'est ce pour quoi on ouvre l'application. */}
-        <BarreRecherche onPress={() => navigation.navigate('Comparer')} />
+        <BarreRecherche
+          onChercher={() => navigation.navigate('Comparer')}
+          onScanner={() =>
+            navigation.navigate('Comparer', { screen: 'ScanCodeBarres' })
+          }
+        />
         <Rayons
           onChoisir={(mot) =>
             navigation.navigate('Comparer', { screen: 'Recherche', params: { query: mot } })
@@ -547,6 +564,7 @@ const styles = StyleSheet.create({
     shadowColor: '#0B2019', shadowOpacity: 0.08, shadowRadius: 12,
     shadowOffset: { width: 0, height: 4 }, elevation: 3,
   },
+  rechercheZone: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10 },
   recherchePlaceholder: { flex: 1, fontSize: 15, color: '#8A9A92', paddingVertical: 10 },
   rechercheScan: {
     width: 38, height: 38, borderRadius: 12, backgroundColor: C.primary,
