@@ -248,9 +248,12 @@ const ProductCard: React.FC<{
 
 // ── Écran principal ───────────────────────────────────────────────────────────
 
-const RechercheScreen: React.FC<Props> = ({ navigation }) => {
-  const [query, setQuery] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
+const RechercheScreen: React.FC<Props> = ({ navigation, route }) => {
+  // Un rayon touché sur l'accueil arrive ici avec son mot : la recherche
+  // s'ouvre déjà remplie plutôt que sur un champ vide.
+  const rayon = route.params?.query ?? '';
+  const [query, setQuery] = useState(rayon);
+  const [searchTerm, setSearchTerm] = useState(rayon);
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [showFilters, setShowFilters] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);

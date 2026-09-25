@@ -207,6 +207,67 @@ const SectionHeader: React.FC<{ title: string; onVoirTout?: () => void }> = ({
   </View>
 );
 
+// ── Recherche et rayons ───────────────────────────────────────────────────────
+
+/**
+ * Barre de recherche en tête d'écran.
+ *
+ * Elle n'accueille pas la saisie : la toucher emmène à l'écran de recherche,
+ * qui a le clavier, l'historique et les filtres. C'est le geste d'ouverture
+ * des applications de courses — on arrive, on cherche.
+ */
+const BarreRecherche: React.FC<{ onPress: () => void }> = ({ onPress }) => (
+  <TouchableOpacity
+    style={styles.rechercheBarre}
+    onPress={onPress}
+    activeOpacity={0.85}
+    accessibilityRole="search"
+    accessibilityLabel="Rechercher un produit"
+  >
+    <Ionicons name="search" size={19} color={C.primary} />
+    <Text style={styles.recherchePlaceholder}>Rechercher un produit…</Text>
+    <View style={styles.rechercheScan}>
+      <Ionicons name="barcode-outline" size={17} color={C.white} />
+    </View>
+  </TouchableOpacity>
+);
+
+/** Rayons du magasin : le second geste, quand on ne sait pas quoi chercher. */
+const RAYONS: { mot: string; libelle: string; emoji: string; fond: string }[] = [
+  { mot: 'lait',     libelle: 'Laitiers',    emoji: '🥛', fond: '#EAF2F6' },
+  { mot: 'huile',    libelle: 'Huiles',      emoji: '🫗', fond: '#FBF3E0' },
+  { mot: 'farine',   libelle: 'Farine',      emoji: '🌾', fond: '#F6F1E3' },
+  { mot: 'couscous', libelle: 'Couscous',    emoji: '🍚', fond: '#FAF2E6' },
+  { mot: 'thé',      libelle: 'Thé & café',  emoji: '🍵', fond: '#E9F3ED' },
+  { mot: 'yaourt',   libelle: 'Yaourts',     emoji: '🥣', fond: '#EEF5F7' },
+  { mot: 'thon',     libelle: 'Conserves',   emoji: '🐟', fond: '#E8F1F4' },
+  { mot: 'savon',    libelle: 'Hygiène',     emoji: '🧴', fond: '#F2EFF8' },
+];
+
+const Rayons: React.FC<{ onChoisir: (mot: string) => void }> = ({ onChoisir }) => (
+  <ScrollView
+    horizontal
+    showsHorizontalScrollIndicator={false}
+    contentContainerStyle={styles.rayonsRangee}
+  >
+    {RAYONS.map((r) => (
+      <TouchableOpacity
+        key={r.mot}
+        style={styles.rayon}
+        activeOpacity={0.8}
+        onPress={() => onChoisir(r.mot)}
+        accessibilityRole="button"
+        accessibilityLabel={`Rayon ${r.libelle}`}
+      >
+        <View style={[styles.rayonPastille, { backgroundColor: r.fond }]}>
+          <Text style={styles.rayonEmoji}>{r.emoji}</Text>
+        </View>
+        <Text style={styles.rayonLibelle} numberOfLines={1}>{r.libelle}</Text>
+      </TouchableOpacity>
+    ))}
+  </ScrollView>
+);
+
 // ── Main Screen ───────────────────────────────────────────────────────────────
 
 const DashboardScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
@@ -261,6 +322,14 @@ const DashboardScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         )}
+
+        {/* Chercher d'abord : c'est ce pour quoi on ouvre l'application. */}
+        <BarreRecherche onPress={() => navigation.navigate('Comparer')} />
+        <Rayons
+          onChoisir={(mot) =>
+            navigation.navigate('Comparer', { screen: 'Recherche', params: { query: mot } })
+          }
+        />
 
         {/* Content */}
         {data && (
@@ -470,6 +539,27 @@ const styles = StyleSheet.create({
     marginTop: 14,
     marginBottom: 10,
   },
+  rechercheBarre: {
+    flexDirection: 'row', alignItems: 'center', gap: 10,
+    marginHorizontal: 16, marginTop: 14, marginBottom: 4,
+    backgroundColor: C.white, borderRadius: 16,
+    paddingLeft: 16, paddingRight: 6, paddingVertical: 6,
+    shadowColor: '#0B2019', shadowOpacity: 0.08, shadowRadius: 12,
+    shadowOffset: { width: 0, height: 4 }, elevation: 3,
+  },
+  recherchePlaceholder: { flex: 1, fontSize: 15, color: '#8A9A92', paddingVertical: 10 },
+  rechercheScan: {
+    width: 38, height: 38, borderRadius: 12, backgroundColor: C.primary,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  rayonsRangee: { paddingHorizontal: 16, paddingTop: 14, paddingBottom: 4, gap: 14 },
+  rayon: { width: 64, alignItems: 'center', gap: 6 },
+  rayonPastille: {
+    width: 58, height: 58, borderRadius: 20,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  rayonEmoji: { fontSize: 26 },
+  rayonLibelle: { fontSize: 11.5, fontWeight: '600', color: '#3C4F47', textAlign: 'center' },
   sectionTitle: {
     fontSize: 16,
     fontWeight: '800',
