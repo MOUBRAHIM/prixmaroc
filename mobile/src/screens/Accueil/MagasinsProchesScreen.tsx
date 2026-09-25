@@ -29,6 +29,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { C } from '@constants/colors';
+import { prevenir } from '@utils/dialogue';
 import { MAPS_ENABLED } from '@constants';
 import { StoresAPI } from '@services/api';
 import type { AccueilStackParamList } from '@types/models';
@@ -100,7 +101,7 @@ const StoreRow: React.FC<StoreRowProps> = ({ store, selected, onToggle, onFocus,
 
   const navigateToStore = async () => {
     if (!store.latitude || !store.longitude) {
-      Alert.alert('Adresse inconnue', 'Ce magasin n\'a pas de coordonnées GPS.');
+      prevenir('Adresse inconnue', 'Ce magasin n\'a pas de coordonnées GPS.');
       return;
     }
     const dest = `${store.latitude},${store.longitude}`;
@@ -110,7 +111,7 @@ const StoreRow: React.FC<StoreRowProps> = ({ store, selected, onToggle, onFocus,
     const webUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLng}&destination=${dest}`;
     const canNative = await Linking.canOpenURL(nativeUrl).catch(() => false);
     Linking.openURL(canNative ? nativeUrl : webUrl).catch(() =>
-      Alert.alert('Erreur', "Impossible d'ouvrir la navigation.")
+      prevenir('Erreur', "Impossible d'ouvrir la navigation.")
     );
   };
 
@@ -194,7 +195,7 @@ const RouteModal: React.FC<RouteModalProps> = ({ visible, route, originLat, orig
 
     const canOpenNative = await Linking.canOpenURL(nativeBase).catch(() => false);
     Linking.openURL(canOpenNative ? nativeBase : webUrl).catch(() =>
-      Alert.alert('Erreur', "Impossible d'ouvrir la navigation.")
+      prevenir('Erreur', "Impossible d'ouvrir la navigation.")
     );
   };
 
@@ -487,7 +488,7 @@ const MagasinsProchesScreen: React.FC<Props> = () => {
       setRouteResult(result as RouteOptimizeResponse);
       setRouteModalVisible(true);
     } catch {
-      Alert.alert(
+      prevenir(
         'Erreur réseau',
         'Impossible de calculer le parcours. Vérifiez votre connexion.'
       );

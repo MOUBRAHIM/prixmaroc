@@ -9,6 +9,7 @@ import {
   I18nManager,
   Alert,
 } from 'react-native';
+import { confirmer, prevenir } from '@utils/dialogue';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -136,24 +137,18 @@ const ParametresScreen: React.FC = () => {
 
     if (isAr !== wasAr) {
       // RTL switch : informe l'utilisateur qu'un redémarrage est nécessaire
-      Alert.alert(
-        isAr ? 'Mode arabe (RTL)' : 'Mode LTR',
-        isAr
+      confirmer({
+        titre: isAr ? 'Mode arabe (RTL)' : 'Mode LTR',
+        message: isAr
           ? "L'affichage passera en arabe (droite à gauche) au prochain démarrage. Enregistrez puis relancez l'application."
           : "L'affichage repassera en mode gauche à droite au prochain démarrage. Enregistrez puis relancez l'application.",
-        [
-          { text: 'Annuler', style: 'cancel', onPress: () => update({ langue: prefs.langue }) },
-          {
-            text: 'Confirmer',
-            onPress: async () => {
-              const newPrefs = { ...prefs, langue: lang };
-              await savePreferences(newPrefs);
-              I18nManager.forceRTL(isAr);
-              setSaved(true);
-            },
-          },
-        ],
-      );
+      }).then(async (ok) => {
+        if (!ok) { update({ langue: prefs.langue }); return; }
+        const newPrefs = { ...prefs, langue: lang };
+        await savePreferences(newPrefs);
+        I18nManager.forceRTL(isAr);
+        setSaved(true);
+      });
     }
   };
 

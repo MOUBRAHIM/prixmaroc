@@ -17,6 +17,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
 import { ListsAPI } from '@services/api';
 import { C } from '@constants/colors';
+import { confirmer, prevenir } from '@utils/dialogue';
 import type { ListesStackParamList, ShoppingList } from '@types/models';
 
 type Props = NativeStackScreenProps<ListesStackParamList, 'MesListes'>;
@@ -126,7 +127,7 @@ const NewListModal: React.FC<{
 
   const handleSubmit = () => {
     const trimmed = name.trim();
-    if (!trimmed) { Alert.alert('Nom requis', 'Saisissez un nom pour la liste.'); return; }
+    if (!trimmed) { prevenir('Nom requis', 'Saisissez un nom pour la liste.'); return; }
     onSubmit(trimmed, desc.trim());
   };
 
@@ -201,20 +202,23 @@ const MesListesScreen: React.FC<Props> = ({ navigation }) => {
       setShowModal(false);
       setPresetType(null);
     },
-    onError: () => Alert.alert('Erreur', "Impossible de créer la liste."),
+    onError: () => prevenir('Erreur', "Impossible de créer la liste."),
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: number) => ListsAPI.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['shopping-lists'] }),
-    onError: () => Alert.alert('Erreur', "Impossible de supprimer la liste."),
+    onError: () => prevenir('Erreur', "Impossible de supprimer la liste."),
   });
 
-  const handleDelete = (id: number, name: string) => {
-    Alert.alert('Supprimer la liste', `Voulez-vous supprimer « ${name} » ?`, [
-      { text: 'Annuler', style: 'cancel' },
-      { text: 'Supprimer', style: 'destructive', onPress: () => deleteMutation.mutate(id) },
-    ]);
+  const handleDelete = async (id: number, name: string) => {
+    const ok = await confirmer({
+      titre: 'Supprimer la liste',
+      message: `Voulez-vous supprimer « ${name} » ?`,
+      action: 'Supprimer',
+      destructif: true,
+    });
+    if (ok) deleteMutation.mutate(id);
   };
 
   const openNewList = (type?: Exclude<ListType, 'toutes'>) => {

@@ -10,7 +10,10 @@ import {
   RefreshControl,
   Alert,
   Dimensions,
+  Modal,
+  TextInput,
 } from 'react-native';
+import { prevenir } from '@utils/dialogue';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
@@ -445,6 +448,7 @@ const ProduitDetailScreen: React.FC<Props> = ({ route, navigation }) => {
   const { productId, productName } = route.params;
   const queryClient = useQueryClient();
   const [alertTarget, setAlertTarget] = useState('');
+  const [alerteOuverte, setAlerteOuverte] = useState(false);
 
   const { data, isLoading, isError, error, refetch, isRefetching } = useQuery({
     queryKey: ['product-detail', productId],
@@ -456,35 +460,29 @@ const ProduitDetailScreen: React.FC<Props> = ({ route, navigation }) => {
       AlertsAPI.create({ product_id: productId, target_price: target }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['price-alerts'] });
-      Alert.alert('Alerte créée !', `Vous serez notifié quand le prix descend sous ${alertTarget} MAD.`);
+      prevenir('Alerte créée', `Vous serez notifié quand le prix descend sous ${alertTarget} MAD.`);
       setAlertTarget('');
+      setAlerteOuverte(false);
     },
-    onError: () => Alert.alert('Erreur', "Impossible de créer l'alerte."),
+    onError: () => prevenir('Erreur', "Impossible de créer l'alerte."),
   });
 
+  // Alert.prompt n'existe que sur iOS : sur Android et sur le web, la
+  // création d'alerte ne se passait rien. Une fenêtre avec un vrai champ
+  // fonctionne partout.
   const handleCreateAlert = () => {
     if (!data) return;
-    const cheapest = data.lowest_price ?? 0;
-    Alert.prompt(
-      'Créer une alerte prix',
-      `Prix actuel le plus bas : ${cheapest.toFixed(2)} MAD\nSaisissez votre prix cible (MAD) :`,
-      [
-        { text: 'Annuler', style: 'cancel' },
-        {
-          text: 'Créer',
-          onPress: (value?: string) => {
-            const n = parseFloat(value ?? '');
-            if (isNaN(n) || n <= 0) {
-              Alert.alert('Erreur', 'Veuillez saisir un prix valide.');
-              return;
-            }
-            alertMutation.mutate(n);
-          },
-        },
-      ],
-      'plain-text',
-      cheapest ? String(cheapest.toFixed(2)) : '',
-    );
+    setAlertTarget(data.lowest_price ? data.lowest_price.toFixed(2) : '');
+    setAlerteOuverte(true);
+  };
+
+  const validerAlerte = () => {
+    const n = parseFloat(alertTarget.replace(',', '.'));
+    if (isNaN(n) || n <= 0) {
+      prevenir('Prix invalide', 'Saisissez un montant supérieur à zéro.');
+      return;
+    }
+    alertMutation.mutate(n);
   };
 
   const sortedPrices = [...(data?.prices ?? [])].sort(
@@ -621,6 +619,45 @@ const ProduitDetailScreen: React.FC<Props> = ({ route, navigation }) => {
           </>
         )}
       </ScrollView>
+
+      <Modal visible={alerteOuverte} transparent animationType="fade"
+             onRequestClose={() => setAlerteOuverte(false)}>
+        <View style={styles.alerteFond}>
+          <View style={styles.alerteCarte}>
+            <Text style={styles.alerteTitre}>Créer une alerte prix</Text>
+            <Text style={styles.alerteTexte}>
+              {data?.lowest_price
+                ? `Prix le plus bas aujourd'hui : ${data.lowest_price.toFixed(2)} MAD`
+                : 'Aucun prix relevé pour ce produit.'}
+            </Text>
+            <Text style={styles.alerteLabel}>Prévenez-moi en dessous de</Text>
+            <View style={styles.alerteChampRangee}>
+              <TextInput
+                style={styles.alerteChamp}
+                value={alertTarget}
+                onChangeText={setAlertTarget}
+                keyboardType="decimal-pad"
+                placeholder="0.00"
+                placeholderTextColor="#8A9A92"
+                autoFocus
+              />
+              <Text style={styles.alerteDevise}>MAD</Text>
+            </View>
+            <View style={styles.alerteBoutons}>
+              <TouchableOpacity style={styles.alerteAnnuler}
+                                onPress={() => setAlerteOuverte(false)}>
+                <Text style={styles.alerteAnnulerTexte}>Annuler</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.alerteValider} onPress={validerAlerte}
+                                disabled={alertMutation.isPending}>
+                <Text style={styles.alerteValiderTexte}>
+                  {alertMutation.isPending ? 'Création…' : "Créer l'alerte"}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -778,6 +815,35 @@ const styles = StyleSheet.create({
   storeCity: { fontSize: 12, color: '#4A5B53', marginTop: 3 },
   storeSource: { fontSize: 11, color: '#8A9A92', marginTop: 2, textTransform: 'capitalize' },
   fraicheurRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 3 },
+  alerteFond: {
+    flex: 1, backgroundColor: 'rgba(11,32,25,0.55)',
+    alignItems: 'center', justifyContent: 'center', padding: 24,
+  },
+  alerteCarte: {
+    width: '100%', maxWidth: 380, backgroundColor: '#FFFFFF',
+    borderRadius: 20, padding: 22, gap: 10,
+  },
+  alerteTitre: { fontSize: 18, fontWeight: '800', color: '#0B2019' },
+  alerteTexte: { fontSize: 13.5, color: '#55655C' },
+  alerteLabel: {
+    fontSize: 11.5, fontWeight: '700', color: '#8A9A92',
+    textTransform: 'uppercase', letterSpacing: 0.6, marginTop: 6,
+  },
+  alerteChampRangee: {
+    flexDirection: 'row', alignItems: 'center', gap: 8,
+    borderWidth: 1, borderColor: '#DCE3D8', borderRadius: 14,
+    paddingHorizontal: 14, paddingVertical: 4,
+  },
+  alerteChamp: { flex: 1, fontSize: 20, fontWeight: '700', color: '#0B2019', paddingVertical: 10 },
+  alerteDevise: { fontSize: 13, fontWeight: '700', color: '#8A9A92' },
+  alerteBoutons: { flexDirection: 'row', gap: 10, marginTop: 10 },
+  alerteAnnuler: { flex: 1, paddingVertical: 14, alignItems: 'center' },
+  alerteAnnulerTexte: { fontSize: 15, fontWeight: '600', color: '#55655C' },
+  alerteValider: {
+    flex: 2, paddingVertical: 14, alignItems: 'center',
+    backgroundColor: C.primary, borderRadius: 14,
+  },
+  alerteValiderTexte: { fontSize: 15, fontWeight: '700', color: '#FFFFFF' },
   fraicheurText: { fontSize: 11, color: C.textMuted },
   fraicheurPerime: { color: C.promo, fontWeight: '600' },
   priceBox: { alignItems: 'flex-end' },

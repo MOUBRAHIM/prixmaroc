@@ -16,6 +16,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
 import { IAAPI, ListsAPI } from '@services/api';
 import { C } from '@constants/colors';
+import { confirmer, prevenir } from '@utils/dialogue';
 import { libelleFraicheur, niveauFraicheur } from '@utils/fraicheur';
 import type { ListesStackParamList, ListType, GeneratedList, GeneratedListItem } from '@types/models';
 
@@ -153,7 +154,7 @@ const NouvelleListeIAScreen: React.FC<Props> = ({ navigation }) => {
     onError: (err: unknown) => {
       const msg = (err as { response?: { data?: { detail?: string } } })
         ?.response?.data?.detail ?? 'Impossible de générer la liste. Réessayez.';
-      Alert.alert('Erreur IA', msg);
+      prevenir('Erreur IA', msg);
     },
   });
 
@@ -178,13 +179,12 @@ const NouvelleListeIAScreen: React.FC<Props> = ({ navigation }) => {
         ),
       );
       queryClient.invalidateQueries({ queryKey: ['shopping-lists'] });
-      Alert.alert(
-        'Liste sauvegardée !',
-        `"${list.name}" a été ajoutée à vos listes.`,
-        [{ text: 'Voir mes listes', onPress: () => navigation.navigate('MesListes') }],
-      );
+      // On emmène directement l'utilisateur à sa liste : l'ancienne boîte de
+      // dialogue n'apparaissait pas sur le web, et l'enregistrement semblait
+      // avoir échoué alors qu'il avait réussi.
+      navigation.navigate('MesListes');
     } catch {
-      Alert.alert('Erreur', 'Impossible de sauvegarder la liste.');
+      prevenir('Erreur', 'Impossible de sauvegarder la liste.');
     } finally {
       setSaving(false);
     }
@@ -225,7 +225,7 @@ const NouvelleListeIAScreen: React.FC<Props> = ({ navigation }) => {
     text += `\n_Généré par PrixMaroc IA 🇲🇦_`;
 
     Linking.openURL(`whatsapp://send?text=${encodeURIComponent(text)}`).catch(() =>
-      Alert.alert('WhatsApp non disponible', "Installez WhatsApp pour partager votre liste."),
+      prevenir('WhatsApp non disponible', "Installez WhatsApp pour partager votre liste."),
     );
   };
 

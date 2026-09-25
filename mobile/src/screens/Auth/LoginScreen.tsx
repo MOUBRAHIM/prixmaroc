@@ -13,6 +13,7 @@ import {
   Modal,
   Alert,
 } from 'react-native';
+import { prevenir } from '@utils/dialogue';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -64,12 +65,12 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   const saveUrl = async () => {
     const url = urlInput.trim().replace(/\/$/, '');
     if (!url.startsWith('http')) {
-      Alert.alert('URL invalide', "L'URL doit commencer par http:// ou https://");
+      prevenir('URL invalide', "L'URL doit commencer par http:// ou https://");
       return;
     }
     await setApiUrl(url);
     setShowUrlModal(false);
-    Alert.alert('URL mise à jour', `Backend : ${url}`);
+    prevenir('URL mise à jour', `Backend : ${url}`);
   };
 
   return (

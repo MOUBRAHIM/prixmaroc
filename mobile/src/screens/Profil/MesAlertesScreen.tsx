@@ -9,6 +9,7 @@ import {
   Alert,
   RefreshControl,
 } from 'react-native';
+import { confirmer, prevenir } from '@utils/dialogue';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -96,18 +97,16 @@ const MesAlertesScreen: React.FC<Props> = () => {
   const deleteMutation = useMutation({
     mutationFn: (id: number) => AlertsAPI.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['price-alerts'] }),
-    onError: () => Alert.alert('Erreur', "Impossible de supprimer l'alerte."),
+    onError: () => prevenir('Erreur', "Impossible de supprimer l'alerte."),
   });
 
   const handleDelete = (id: number, productName: string) => {
-    Alert.alert(
-      'Supprimer l\'alerte',
-      `Supprimer l'alerte pour « ${productName} » ?`,
-      [
-        { text: 'Annuler', style: 'cancel' },
-        { text: 'Supprimer', style: 'destructive', onPress: () => deleteMutation.mutate(id) },
-      ],
-    );
+    confirmer({
+      titre: "Supprimer l'alerte",
+      message: `Supprimer l'alerte pour « ${productName} » ?`,
+      action: 'Supprimer',
+      destructif: true,
+    }).then((ok) => { if (ok) deleteMutation.mutate(id); });
   };
 
   const active = (data ?? []).filter((a) => !a.is_triggered && a.triggered_at == null);

@@ -21,6 +21,7 @@ import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ListsAPI } from '@services/api';
 import { C } from '@constants/colors';
+import { confirmer, prevenir } from '@utils/dialogue';
 import type { ListesStackParamList, ShoppingList, ShoppingListItem } from '@types/models';
 
 type Props = NativeStackScreenProps<ListesStackParamList, 'DetailListe'>;
@@ -131,8 +132,8 @@ const AddItemModal: React.FC<{
 
   const handle = () => {
     const trimmed = name.trim();
-    if (!trimmed) { Alert.alert('Requis', 'Saisissez un nom de produit.'); return; }
-    if (qty < 1) { Alert.alert('Invalide', 'La quantité doit être ≥ 1.'); return; }
+    if (!trimmed) { prevenir('Requis', 'Saisissez un nom de produit.'); return; }
+    if (qty < 1) { prevenir('Invalide', 'La quantité doit être ≥ 1.'); return; }
     onSubmit(trimmed, qty);
     setName('');
     setQty(1);
@@ -294,7 +295,7 @@ const OptimizeModal: React.FC<{
     // Ouvre Google Maps en mode itinéraire
     const url = 'https://www.google.com/maps/dir/?api=1&travelmode=driving';
     Linking.openURL(url).catch(() =>
-      Alert.alert('Erreur', 'Impossible d\'ouvrir Google Maps.'),
+      prevenir('Erreur', 'Impossible d\'ouvrir Google Maps.'),
     );
   };
 
@@ -478,7 +479,7 @@ const DetailListeScreen: React.FC<Props> = ({ route }) => {
       queryClient.invalidateQueries({ queryKey: ['shopping-lists'] });
       setShowModal(false);
     },
-    onError: () => Alert.alert('Erreur', "Impossible d'ajouter l'article."),
+    onError: () => prevenir('Erreur', "Impossible d'ajouter l'article."),
   });
 
   const toggleMutation = useMutation({
@@ -487,7 +488,7 @@ const DetailListeScreen: React.FC<Props> = ({ route }) => {
     onMutate: ({ itemId }) => setTogglingId(itemId),
     onSettled: () => setTogglingId(null),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['shopping-list', listId] }),
-    onError: () => Alert.alert('Erreur', "Impossible de modifier l'article."),
+    onError: () => prevenir('Erreur', "Impossible de modifier l'article."),
   });
 
   const deleteMutation = useMutation({
@@ -496,32 +497,26 @@ const DetailListeScreen: React.FC<Props> = ({ route }) => {
       queryClient.invalidateQueries({ queryKey: ['shopping-list', listId] });
       queryClient.invalidateQueries({ queryKey: ['shopping-lists'] });
     },
-    onError: () => Alert.alert('Erreur', "Impossible de supprimer l'article."),
+    onError: () => prevenir('Erreur', "Impossible de supprimer l'article."),
   });
 
   const updateQtyMutation = useMutation({
     mutationFn: ({ itemId, quantity }: { itemId: number; quantity: number }) =>
       ListsAPI.updateItemQty(listId, itemId, quantity),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['shopping-list', listId] }),
-    onError: () => Alert.alert('Erreur', "Impossible de modifier la quantité."),
+    onError: () => prevenir('Erreur', "Impossible de modifier la quantité."),
   });
 
   // ─── Handlers ───────────────────────────────────────────────────────────────
 
   const handleDelete = useCallback((item: ShoppingListItem) => {
     const name = item.custom_name ?? item.product?.name ?? 'cet article';
-    Alert.alert(
-      'Supprimer',
-      `Supprimer « ${name} » de la liste ?`,
-      [
-        { text: 'Annuler', style: 'cancel' },
-        {
-          text: 'Supprimer',
-          style: 'destructive',
-          onPress: () => deleteMutation.mutate(item.id),
-        },
-      ],
-    );
+    confirmer({
+      titre: 'Supprimer',
+      message: `Supprimer « ${name} » de la liste ?`,
+      action: 'Supprimer',
+      destructif: true,
+    }).then((ok) => { if (ok) deleteMutation.mutate(item.id); });
   }, [deleteMutation]);
 
   const handleQtyChange = useCallback((item: ShoppingListItem, delta: number) => {
@@ -561,7 +556,7 @@ const DetailListeScreen: React.FC<Props> = ({ route }) => {
     text += `\n_PrixMaroc 🇲🇦_`;
 
     Linking.openURL(`whatsapp://send?text=${encodeURIComponent(text)}`).catch(() =>
-      Alert.alert(
+      prevenir(
         'WhatsApp non disponible',
         'Installez WhatsApp pour partager votre liste.',
       ),

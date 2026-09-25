@@ -7,6 +7,7 @@ import {
   View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput,
   ActivityIndicator, Modal, Alert, KeyboardAvoidingView, Platform, RefreshControl,
 } from 'react-native';
+import { prevenir } from '@utils/dialogue';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -100,7 +101,7 @@ const SoukPricesScreen: React.FC = () => {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['souk-list'] });
     },
-    onError: () => Alert.alert('Erreur', 'Vote impossible. Réessayez.'),
+    onError: () => prevenir('Erreur', 'Vote impossible. Réessayez.'),
   });
 
   const refreshing = medianQ.isFetching || listQ.isFetching;
@@ -209,23 +210,23 @@ const SubmitModal: React.FC<{ visible: boolean; defaultCity: string; onClose: ()
     onSuccess: (data) => {
       reset();
       if (data.status === 'approved') {
-        Alert.alert('Merci ! 🎉', 'Ton prix a été publié et aidera la communauté.');
+        prevenir('Merci ! 🎉', 'Ton prix a été publié et aidera la communauté.');
       } else {
-        Alert.alert('Reçu, en vérification ⏳', data.moderation_reason ?? 'Ce prix sera vérifié avant publication.');
+        prevenir('Reçu, en vérification ⏳', data.moderation_reason ?? 'Ce prix sera vérifié avant publication.');
       }
       onSubmitted();
     },
     onError: (e: unknown) => {
       const msg = (e as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
-      Alert.alert('Erreur', typeof msg === 'string' ? msg : 'Soumission impossible. Vérifie les champs.');
+      prevenir('Erreur', typeof msg === 'string' ? msg : 'Soumission impossible. Vérifie les champs.');
     },
   });
 
   const submit = () => {
     const p = parseFloat(price.replace(',', '.'));
-    if (itemName.trim().length < 2) return Alert.alert('Produit manquant', 'Indique le nom du produit.');
-    if (!p || p <= 0) return Alert.alert('Prix invalide', 'Indique un prix en MAD.');
-    if (defaultCity.trim().length < 2) return Alert.alert('Ville manquante', 'Indique la ville en haut de l\'écran.');
+    if (itemName.trim().length < 2) return prevenir('Produit manquant', 'Indique le nom du produit.');
+    if (!p || p <= 0) return prevenir('Prix invalide', 'Indique un prix en MAD.');
+    if (defaultCity.trim().length < 2) return prevenir('Ville manquante', 'Indique la ville en haut de l\'écran.');
     mut.mutate({
       item_name: itemName.trim(), category, price: p, unit,
       city: defaultCity.trim(),

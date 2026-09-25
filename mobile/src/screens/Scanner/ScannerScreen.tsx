@@ -9,6 +9,7 @@ import {
   ScrollView,
   TextInput,
 } from 'react-native';
+import { prevenir } from '@utils/dialogue';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useNavigation } from '@react-navigation/native';
@@ -143,7 +144,7 @@ const EditableItemRow: React.FC<{
   const handleSave = () => {
     const parsedPrice = parseFloat(price.replace(',', '.'));
     if (!name.trim() || isNaN(parsedPrice) || parsedPrice <= 0) {
-      Alert.alert('Valeur incorrecte', 'Entrez un nom et un prix valide.');
+      prevenir('Valeur incorrecte', 'Entrez un nom et un prix valide.');
       return;
     }
     onSave({
@@ -259,7 +260,7 @@ const ResultsView: React.FC<{ scan: OcrScan; onReset: () => void }> = ({
       setConfirmState('done');
     } catch {
       setConfirmState('error');
-      Alert.alert(
+      prevenir(
         'Erreur',
         "Impossible d'enregistrer les prix. Vérifiez votre connexion.",
       );

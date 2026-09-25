@@ -20,6 +20,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { AuthAPI, ProfileAPI, AdminAPI } from '@services/api';
 import { useAuthStore } from '@store/authStore';
 import { C } from '@constants/colors';
+import { confirmer, prevenir } from '@utils/dialogue';
 import type { ProfilStackParamList } from '@types/models';
 
 type Props = NativeStackScreenProps<ProfilStackParamList, 'MonProfil'>;
@@ -167,9 +168,9 @@ const AdminSection: React.FC = () => {
     setTriggering(slug);
     try {
       await AdminAPI.triggerScraper(slug);
-      Alert.alert('✅ Scraper lancé', `Le scraper ${slug} a été déclenché.`);
+      prevenir('✅ Scraper lancé', `Le scraper ${slug} a été déclenché.`);
     } catch {
-      Alert.alert('Erreur', `Impossible de lancer le scraper ${slug}.`);
+      prevenir('Erreur', `Impossible de lancer le scraper ${slug}.`);
     } finally {
       setTriggering(null);
     }
@@ -286,22 +287,24 @@ const MonProfilScreen: React.FC<Props> = ({ navigation }) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['me'] });
       setIsEditing(false);
-      Alert.alert('✅ Profil mis à jour', 'Vos informations ont été sauvegardées.');
+      prevenir('✅ Profil mis à jour', 'Vos informations ont été sauvegardées.');
     },
-    onError: () => Alert.alert('Erreur', 'Impossible de mettre à jour le profil.'),
+    onError: () => prevenir('Erreur', 'Impossible de mettre à jour le profil.'),
   });
 
   const handleLogout = () => {
-    Alert.alert('Déconnexion', 'Voulez-vous vous déconnecter ?', [
-      { text: 'Annuler', style: 'cancel' },
-      { text: 'Déconnexion', style: 'destructive', onPress: () => logout() },
-    ]);
+    confirmer({
+      titre: 'Déconnexion',
+      message: 'Voulez-vous vous déconnecter ?',
+      action: 'Déconnexion',
+      destructif: true,
+    }).then((ok) => { if (ok) logout(); });
   };
 
   const handlePickAvatar = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
-      Alert.alert('Permission requise', "Autorisez l'accès à la galerie.");
+      prevenir('Permission requise', "Autorisez l'accès à la galerie.");
       return;
     }
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -315,9 +318,9 @@ const MonProfilScreen: React.FC<Props> = ({ navigation }) => {
         setUploadingAvatar(true);
         await ProfileAPI.uploadAvatar(result.assets[0].uri);
         queryClient.invalidateQueries({ queryKey: ['me'] });
-        Alert.alert('✅ Photo mise à jour');
+        prevenir('✅ Photo mise à jour');
       } catch {
-        Alert.alert('Erreur', 'Impossible de mettre à jour la photo.');
+        prevenir('Erreur', 'Impossible de mettre à jour la photo.');
       } finally {
         setUploadingAvatar(false);
       }
