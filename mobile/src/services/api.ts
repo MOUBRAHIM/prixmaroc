@@ -485,13 +485,26 @@ export const NotificationsAPI = {
 
 // ─── Admin scraper ────────────────────────────────────────────────────────────
 
+export interface EtatCollecte {
+  en_cours: boolean;
+  depuis: string | null;
+  dernier_bilan: { catalogues: number; retenus: number; produits: number; prix: number } | null;
+  derniere_erreur: string | null;
+  dernier_releve: string | null;
+  prix_24h: number;
+  prix_7j: number;
+  prix_total: number;
+}
+
 export const AdminAPI = {
-  getScraperStatus: async (): Promise<Record<string, { status: string; last_run: string | null; products_found: number }>> => {
-    const { data } = await api.get('/admin/scrapers/status');
+  /** État de la collecte et fraîcheur des prix en base. */
+  etatCollecte: async (): Promise<EtatCollecte> => {
+    const { data } = await api.get<EtatCollecte>('/admin/collecte');
     return data;
   },
-  triggerScraper: async (slug: string): Promise<{ message: string }> => {
-    const { data } = await api.post(`/admin/scrapers/${slug}/trigger`);
+  /** Lance une collecte des catalogues. Rend la main tout de suite. */
+  lancerCollecte: async (catalogues = 12): Promise<{ message: string }> => {
+    const { data } = await api.post('/admin/collecte', null, { params: { catalogues } });
     return data;
   },
 };

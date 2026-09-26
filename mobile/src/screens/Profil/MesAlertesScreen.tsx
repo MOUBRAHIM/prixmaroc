@@ -10,6 +10,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import { confirmer, prevenir } from '@utils/dialogue';
+import { messageErreur } from '@utils/erreurs';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -97,7 +98,7 @@ const MesAlertesScreen: React.FC<Props> = () => {
   const deleteMutation = useMutation({
     mutationFn: (id: number) => AlertsAPI.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['price-alerts'] }),
-    onError: () => prevenir('Erreur', "Impossible de supprimer l'alerte."),
+    onError: (e) => prevenir('Erreur', messageErreur(e, "Impossible de supprimer l'alerte.")),
   });
 
   const handleDelete = (id: number, productName: string) => {

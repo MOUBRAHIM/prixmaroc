@@ -8,6 +8,7 @@ import {
   ActivityIndicator, Modal, Alert, KeyboardAvoidingView, Platform, RefreshControl,
 } from 'react-native';
 import { prevenir } from '@utils/dialogue';
+import { messageErreur } from '@utils/erreurs';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -101,7 +102,7 @@ const SoukPricesScreen: React.FC = () => {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['souk-list'] });
     },
-    onError: () => prevenir('Erreur', 'Vote impossible. Réessayez.'),
+    onError: (e) => prevenir('Erreur', messageErreur(e, 'Vote impossible. Réessayez.')),
   });
 
   const refreshing = medianQ.isFetching || listQ.isFetching;

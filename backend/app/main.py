@@ -25,6 +25,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.core.config import settings
 from app.routers import auth, produits, prix, magasins, listes, utilisateurs, ocr, admin_scraper, admin_products, admin_stores, admin_prices
+from app.routers import admin_collecte
 from app.routers import api_souk
 from app.routers import api_products, api_prices, api_stores, api_ai, api_dashboard, api_notifications
 from app.services.scheduler import startup_scheduler, shutdown_scheduler
@@ -75,6 +76,7 @@ app.include_router(magasins.router)
 app.include_router(listes.router)
 app.include_router(ocr.router)
 app.include_router(admin_scraper.router)
+app.include_router(admin_collecte.router)
 app.include_router(admin_products.router)
 app.include_router(admin_stores.router)
 app.include_router(admin_prices.router)

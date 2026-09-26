@@ -14,6 +14,7 @@ import {
   TextInput,
 } from 'react-native';
 import { prevenir } from '@utils/dialogue';
+import { messageErreur } from '@utils/erreurs';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
@@ -464,7 +465,7 @@ const ProduitDetailScreen: React.FC<Props> = ({ route, navigation }) => {
       setAlertTarget('');
       setAlerteOuverte(false);
     },
-    onError: () => prevenir('Erreur', "Impossible de créer l'alerte."),
+    onError: (e) => prevenir('Erreur', messageErreur(e, "Impossible de créer l'alerte.")),
   });
 
   // Alert.prompt n'existe que sur iOS : sur Android et sur le web, la

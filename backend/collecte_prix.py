@@ -347,23 +347,26 @@ async def enregistrer(db: AsyncSession, releves: list[Releve]) -> tuple[int, int
     return nouveaux, ajoutes
 
 
-async def main() -> None:
-    appliquer = "--appliquer" in sys.argv
-    limite = 8
-    for a in sys.argv:
-        if a.startswith("--catalogues="):
-            limite = int(a.split("=")[1])
+async def collecter(appliquer: bool, limite: int, journal=print) -> dict:
+    """
+    Exécute une collecte et rend son bilan.
 
+    Séparée de l'interface en ligne de commande pour que l'API puisse la
+    déclencher : le panneau d'administration lance la même collecte que la
+    tâche hebdomadaire, sans code dupliqué.
+    """
     if not settings.ANTHROPIC_API_KEY:
-        print("[STOP] ANTHROPIC_API_KEY absente — la collecte a besoin du modèle.")
-        return
+        raise CollecteInterrompue(
+            "clé API absente — la collecte a besoin du modèle pour lire les catalogues"
+        )
 
     claude = anthropic.AsyncAnthropic(api_key=settings.ANTHROPIC_API_KEY)
-    total_gardes = total_rejets = total_nouveaux = total_ajoutes = 0
+    bilan = {"catalogues": 0, "retenus": 0, "ecartes": 0, "produits": 0, "prix": 0}
 
     async with httpx.AsyncClient(follow_redirects=True) as web:
         catalogues = await catalogues_du_moment(web, limite)
-        print(f"{len(catalogues)} catalogues en cours\n")
+        bilan["catalogues"] = len(catalogues)
+        journal(f"{len(catalogues)} catalogues en cours")
 
         async with Session() as db:
             for url in catalogues:
@@ -372,42 +375,53 @@ async def main() -> None:
                     page = await web.get(url, headers=NAVIGATEUR, timeout=60)
                     page.raise_for_status()
                 except Exception as e:
-                    print(f"  [ERREUR] {enseigne:14} {type(e).__name__}")
+                    journal(f"  [ERREUR] {enseigne:14} {type(e).__name__}")
                     continue
 
                 texte = texte_utile(page.text)
                 if len(texte) < 200:
-                    print(f"  [VIDE]   {enseigne:14} aucun prix dans la page")
+                    journal(f"  [VIDE]   {enseigne:14} aucun prix dans la page")
                     continue
 
-                try:
-                    donnees = await extraire(claude, texte)
-                except CollecteInterrompue as arret:
-                    print(f"\n[ARRÊT] {arret}")
-                    await engine.dispose()
-                    sys.exit(1)
-
+                donnees = await extraire(claude, texte)     # peut lever CollecteInterrompue
                 gardes, rejets = valider(donnees, enseigne, url)
-                total_gardes += len(gardes)
-                total_rejets += rejets
+                bilan["retenus"] += len(gardes)
+                bilan["ecartes"] += rejets
 
                 if appliquer and gardes:
                     n, a = await enregistrer(db, gardes)
-                    total_nouveaux += n
-                    total_ajoutes += a
+                    bilan["produits"] += n
+                    bilan["prix"] += a
 
-                print(f"  {enseigne:14} {len(gardes):3} produits retenus · "
-                      f"{rejets:3} écartés")
+                journal(f"  {enseigne:14} {len(gardes):3} produits retenus · "
+                        f"{rejets:3} écartés")
                 for r in gardes[:3]:
                     barre = f" (au lieu de {r.prix_barre})" if r.prix_barre else ""
-                    print(f"       {r.nom[:44]:46} {r.prix:>8.2f} MAD{barre}")
+                    journal(f"       {r.nom[:44]:46} {r.prix:>8.2f} MAD{barre}")
 
                 await asyncio.sleep(2)      # on ne martèle pas la source
+    return bilan
+
+
+async def main() -> None:
+    appliquer = "--appliquer" in sys.argv
+    limite = 8
+    for a in sys.argv:
+        if a.startswith("--catalogues="):
+            limite = int(a.split("=")[1])
+
+    try:
+        bilan = await collecter(appliquer, limite)
+    except CollecteInterrompue as arret:
+        print(f"\n[ARRÊT] {arret}")
+        await engine.dispose()
+        sys.exit(1)
 
     print(f"\n[{'APPLIQUE' if appliquer else 'SIMULATION'}] "
-          f"{total_gardes} relevés valides · {total_rejets} écartés")
+          f"{bilan['retenus']} relevés valides · {bilan['ecartes']} écartés")
     if appliquer:
-        print(f"           {total_nouveaux} produits créés · {total_ajoutes} prix ajoutés")
+        print(f"           {bilan['produits']} produits créés · "
+              f"{bilan['prix']} prix ajoutés")
 
     await engine.dispose()
 

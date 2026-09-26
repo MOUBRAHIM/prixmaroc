@@ -18,6 +18,7 @@ import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import { AuthAPI, ProfileAPI, AdminAPI } from '@services/api';
+import { messageErreur } from '@utils/erreurs';
 import { useAuthStore } from '@store/authStore';
 import { C } from '@constants/colors';
 import { confirmer, prevenir } from '@utils/dialogue';
@@ -151,30 +152,42 @@ const AgeCounter: React.FC<{
 
 // ── Admin Section ─────────────────────────────────────────────────────────────
 
-const SCRAPERS = [
-  { slug: 'marjane',   label: 'Marjane',    color: '#D0402F' },
-  { slug: 'carrefour', label: 'Carrefour',  color: '#256B7A' },
-  { slug: 'labelvie',  label: "Label'Vie",  color: '#0E5C44' },
-  { slug: 'bim',       label: 'BIM',        color: '#ca8a04' },
-  { slug: 'kazyon',    label: 'Kazyon',     color: '#C4620F' },
-  { slug: 'sopreco',   label: 'Sopreco',    color: '#7c3aed' },
-  { slug: 'hmizate',   label: 'Hmizate',    color: '#2E7D8F' },
-];
-
+/**
+ * Mise à jour des prix.
+ *
+ * Les anciens boutons — un par enseigne — visaient une infrastructure de
+ * scraping jamais mise en service : la table des configurations est vide et
+ * le serveur répondait 404, que l'écran traduisait par « Impossible de
+ * lancer le scraper ». Les sites visés n'existent d'ailleurs plus sous
+ * cette forme.
+ *
+ * La collecte qui fonctionne lit les catalogues publiés en ligne. C'est
+ * celle que la tâche hebdomadaire exécute ; ce bouton la déclenche à la
+ * demande.
+ */
 const AdminSection: React.FC = () => {
-  const [triggering, setTriggering] = React.useState<string | null>(null);
+  const queryClient = useQueryClient();
+  const { data: etat, isLoading } = useQuery({
+    queryKey: ['etat-collecte'],
+    queryFn: AdminAPI.etatCollecte,
+    // Pendant une collecte, on rafraîchit pour voir le bilan arriver.
+    refetchInterval: (q) => (q.state.data?.en_cours ? 10_000 : false),
+  });
 
-  const trigger = async (slug: string) => {
-    setTriggering(slug);
-    try {
-      await AdminAPI.triggerScraper(slug);
-      prevenir('✅ Scraper lancé', `Le scraper ${slug} a été déclenché.`);
-    } catch {
-      prevenir('Erreur', `Impossible de lancer le scraper ${slug}.`);
-    } finally {
-      setTriggering(null);
-    }
-  };
+  const lancer = useMutation({
+    mutationFn: () => AdminAPI.lancerCollecte(12),
+    onSuccess: (r) => {
+      prevenir('Collecte lancée', r.message);
+      queryClient.invalidateQueries({ queryKey: ['etat-collecte'] });
+    },
+    onError: (e) => prevenir('Collecte impossible', messageErreur(e)),
+  });
+
+  const dateReleve = etat?.dernier_releve
+    ? new Date(etat.dernier_releve).toLocaleDateString('fr-MA', {
+        day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit',
+      })
+    : null;
 
   return (
     <View style={styles.section}>
@@ -183,25 +196,62 @@ const AdminSection: React.FC = () => {
         <Text style={styles.sectionTitle}>Administration</Text>
       </View>
       <View style={styles.card}>
-        <Text style={styles.fieldLabel}>Déclencher un scraper</Text>
-        <View style={styles.scraperGrid}>
-          {SCRAPERS.map((s) => (
-            <TouchableOpacity
-              key={s.slug}
-              style={[styles.scraperBtn, { borderColor: s.color }]}
-              onPress={() => trigger(s.slug)}
-              disabled={triggering !== null}
-              activeOpacity={0.75}
-            >
-              {triggering === s.slug ? (
-                <ActivityIndicator size="small" color={s.color} />
-              ) : (
-                <Ionicons name="play-circle" size={18} color={s.color} />
-              )}
-              <Text style={[styles.scraperBtnText, { color: s.color }]}>{s.label}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+        <Text style={styles.fieldLabel}>Mise à jour des prix</Text>
+
+        {isLoading ? (
+          <ActivityIndicator color={C.primary} style={{ marginVertical: 12 }} />
+        ) : etat ? (
+          <View style={styles.collecteChiffres}>
+            <View style={styles.collecteBloc}>
+              <Text style={styles.collecteNombre}>{etat.prix_24h}</Text>
+              <Text style={styles.collecteLegende}>relevés aujourd'hui</Text>
+            </View>
+            <View style={styles.collecteBloc}>
+              <Text style={styles.collecteNombre}>{etat.prix_7j}</Text>
+              <Text style={styles.collecteLegende}>cette semaine</Text>
+            </View>
+            <View style={styles.collecteBloc}>
+              <Text style={styles.collecteNombre}>{etat.prix_total}</Text>
+              <Text style={styles.collecteLegende}>au total</Text>
+            </View>
+          </View>
+        ) : null}
+
+        {dateReleve ? (
+          <Text style={styles.collecteDate}>Dernier relevé : {dateReleve}</Text>
+        ) : null}
+
+        {etat?.derniere_erreur ? (
+          <Text style={styles.collecteErreur}>⚠️ {etat.derniere_erreur}</Text>
+        ) : null}
+
+        {etat?.dernier_bilan ? (
+          <Text style={styles.collecteDate}>
+            Dernière collecte : {etat.dernier_bilan.prix} prix ajoutés sur{' '}
+            {etat.dernier_bilan.catalogues} catalogues
+          </Text>
+        ) : null}
+
+        <TouchableOpacity
+          style={[styles.collecteBouton, (etat?.en_cours || lancer.isPending) && styles.collecteBoutonOccupe]}
+          onPress={() => lancer.mutate()}
+          disabled={etat?.en_cours || lancer.isPending}
+          activeOpacity={0.85}
+        >
+          {etat?.en_cours || lancer.isPending ? (
+            <ActivityIndicator size="small" color="#FFFFFF" />
+          ) : (
+            <Ionicons name="refresh" size={18} color="#FFFFFF" />
+          )}
+          <Text style={styles.collecteBoutonTexte}>
+            {etat?.en_cours ? 'Collecte en cours…' : 'Mettre à jour les prix'}
+          </Text>
+        </TouchableOpacity>
+
+        <Text style={styles.collecteAide}>
+          Lit les catalogues des enseignes et enregistre les prix du moment.
+          Compte deux à cinq minutes. La collecte tourne aussi seule chaque lundi.
+        </Text>
       </View>
     </View>
   );
@@ -289,7 +339,7 @@ const MonProfilScreen: React.FC<Props> = ({ navigation }) => {
       setIsEditing(false);
       prevenir('✅ Profil mis à jour', 'Vos informations ont été sauvegardées.');
     },
-    onError: () => prevenir('Erreur', 'Impossible de mettre à jour le profil.'),
+    onError: (e) => prevenir('Erreur', messageErreur(e, 'Impossible de mettre à jour le profil.')),
   });
 
   const handleLogout = () => {
@@ -806,7 +856,22 @@ const styles = StyleSheet.create({
 
   // Admin section
   adminHeader: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 8 },
-  scraperGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 4 },
+  collecteChiffres: { flexDirection: 'row', gap: 10, marginTop: 8 },
+  collecteBloc: {
+    flex: 1, alignItems: 'center', paddingVertical: 12,
+    backgroundColor: '#FBF7F1', borderRadius: 14,
+  },
+  collecteNombre: { fontSize: 20, fontWeight: '800', color: C.primary },
+  collecteLegende: { fontSize: 10.5, color: '#93A09A', marginTop: 2, textAlign: 'center' },
+  collecteDate: { fontSize: 12.5, color: '#5A6A61', marginTop: 10 },
+  collecteErreur: { fontSize: 12.5, color: '#D0402F', marginTop: 8, fontWeight: '600' },
+  collecteBouton: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
+    backgroundColor: C.primary, borderRadius: 14, paddingVertical: 14, marginTop: 14,
+  },
+  collecteBoutonOccupe: { opacity: 0.6 },
+  collecteBoutonTexte: { color: '#FFFFFF', fontSize: 15, fontWeight: '700' },
+  collecteAide: { fontSize: 11.5, color: '#93A09A', marginTop: 10, lineHeight: 16 },
   scraperBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 14, paddingVertical: 10, borderRadius: 12, borderWidth: 1.5, backgroundColor: '#fafafa', minWidth: '45%' as any },
   scraperBtnText: { fontSize: 13, fontWeight: '700' },
 });

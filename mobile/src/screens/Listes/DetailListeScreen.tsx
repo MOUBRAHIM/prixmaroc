@@ -22,6 +22,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ListsAPI } from '@services/api';
 import { C } from '@constants/colors';
 import { confirmer, prevenir } from '@utils/dialogue';
+import { messageErreur } from '@utils/erreurs';
 import type { ListesStackParamList, ShoppingList, ShoppingListItem } from '@types/models';
 
 type Props = NativeStackScreenProps<ListesStackParamList, 'DetailListe'>;
@@ -479,7 +480,7 @@ const DetailListeScreen: React.FC<Props> = ({ route }) => {
       queryClient.invalidateQueries({ queryKey: ['shopping-lists'] });
       setShowModal(false);
     },
-    onError: () => prevenir('Erreur', "Impossible d'ajouter l'article."),
+    onError: (e) => prevenir('Erreur', messageErreur(e, "Impossible d'ajouter l'article.")),
   });
 
   const toggleMutation = useMutation({
@@ -488,7 +489,7 @@ const DetailListeScreen: React.FC<Props> = ({ route }) => {
     onMutate: ({ itemId }) => setTogglingId(itemId),
     onSettled: () => setTogglingId(null),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['shopping-list', listId] }),
-    onError: () => prevenir('Erreur', "Impossible de modifier l'article."),
+    onError: (e) => prevenir('Erreur', messageErreur(e, "Impossible de modifier l'article.")),
   });
 
   const deleteMutation = useMutation({
@@ -497,14 +498,14 @@ const DetailListeScreen: React.FC<Props> = ({ route }) => {
       queryClient.invalidateQueries({ queryKey: ['shopping-list', listId] });
       queryClient.invalidateQueries({ queryKey: ['shopping-lists'] });
     },
-    onError: () => prevenir('Erreur', "Impossible de supprimer l'article."),
+    onError: (e) => prevenir('Erreur', messageErreur(e, "Impossible de supprimer l'article.")),
   });
 
   const updateQtyMutation = useMutation({
     mutationFn: ({ itemId, quantity }: { itemId: number; quantity: number }) =>
       ListsAPI.updateItemQty(listId, itemId, quantity),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['shopping-list', listId] }),
-    onError: () => prevenir('Erreur', "Impossible de modifier la quantité."),
+    onError: (e) => prevenir('Erreur', messageErreur(e, "Impossible de modifier la quantité.")),
   });
 
   // ─── Handlers ───────────────────────────────────────────────────────────────

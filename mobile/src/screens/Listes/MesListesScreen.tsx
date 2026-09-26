@@ -18,6 +18,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { ListsAPI } from '@services/api';
 import { C } from '@constants/colors';
 import { confirmer, prevenir } from '@utils/dialogue';
+import { messageErreur } from '@utils/erreurs';
 import type { ListesStackParamList, ShoppingList } from '@types/models';
 
 type Props = NativeStackScreenProps<ListesStackParamList, 'MesListes'>;
@@ -202,13 +203,13 @@ const MesListesScreen: React.FC<Props> = ({ navigation }) => {
       setShowModal(false);
       setPresetType(null);
     },
-    onError: () => prevenir('Erreur', "Impossible de créer la liste."),
+    onError: (e) => prevenir('Erreur', messageErreur(e, "Impossible de créer la liste.")),
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: number) => ListsAPI.delete(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['shopping-lists'] }),
-    onError: () => prevenir('Erreur', "Impossible de supprimer la liste."),
+    onError: (e) => prevenir('Erreur', messageErreur(e, "Impossible de supprimer la liste.")),
   });
 
   const handleDelete = async (id: number, name: string) => {
