@@ -51,7 +51,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.core.config import settings
 from app.services.reponse_claude import texte_de
-from recentre_catalogue import categorie
+from recentre_catalogue import hors_perimetre_evident
 
 engine = create_async_engine(settings.DATABASE_URL, echo=False, pool_pre_ping=True)
 Session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
@@ -62,6 +62,11 @@ MODELE = "claude-haiku-4-5-20251001"
 # Un prix de courses hors de ces bornes est une erreur de lecture, pas une affaire.
 PRIX_MIN, PRIX_MAX = 0.5, 3000.0
 NOM_MIN = 5
+
+# Les rayons qui composent le catalogue. « autre » — appareils, ustensiles,
+# textile, décoration — reste dehors : l'application ne sert qu'aux courses
+# consommables du foyer.
+RAYONS_RETENUS = frozenset({"alimentaire", "hygiene", "entretien"})
 
 NAVIGATEUR = {
     "User-Agent": (
@@ -79,7 +84,8 @@ ENSEIGNES = {
 CONSIGNE = """Tu extrais les produits d'un texte de catalogue de supermarché marocain.
 
 Réponds UNIQUEMENT par un tableau JSON, sans commentaire ni bloc de code :
-[{"nom": "...", "marque": "...", "prix": 12.5, "prix_barre": 18.0, "format": "1 kg"}]
+[{"nom": "...", "marque": "...", "prix": 12.5, "prix_barre": 18.0, "format": "1 kg",
+  "rayon": "alimentaire"}]
 
 Règles :
 - "prix" est le montant à payer. Si le texte dit « 24,50 DH au lieu de 27,50 DH »,
@@ -88,8 +94,16 @@ Règles :
 - N'invente jamais un produit. Si un prix n'a pas de produit identifiable, ignore-le.
 - N'extrais JAMAIS les mentions de mise en page comme nom de produit :
   « Prix promotionnel », « À partir de », « Économie », « au lieu de », « Offre spéciale ».
-- Ignore l'électroménager, la vaisselle, le textile et la décoration :
-  ce catalogue ne sert qu'aux courses alimentaires, à l'hygiène et à l'entretien.
+- "rayon" est OBLIGATOIRE pour chaque produit, avec exactement une de ces valeurs :
+    "alimentaire" — tout ce qui se mange ou se boit, y compris frais, surgelé et conserves
+    "hygiene"     — soin du corps : savon, shampooing, dentifrice, couches, coton
+    "entretien"   — consommables du ménage : lessive, javel, éponges, sacs poubelle
+    "autre"       — tout le reste : appareils, ustensiles, vaisselle, textile,
+                    décoration, jouets, électronique, piles, mobilier
+  Classe honnêtement plutôt que d'omettre : un article mal rangé en "autre" est
+  simplement écarté, alors qu'un appareil rangé en "alimentaire" pollue le catalogue.
+  Exemples : « Thon en boîte » → alimentaire ; « Boîte à pain » → autre ;
+  « Machine multi-boissons » → autre ; « Capsules lave-vaisselle » → entretien.
 - "marque", "prix_barre" et "format" sont facultatifs : mets null si absent.
 - Le nom doit être celui du produit seul, sans le prix ni la promotion.
 
@@ -265,7 +279,15 @@ def valider(donnees: list[dict], enseigne: str, url: str) -> tuple[list[Releve],
         if len(nom) < NOM_MIN or not (PRIX_MIN <= prix <= PRIX_MAX):
             rejets += 1
             continue
-        if categorie(nom) not in ("alimentaire", "hygiene"):
+
+        # Le rayon vient du modèle, qui voit le produit dans son contexte.
+        # Un rayon absent est traité comme « autre » : sans classement explicite,
+        # on n'a aucune raison de faire entrer l'article.
+        if str(d.get("rayon") or "").strip().lower() not in RAYONS_RETENUS:
+            rejets += 1
+            continue
+        # Garde-fou : le modèle range parfois un appareil en alimentaire.
+        if hors_perimetre_evident(nom):
             rejets += 1
             continue
 
