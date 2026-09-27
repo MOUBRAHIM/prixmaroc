@@ -369,8 +369,8 @@ const MonProfilScreen: React.FC<Props> = ({ navigation }) => {
         await ProfileAPI.uploadAvatar(result.assets[0].uri);
         queryClient.invalidateQueries({ queryKey: ['me'] });
         prevenir('✅ Photo mise à jour');
-      } catch {
-        prevenir('Erreur', 'Impossible de mettre à jour la photo.');
+      } catch (e) {
+        prevenir('Erreur', messageErreur(e, 'Impossible de mettre à jour la photo.'));
       } finally {
         setUploadingAvatar(false);
       }

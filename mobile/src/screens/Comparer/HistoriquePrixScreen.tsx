@@ -14,6 +14,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
 import { ProductsAPI } from '@services/api';
 import { C } from '@constants/colors';
+import EtatErreur from '@components/EtatErreur';
 import type { ComparerStackParamList, PricePoint } from '@types/models';
 
 type Props = NativeStackScreenProps<ComparerStackParamList, 'HistoriquePrix'>;
@@ -76,7 +77,7 @@ const HistoriquePrixScreen: React.FC<Props> = ({ route }) => {
   const { productId } = route.params;
   const [days, setDays] = useState<30 | 90>(30);
 
-  const { data, isLoading, isError, refetch, isRefetching } = useQuery({
+  const { data, isLoading, isError, error, refetch, isRefetching } = useQuery({
     queryKey: ['price-history', productId, days],
     queryFn: () => ProductsAPI.getPriceHistory(productId, days),
   });
@@ -113,13 +114,11 @@ const HistoriquePrixScreen: React.FC<Props> = ({ route }) => {
         )}
 
         {isError && (
-          <View style={styles.centered}>
-            <Ionicons name="alert-circle-outline" size={44} color="#D0402F" />
-            <Text style={styles.errorText}>Impossible de charger l'historique</Text>
-            <TouchableOpacity style={styles.retryBtn} onPress={() => refetch()}>
-              <Text style={styles.retryBtnText}>Réessayer</Text>
-            </TouchableOpacity>
-          </View>
+          <EtatErreur
+            titre="Impossible de charger l'historique"
+            error={error}
+            onRetry={() => refetch()}
+          />
         )}
 
         {data && (

@@ -30,6 +30,7 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { C } from '@constants/colors';
 import { prevenir } from '@utils/dialogue';
+import { messageErreur } from '@utils/erreurs';
 import { MAPS_ENABLED } from '@constants';
 import { StoresAPI } from '@services/api';
 import type { AccueilStackParamList } from '@types/models';
@@ -487,11 +488,8 @@ const MagasinsProchesScreen: React.FC<Props> = () => {
       const result = await StoresAPI.optimizeRoute(ids, undefined);
       setRouteResult(result as RouteOptimizeResponse);
       setRouteModalVisible(true);
-    } catch {
-      prevenir(
-        'Erreur réseau',
-        'Impossible de calculer le parcours. Vérifiez votre connexion.'
-      );
+    } catch (e) {
+      prevenir('Erreur', messageErreur(e, 'Impossible de calculer le parcours.'));
     } finally {
       setOptimizing(false);
     }

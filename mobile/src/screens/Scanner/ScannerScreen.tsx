@@ -10,6 +10,7 @@ import {
   TextInput,
 } from 'react-native';
 import { prevenir } from '@utils/dialogue';
+import { messageErreur } from '@utils/erreurs';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useNavigation } from '@react-navigation/native';
@@ -485,12 +486,7 @@ const ScannerScreen: React.FC = () => {
       await new Promise((r) => setTimeout(r, 600));
       setScanResult(result);
     } catch (err: unknown) {
-      const msg =
-        (err as { response?: { data?: { detail?: string } } })?.response?.data
-          ?.detail ??
-        (err as Error)?.message ??
-        'Une erreur est survenue lors du scan.';
-      setErreur(msg);
+      setErreur(messageErreur(err, 'Une erreur est survenue lors du scan.'));
     } finally {
       setIsCapturing(false);
       setCaptureStep(null);

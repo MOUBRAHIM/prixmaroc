@@ -14,6 +14,7 @@ import { useQueries } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
 import { ProductsAPI } from '@services/api';
 import { C } from '@constants/colors';
+import EtatErreur from '@components/EtatErreur';
 import type { ComparerStackParamList, ProductDetail } from '@types/models';
 
 type Props = NativeStackScreenProps<ComparerStackParamList, 'ComparerPrix'>;
@@ -130,6 +131,7 @@ const ComparerPrixScreen: React.FC<Props> = ({ route, navigation }) => {
 
   const isLoading = results.some((r) => r.isLoading);
   const isError = results.some((r) => r.isError);
+  const premiereErreur = results.find((r) => r.isError)?.error;
   const products = results.map((r) => r.data).filter(Boolean) as ProductDetail[];
 
   // Récupère tous les magasins uniques
@@ -175,13 +177,11 @@ const ComparerPrixScreen: React.FC<Props> = ({ route, navigation }) => {
         )}
 
         {isError && (
-          <View style={styles.centered}>
-            <Ionicons name="alert-circle-outline" size={44} color="#D0402F" />
-            <Text style={styles.errorText}>Erreur lors de la comparaison</Text>
-            <TouchableOpacity style={styles.retryBtn} onPress={refetchAll}>
-              <Text style={styles.retryBtnText}>Réessayer</Text>
-            </TouchableOpacity>
-          </View>
+          <EtatErreur
+            titre="La comparaison a échoué"
+            error={premiereErreur}
+            onRetry={refetchAll}
+          />
         )}
 
         {products.length > 0 && (

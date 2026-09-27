@@ -19,6 +19,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { ProductsAPI } from '@services/api';
 import ProductVisual from '@components/ui/ProductVisual';
 import { C } from '@constants/colors';
+import EtatErreur from '@components/EtatErreur';
 import type { ComparerStackParamList, ProductSummary } from '@types/models';
 
 type Props = NativeStackScreenProps<ComparerStackParamList, 'Recherche'>;
@@ -281,7 +282,7 @@ const RechercheScreen: React.FC<Props> = ({ navigation, route }) => {
     filters.promoOnly,
   ].filter(Boolean).length;
 
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['products-search', searchTerm, filters],
     queryFn: () =>
       ProductsAPI.search({
@@ -425,13 +426,11 @@ const RechercheScreen: React.FC<Props> = ({ navigation, route }) => {
 
       {/* Erreur */}
       {isError && (
-        <View style={styles.errorContainer}>
-          <Ionicons name="alert-circle-outline" size={44} color="#D0402F" />
-          <Text style={styles.errorText}>Erreur lors de la recherche</Text>
-          <TouchableOpacity style={styles.retryBtn} onPress={() => refetch()}>
-            <Text style={styles.retryBtnText}>Réessayer</Text>
-          </TouchableOpacity>
-        </View>
+        <EtatErreur
+          titre="La recherche a échoué"
+          error={error}
+          onRetry={() => refetch()}
+        />
       )}
 
       {/* Résultats */}

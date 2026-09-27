@@ -18,6 +18,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useQuery } from '@tanstack/react-query';
 import { PricesAPI } from '@services/api';
 import { Colors, C } from '@constants/colors';
+import EtatErreur from '@components/EtatErreur';
 import type { PromoItem } from '@types/models';
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
@@ -192,7 +193,7 @@ const EmptyState: React.FC = () => (
 export default function PromotionsScreen() {
   const [city, setCity] = useState<string>('');
 
-  const { data, isLoading, isError, refetch, isFetching } = useQuery({
+  const { data, isLoading, isError, error, refetch, isFetching } = useQuery({
     queryKey: ['promotions', city] as const,
     queryFn: () =>
       PricesAPI.getPromos({ city: city !== '' ? city : undefined, limit: 30 }),
@@ -244,20 +245,11 @@ export default function PromotionsScreen() {
           <Text style={styles.loadingText}>Chargement des promotions…</Text>
         </View>
       ) : isError ? (
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyIcon}>⚠️</Text>
-          <Text style={styles.emptyTitle}>Erreur de chargement</Text>
-          <Text style={styles.emptySubtitle}>
-            Impossible de récupérer les promotions.
-          </Text>
-          <TouchableOpacity
-            style={styles.retryButton}
-            onPress={() => refetch()}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.retryButtonText}>Réessayer</Text>
-          </TouchableOpacity>
-        </View>
+        <EtatErreur
+          titre="Impossible de récupérer les promotions"
+          error={error}
+          onRetry={() => refetch()}
+        />
       ) : (
         <FlatList
           data={promotions}

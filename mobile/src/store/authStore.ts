@@ -6,6 +6,7 @@ import { create } from 'zustand';
 import * as SecureStore from '@services/secureStorage';
 import { AuthAPI, authEventEmitter } from '@services/api';
 import { STORAGE_KEYS } from '@constants/index';
+import { messageErreur } from '@utils/erreurs';
 import type { User, UserCreate } from '@types/models';
 
 interface AuthState {
@@ -70,13 +71,15 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       await AuthAPI.register(payload);
-      await get().login(payload.username, payload.password);
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { detail?: string } } })
-        ?.response?.data?.detail || 'Erreur lors de l\'inscription';
-      set({ error: msg, isLoading: false });
+      set({ error: messageErreur(err, "Inscription impossible. Réessayez."), isLoading: false });
       throw err;
     }
+    // Le compte existe désormais. Si la connexion automatique échoue — service
+    // endormi, réseau coupé — c'est son message qu'il faut garder : annoncer
+    // « erreur d'inscription » ferait recommencer une inscription qui a réussi,
+    // et le serveur refuserait alors l'adresse comme déjà prise.
+    await get().login(payload.username, payload.password);
   },
 
   logout: async () => {

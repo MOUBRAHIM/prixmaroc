@@ -17,6 +17,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
 import { ListsAPI } from '@services/api';
 import { C } from '@constants/colors';
+import { useAuthStore } from '@store/authStore';
+import EtatErreur from '@components/EtatErreur';
+import CompteRequis from '@components/CompteRequis';
 import { confirmer, prevenir } from '@utils/dialogue';
 import { messageErreur } from '@utils/erreurs';
 import type { ListesStackParamList, ShoppingList } from '@types/models';
@@ -186,13 +189,15 @@ const modal = StyleSheet.create({
 
 const MesListesScreen: React.FC<Props> = ({ navigation }) => {
   const queryClient = useQueryClient();
+  const { isGuest } = useAuthStore();
   const [activeTab, setActiveTab] = useState<ListType>('toutes');
   const [showModal, setShowModal] = useState(false);
   const [presetType, setPresetType] = useState<Exclude<ListType, 'toutes'> | null>(null);
 
-  const { data, isLoading, isError, refetch, isRefetching } = useQuery({
+  const { data, isLoading, isError, error, refetch, isRefetching } = useQuery({
     queryKey: ['shopping-lists'],
     queryFn: ListsAPI.getAll,
+    enabled: !isGuest,
   });
 
   const createMutation = useMutation({
@@ -283,7 +288,7 @@ const MesListesScreen: React.FC<Props> = ({ navigation }) => {
       </View>
 
       {/* Raccourcis création rapide (si onglet vide) */}
-      {activeTab !== 'toutes' && !isLoading && filteredData.length === 0 && (
+      {!isGuest && activeTab !== 'toutes' && !isLoading && filteredData.length === 0 && (
         <TouchableOpacity
           style={styles.quickCreate}
           onPress={() => openNewList(activeTab as Exclude<ListType, 'toutes'>)}
@@ -296,6 +301,8 @@ const MesListesScreen: React.FC<Props> = ({ navigation }) => {
       )}
 
       {/* États */}
+      {isGuest && <CompteRequis usage="enregistrer vos listes de courses" icone="list-outline" />}
+
       {isLoading && (
         <View style={styles.centered}>
           <ActivityIndicator size="large" color={C.primary} />
@@ -303,13 +310,11 @@ const MesListesScreen: React.FC<Props> = ({ navigation }) => {
         </View>
       )}
       {isError && (
-        <View style={styles.centered}>
-          <Ionicons name="alert-circle-outline" size={44} color="#D0402F" />
-          <Text style={styles.errorText}>Impossible de charger les listes</Text>
-          <TouchableOpacity style={styles.retryBtn} onPress={() => refetch()}>
-            <Text style={styles.retryBtnText}>Réessayer</Text>
-          </TouchableOpacity>
-        </View>
+        <EtatErreur
+          titre="Impossible de charger les listes"
+          error={error}
+          onRetry={() => refetch()}
+        />
       )}
 
       {/* Liste filtrée */}

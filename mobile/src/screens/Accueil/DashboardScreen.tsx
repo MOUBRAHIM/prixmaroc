@@ -17,6 +17,7 @@ import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { DashboardAPI } from '@services/api';
 import { useAuthStore } from '@store/authStore';
 import { C, Colors } from '@constants/colors';
+import EtatErreur from '@components/EtatErreur';
 import type { MainTabParamList, DashboardResponse, DashboardAlerte } from '@types/models';
 
 function getGreeting(): string {
@@ -283,10 +284,16 @@ const Rayons: React.FC<{ onChoisir: (mot: string) => void }> = ({ onChoisir }) =
 // ── Main Screen ───────────────────────────────────────────────────────────────
 
 const DashboardScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
+  // Le tableau de bord n'existe que pour un compte : économies, tickets,
+  // alertes. En mode invité, l'appel partait quand même et revenait en 401 —
+  // l'écran annonçait une panne là où il n'y avait qu'une absence de compte.
+  const { isGuest } = useAuthStore();
+
   const { data, isLoading, isError, error, refetch, isRefetching } =
     useQuery<DashboardResponse>({
       queryKey: ['dashboard'],
       queryFn: DashboardAPI.get,
+      enabled: !isGuest,
     });
 
   return (
@@ -319,20 +326,11 @@ const DashboardScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
 
         {/* Error */}
         {isError && (
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorEmoji}>😕</Text>
-            <Text style={styles.errorTitle}>Impossible de charger</Text>
-            <Text style={styles.errorMessage}>
-              {(error as Error)?.message ?? 'Une erreur est survenue.'}
-            </Text>
-            <TouchableOpacity
-              style={styles.retryButton}
-              onPress={() => refetch()}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.retryButtonText}>Réessayer</Text>
-            </TouchableOpacity>
-          </View>
+          <EtatErreur
+            titre="Impossible de charger le tableau de bord"
+            error={error}
+            onRetry={() => refetch()}
+          />
         )}
 
         {/* Chercher d'abord : c'est ce pour quoi on ouvre l'application. */}
@@ -347,6 +345,29 @@ const DashboardScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
             navigation.navigate('Comparer', { screen: 'Recherche', params: { query: mot } })
           }
         />
+
+        {/* Invité : pas de compte, donc pas d'économies à afficher. On garde
+            les raccourcis, utiles sans compte, et on explique ce qui manque. */}
+        {isGuest && (
+          <>
+            <View style={styles.inviteCarte}>
+              <Text style={styles.inviteTitre}>Suivez vos économies</Text>
+              <Text style={styles.inviteTexte}>
+                Créez un compte pour scanner vos tickets, suivre vos prix et
+                voir ce que vous économisez chaque mois.
+              </Text>
+              <TouchableOpacity
+                style={styles.inviteBouton}
+                onPress={() => navigation.navigate('Profil')}
+                activeOpacity={0.85}
+              >
+                <Text style={styles.inviteBoutonTexte}>Créer un compte</Text>
+              </TouchableOpacity>
+            </View>
+            <SectionHeader title="Actions rapides" />
+            <QuickActions />
+          </>
+        )}
 
         {/* Content */}
         {data && (
@@ -467,6 +488,21 @@ const styles = StyleSheet.create({
   // Loading / Error
   loadingContainer: { alignItems: 'center', paddingVertical: 64 },
   loadingText: { marginTop: 14, color: '#5A6A61', fontSize: 15 },
+
+  inviteCarte: {
+    marginHorizontal: 16, marginTop: 4, marginBottom: 8,
+    padding: 20, borderRadius: 20,
+    backgroundColor: C.safranPale, borderWidth: 1, borderColor: '#F3DCB0',
+    gap: 8,
+  },
+  inviteTitre: { fontSize: 17, fontWeight: '800', color: '#14211B' },
+  inviteTexte: { fontSize: 14, color: '#5A6A61', lineHeight: 20 },
+  inviteBouton: {
+    alignSelf: 'flex-start', marginTop: 6,
+    backgroundColor: C.primary, borderRadius: 12,
+    paddingHorizontal: 20, paddingVertical: 11,
+  },
+  inviteBoutonTexte: { color: '#FFFFFF', fontWeight: '700', fontSize: 14 },
   errorContainer: {
     margin: 20,
     padding: 28,

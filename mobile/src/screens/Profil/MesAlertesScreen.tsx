@@ -17,6 +17,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
 import { AlertsAPI } from '@services/api';
 import { C } from '@constants/colors';
+import { useAuthStore } from '@store/authStore';
+import EtatErreur from '@components/EtatErreur';
+import CompteRequis from '@components/CompteRequis';
 import type { ProfilStackParamList, PriceAlert } from '@types/models';
 
 type Props = NativeStackScreenProps<ProfilStackParamList, 'MesAlertes'>;
@@ -89,10 +92,12 @@ const AlertCard: React.FC<{
 
 const MesAlertesScreen: React.FC<Props> = () => {
   const queryClient = useQueryClient();
+  const { isGuest } = useAuthStore();
 
-  const { data, isLoading, isError, refetch, isRefetching } = useQuery({
+  const { data, isLoading, isError, error, refetch, isRefetching } = useQuery({
     queryKey: ['price-alerts'],
     queryFn: AlertsAPI.getAll,
+    enabled: !isGuest,
   });
 
   const deleteMutation = useMutation({
@@ -115,6 +120,8 @@ const MesAlertesScreen: React.FC<Props> = () => {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['bottom']}>
+      {isGuest && <CompteRequis usage="être prévenu quand un prix baisse" icone="notifications-outline" />}
+
       {isLoading && (
         <View style={styles.centered}>
           <ActivityIndicator size="large" color={C.primary} />
@@ -123,13 +130,11 @@ const MesAlertesScreen: React.FC<Props> = () => {
       )}
 
       {isError && (
-        <View style={styles.centered}>
-          <Ionicons name="alert-circle-outline" size={44} color="#D0402F" />
-          <Text style={styles.errorText}>Impossible de charger les alertes</Text>
-          <TouchableOpacity style={styles.retryBtn} onPress={() => refetch()}>
-            <Text style={styles.retryBtnText}>Réessayer</Text>
-          </TouchableOpacity>
-        </View>
+        <EtatErreur
+          titre="Impossible de charger les alertes"
+          error={error}
+          onRetry={() => refetch()}
+        />
       )}
 
       {data && (

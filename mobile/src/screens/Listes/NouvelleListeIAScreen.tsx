@@ -17,6 +17,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { IAAPI, ListsAPI } from '@services/api';
 import { C } from '@constants/colors';
 import { confirmer, prevenir } from '@utils/dialogue';
+import { messageErreur } from '@utils/erreurs';
 import { libelleFraicheur, niveauFraicheur } from '@utils/fraicheur';
 import type { ListesStackParamList, ListType, GeneratedList, GeneratedListItem } from '@types/models';
 
@@ -151,11 +152,8 @@ const NouvelleListeIAScreen: React.FC<Props> = ({ navigation }) => {
         household_size: householdSize,
       }),
     onSuccess: (data) => setGeneratedList(data),
-    onError: (err: unknown) => {
-      const msg = (err as { response?: { data?: { detail?: string } } })
-        ?.response?.data?.detail ?? 'Impossible de générer la liste. Réessayez.';
-      prevenir('Erreur IA', msg);
-    },
+    onError: (err: unknown) =>
+      prevenir('Erreur IA', messageErreur(err, 'Impossible de générer la liste. Réessayez.')),
   });
 
   const handleSave = async () => {
@@ -183,8 +181,8 @@ const NouvelleListeIAScreen: React.FC<Props> = ({ navigation }) => {
       // dialogue n'apparaissait pas sur le web, et l'enregistrement semblait
       // avoir échoué alors qu'il avait réussi.
       navigation.navigate('MesListes');
-    } catch {
-      prevenir('Erreur', 'Impossible de sauvegarder la liste.');
+    } catch (e) {
+      prevenir('Erreur', messageErreur(e, 'Impossible de sauvegarder la liste.'));
     } finally {
       setSaving(false);
     }

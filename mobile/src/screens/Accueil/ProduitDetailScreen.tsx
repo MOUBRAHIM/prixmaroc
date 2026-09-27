@@ -22,6 +22,7 @@ import Svg, { Polyline, Circle, Line, Text as SvgText } from 'react-native-svg';
 import { ProductsAPI, AlertsAPI } from '@services/api';
 import ProductVisual from '@components/ui/ProductVisual';
 import { C } from '@constants/colors';
+import EtatErreur from '@components/EtatErreur';
 import { libelleFraicheur, niveauFraicheur } from '@utils/fraicheur';
 import type { PriceInStore } from '@types/models';
 
@@ -509,14 +510,11 @@ const ProduitDetailScreen: React.FC<Props> = ({ route, navigation }) => {
 
         {/* Erreur */}
         {isError && (
-          <View style={styles.errorContainer}>
-            <Ionicons name="alert-circle-outline" size={44} color="#D0402F" />
-            <Text style={styles.errorTitle}>Impossible de charger le produit</Text>
-            <Text style={styles.errorMsg}>{(error as Error)?.message}</Text>
-            <TouchableOpacity style={styles.retryBtn} onPress={() => refetch()}>
-              <Text style={styles.retryBtnText}>Réessayer</Text>
-            </TouchableOpacity>
-          </View>
+          <EtatErreur
+            titre="Impossible de charger le produit"
+            error={error}
+            onRetry={() => refetch()}
+          />
         )}
 
         {/* Contenu */}

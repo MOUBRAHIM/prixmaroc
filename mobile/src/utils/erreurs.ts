@@ -26,6 +26,22 @@ const PAR_STATUT: Record<number, string> = {
   503: 'Service momentanément indisponible.',
 };
 
+/**
+ * Messages par défaut de FastAPI : de l'anglais technique, affiché tel quel à
+ * un utilisateur francophone (« Not authenticated »). On les ignore au profit
+ * de nos propres phrases ; les détails écrits pour l'utilisateur, eux, passent.
+ */
+const BOILERPLATE = new Set([
+  'not authenticated',
+  'could not validate credentials',
+  'not found',
+  'forbidden',
+  'unauthorized',
+  'bad request',
+  'internal server error',
+  'unprocessable entity',
+]);
+
 export function messageErreur(err: unknown, defaut = 'Une erreur est survenue.'): string {
   if (!axios.isAxiosError(err)) {
     return err instanceof Error && err.message ? err.message : defaut;
@@ -33,7 +49,9 @@ export function messageErreur(err: unknown, defaut = 'Une erreur est survenue.')
 
   // Le serveur explique souvent lui-même ce qui bloque : on le préfère.
   const detail = (err.response?.data as { detail?: unknown } | undefined)?.detail;
-  if (typeof detail === 'string' && detail.trim()) return detail;
+  if (typeof detail === 'string' && detail.trim() && !BOILERPLATE.has(detail.trim().toLowerCase())) {
+    return detail;
+  }
   if (Array.isArray(detail) && detail.length) {
     const premier = detail[0] as { msg?: string };
     if (premier?.msg) return premier.msg;

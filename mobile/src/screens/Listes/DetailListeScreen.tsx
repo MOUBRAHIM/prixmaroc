@@ -21,6 +21,7 @@ import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ListsAPI } from '@services/api';
 import { C } from '@constants/colors';
+import EtatErreur from '@components/EtatErreur';
 import { confirmer, prevenir } from '@utils/dialogue';
 import { messageErreur } from '@utils/erreurs';
 import type { ListesStackParamList, ShoppingList, ShoppingListItem } from '@types/models';
@@ -449,7 +450,7 @@ const DetailListeScreen: React.FC<Props> = ({ route }) => {
 
   // ─── Query avec cache AsyncStorage ─────────────────────────────────────────
 
-  const { data, isLoading, isError, refetch, isRefetching } = useQuery({
+  const { data, isLoading, isError, error, refetch, isRefetching } = useQuery({
     queryKey: ['shopping-list', listId],
     queryFn: async () => {
       const result = await ListsAPI.getOne(listId);
@@ -672,13 +673,11 @@ const DetailListeScreen: React.FC<Props> = ({ route }) => {
         </View>
       )}
       {isError && !offlineData && (
-        <View style={styles.centered}>
-          <Ionicons name="alert-circle-outline" size={44} color="#D0402F" />
-          <Text style={styles.errorText}>Impossible de charger la liste</Text>
-          <TouchableOpacity style={styles.retryBtn} onPress={() => refetch()}>
-            <Text style={styles.retryBtnText}>Réessayer</Text>
-          </TouchableOpacity>
-        </View>
+        <EtatErreur
+          titre="Impossible de charger la liste"
+          error={error}
+          onRetry={() => refetch()}
+        />
       )}
 
       {/* Liste */}

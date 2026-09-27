@@ -14,6 +14,9 @@ import { useQuery } from '@tanstack/react-query';
 import { Ionicons } from '@expo/vector-icons';
 import { OcrAPI } from '@services/api';
 import { C } from '@constants/colors';
+import { useAuthStore } from '@store/authStore';
+import EtatErreur from '@components/EtatErreur';
+import CompteRequis from '@components/CompteRequis';
 import type { ProfilStackParamList, OcrScan } from '@types/models';
 
 type Props = NativeStackScreenProps<ProfilStackParamList, 'MesScans'>;
@@ -87,9 +90,11 @@ const ScanCard: React.FC<{ scan: OcrScan; onPress: () => void }> = ({ scan, onPr
 // ── Écran principal ───────────────────────────────────────────────────────────
 
 const MesScansScreen: React.FC<Props> = ({ navigation }) => {
-  const { data, isLoading, isError, refetch, isRefetching } = useQuery({
+  const { isGuest } = useAuthStore();
+  const { data, isLoading, isError, error, refetch, isRefetching } = useQuery({
     queryKey: ['ocr-scans'],
     queryFn: OcrAPI.getScans,
+    enabled: !isGuest,
   });
 
   const sorted = [...(data ?? [])].sort(
@@ -98,6 +103,8 @@ const MesScansScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['bottom']}>
+      {isGuest && <CompteRequis usage="garder l'historique de vos tickets" icone="receipt-outline" />}
+
       {isLoading && (
         <View style={styles.centered}>
           <ActivityIndicator size="large" color={C.primary} />
@@ -106,13 +113,11 @@ const MesScansScreen: React.FC<Props> = ({ navigation }) => {
       )}
 
       {isError && (
-        <View style={styles.centered}>
-          <Ionicons name="alert-circle-outline" size={44} color="#D0402F" />
-          <Text style={styles.errorText}>Impossible de charger les scans</Text>
-          <TouchableOpacity style={styles.retryBtn} onPress={() => refetch()}>
-            <Text style={styles.retryBtnText}>Réessayer</Text>
-          </TouchableOpacity>
-        </View>
+        <EtatErreur
+          titre="Impossible de charger les scans"
+          error={error}
+          onRetry={() => refetch()}
+        />
       )}
 
       {data && (
