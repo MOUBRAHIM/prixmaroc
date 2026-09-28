@@ -20,7 +20,11 @@ name: Réveil de l'API
 
 on:
   schedule:
-    - cron: "*/10 * * * *"
+    # Toutes les heures, et non toutes les dix minutes : mesuré sur une
+    # journée, « */10 » n'a déclenché que cinq fois — GitHub abandonne les
+    # exécutions en attente des planifications trop fréquentes. Une demande
+    # horaire est honorée bien plus souvent.
+    - cron: "7 * * * *"
   workflow_dispatch:
 
 # Rien n'est écrit dans le dépôt : lecture seule.
@@ -34,26 +38,40 @@ concurrency:
 jobs:
   appeler:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 58
 
     steps:
-      - name: Appeler /health
+      - name: Maintenir l'API éveillée pendant une heure
         run: |
-          debut=$(date +%s)
-          code=$(curl -sS --max-time 120 --retry 2 --retry-delay 15 \
-                      -o /dev/null -w "%{http_code}" \
-                      "https://prixmaroc-api-07el.onrender.com/health")
-          duree=$(( $(date +%s) - debut ))
+          URL="https://prixmaroc-api-07el.onrender.com/health"
+          # Render endort après un quart d'heure d'inactivité. Une exécution
+          # qui appellerait une seule fois laisserait le service se rendormir
+          # dix minutes plus tard. On appelle donc en boucle pendant toute
+          # l'heure : le dépôt étant public, ces minutes sont gratuites.
+          INTERVALLE=300     # 5 min
+          TOURS=11           # ≈ 55 min de couverture
 
-          echo "HTTP $code en ${duree}s"
+          echecs=0
+          for tour in $(seq 1 $TOURS); do
+            debut=$(date +%s)
+            code=$(curl -sS --max-time 120 --retry 1 --retry-delay 10 \
+                        -o /dev/null -w "%{http_code}" "$URL" || echo "000")
+            duree=$(( $(date +%s) - debut ))
+            echo "[$tour/$TOURS] HTTP $code en ${duree}s"
 
-          if [ "$code" != "200" ]; then
-            echo "::error::L'API a répondu $code — service en panne ou redéployé."
+            if [ "$code" != "200" ]; then
+              echecs=$(( echecs + 1 ))
+            elif [ "$duree" -gt 20 ]; then
+              echo "::warning::Réveil lent (${duree}s) — le service s'était endormi."
+            fi
+
+            [ "$tour" -lt "$TOURS" ] && sleep "$INTERVALLE"
+          done
+
+          # Un incident passager ne doit pas peindre l'historique en rouge ;
+          # une API réellement tombée, si.
+          if [ "$echecs" -ge 3 ]; then
+            echo "::error::$echecs appels en échec sur $TOURS — API en panne."
             exit 1
           fi
-
-          # Au-delà de vingt secondes, le serveur s'était rendormi : le rythme
-          # d'appel ne suffit plus, ou GitHub a décalé la tâche.
-          if [ "$duree" -gt 20 ]; then
-            echo "::warning::Réveil lent (${duree}s) — le service s'était endormi."
-          fi
+          echo "Terminé : $(( TOURS - echecs ))/$TOURS appels réussis."

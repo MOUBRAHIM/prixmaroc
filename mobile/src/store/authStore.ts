@@ -13,6 +13,15 @@ interface AuthState {
   user: User | null;
   token: string | null;
   isLoading: boolean;
+  /**
+   * Restauration de la session au démarrage — distincte de `isLoading`.
+   *
+   * La racine masquait toute l'application dès que `isLoading` passait à vrai,
+   * donc aussi pendant une connexion : l'écran de connexion était démonté, la
+   * saisie perdue, et l'utilisateur fixait « Chargement… » jusqu'à la fin du
+   * réveil du serveur. Seule la restauration initiale justifie cet écran.
+   */
+  isRestoring: boolean;
   isAuthenticated: boolean;
   isGuest: boolean;
   error: string | null;
@@ -30,6 +39,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   token: null,
   isLoading: false,
+  // Vrai dès le départ : sans cela, l'écran de connexion apparaît une fraction
+  // de seconde avant que la session enregistrée ne soit relue.
+  isRestoring: true,
   isAuthenticated: false,
   isGuest: false,
   error: null,
@@ -93,7 +105,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   loadFromStorage: async () => {
-    set({ isLoading: true });
+    set({ isRestoring: true });
     try {
       const token = await SecureStore.getItemAsync(STORAGE_KEYS.accessToken);
       const userStr = await SecureStore.getItemAsync(STORAGE_KEYS.user);
@@ -110,7 +122,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         }
       }
     } finally {
-      set({ isLoading: false });
+      set({ isRestoring: false });
     }
   },
 

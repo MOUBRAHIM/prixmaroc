@@ -71,7 +71,10 @@ const api: AxiosInstance = axios.create({
   // L'hébergement gratuit endort le service ; son réveil prend une
   // cinquantaine de secondes. À 15 s, la première requête de la journée
   // échouait toujours.
-  timeout: 60_000,
+  // L'hébergement gratuit endort le service après un quart d'heure ; le
+  // réveil mesuré est de 54 s. À 60 s de marge, la moindre variation faisait
+  // échouer la connexion sur un serveur pourtant sain.
+  timeout: 90_000,
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',

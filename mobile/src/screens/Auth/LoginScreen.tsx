@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -38,12 +38,27 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
 
   const { login, loginAsGuest, isLoading, error, clearError } = useAuthStore();
 
+  // Le réveil de l'hébergement gratuit approche la minute. Passé quelques
+  // secondes sans réponse, on explique l'attente plutôt que de laisser
+  // tourner un rond muet.
+  const [reveil, setReveil] = useState(false);
+  useEffect(() => {
+    if (!isLoading) {
+      setReveil(false);
+      return;
+    }
+    const minuterie = setTimeout(() => setReveil(true), 6_000);
+    return () => clearTimeout(minuterie);
+  }, [isLoading]);
+
   const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
       return;
     }
     clearError();
-    await login(email.trim(), password);
+    // Le store enregistre déjà le message d'échec ; on absorbe le rejet pour
+    // qu'il ne remonte pas en promesse non traitée.
+    await login(email.trim(), password).catch(() => undefined);
   };
 
   const handleEmailChange = (val: string) => {
@@ -114,6 +129,18 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
                 <View style={styles.errorBox}>
                   <Text style={styles.errorIcon}>⚠️</Text>
                   <Text style={styles.errorText}>{error}</Text>
+                </View>
+              ) : null}
+
+              {/* Réveil de l'hébergement : sans un mot, l'attente passe pour
+                  une panne et l'utilisateur ferme l'application. */}
+              {reveil ? (
+                <View style={styles.reveilBox}>
+                  <Text style={styles.reveilIcon}>⏳</Text>
+                  <Text style={styles.reveilText}>
+                    Le serveur se réveille. La première connexion de la journée
+                    demande environ une minute — les suivantes sont immédiates.
+                  </Text>
                 </View>
               ) : null}
 
@@ -337,6 +364,21 @@ const styles = StyleSheet.create({
     marginBottom: 22,
     letterSpacing: -0.3,
   },
+
+  // Réveil du serveur — informatif, pas alarmant : safran, pas rouge.
+  reveilBox: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    backgroundColor: '#FDF0DA',
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 18,
+    borderLeftWidth: 4,
+    borderLeftColor: '#F2A93B',
+    gap: 8,
+  },
+  reveilIcon: { fontSize: 14, marginTop: 1 },
+  reveilText: { flex: 1, color: '#7A5A18', fontSize: 13, lineHeight: 18 },
 
   // Error
   errorBox: {

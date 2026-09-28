@@ -342,9 +342,12 @@ function AuthNavigator() {
 // ── Root ──────────────────────────────────────────────────────────────────────
 
 export default function Navigation() {
-  const { isAuthenticated, isLoading } = useAuthStore();
+  // Seule la restauration de session masque l'application. Une connexion en
+  // cours laisse l'écran de connexion visible : il montre sa propre attente,
+  // garde la saisie et peut expliquer le réveil du serveur.
+  const { isAuthenticated, isRestoring } = useAuthStore();
 
-  if (isLoading) {
+  if (isRestoring) {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: C.primary }}>
         <Text style={{ color: C.white, fontSize: 24, fontWeight: '700' }}>PrixMaroc</Text>
