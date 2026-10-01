@@ -23,6 +23,7 @@ import type {
   PriceHistory,
   PromoAlert,
   PromoItem,
+  RelevesRecentsResponse,
   ProductDetail,
   ProductSummary,
   ShoppingList,
@@ -274,6 +275,12 @@ export const PricesAPI = {
 
   getPromos: async (params?: { city?: string; limit?: number }): Promise<{ promotions: PromoItem[]; count: number }> => {
     const { data } = await api.get('/api/prices/promotions', { params });
+    return data;
+  },
+
+  /** Ce que la collecte a rapporté récemment, groupé par enseigne. Sans compte. */
+  getReleveRecents: async (params?: { jours?: number; city?: string }): Promise<RelevesRecentsResponse> => {
+    const { data } = await api.get<RelevesRecentsResponse>('/api/prices/recents', { params });
     return data;
   },
 };

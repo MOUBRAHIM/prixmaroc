@@ -200,6 +200,38 @@ export interface PromoItem {
   recorded_at: string;
 }
 
+// ─── Derniers relevés de la collecte ─────────────────────────────────────────
+
+export interface ReleveRecent {
+  product_id: number;
+  product_name: string;
+  product_image: string | null;
+  brand: string | null;
+  unit_size: string | null;
+  price: number;
+  /** null hors promotion. */
+  promo_price: number | null;
+  discount_pct: number | null;
+  recorded_at: string;
+}
+
+export interface EnseigneRelevee {
+  store_id: number;
+  store_name: string;
+  store_city: string | null;
+  /** Nombre total de relevés de l'enseigne, même si l'affichage est tronqué. */
+  count: number;
+  produits: ReleveRecent[];
+}
+
+export interface RelevesRecentsResponse {
+  jours: number;
+  depuis: string;
+  count: number;
+  dernier_releve: string | null;
+  enseignes: EnseigneRelevee[];
+}
+
 // ─── Listes de courses ────────────────────────────────────────────────────────
 
 export interface ShoppingListItem {
@@ -502,6 +534,7 @@ export interface SoukPriceCreate {
 
 export type ComparerStackParamList = {
   Recherche: { query?: string };
+  DerniersReleves: undefined;
   ScanCodeBarres: undefined;
   ProduitDetail: { productId: number; productName: string };
   ComparerPrix: { productIds: number[] };

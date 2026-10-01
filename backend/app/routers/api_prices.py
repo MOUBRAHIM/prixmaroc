@@ -3,8 +3,11 @@ Router /api/prices
 
 GET /api/prices/cheapest    Prix le moins cher pour un produit (avec savings)
 GET /api/prices/promotions  Promotions en cours (filtre ville / user)
+GET /api/prices/recents     Derniers relevés de la collecte, groupés par enseigne
 """
 from __future__ import annotations
+
+from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import func, select, and_, desc
@@ -15,8 +18,11 @@ from app.models import Price, Product, Store
 from app.schemas.api import (
     CheapestPrice,
     CheapestResponse,
+    EnseigneRelevee,
     PromoItem,
     PromosResponse,
+    ReleveRecent,
+    RelevesRecentsResponse,
 )
 from app.utils.cache import (
     TTL_PRICES,
@@ -202,5 +208,127 @@ async def get_promotions(
         ))
 
     response = PromosResponse(city=city, count=len(promotions), promotions=promotions)
+    await cache.set(cache_key, response.model_dump(mode="json"), ttl=TTL_SHORT)
+    return response
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# GET /api/prices/recents
+# ──────────────────────────────────────────────────────────────────────────────
+
+@router.get(
+    "/recents",
+    response_model=RelevesRecentsResponse,
+    summary="Derniers relevés de prix, groupés par enseigne",
+)
+async def get_releves_recents(
+    jours: int = Query(7, ge=1, le=30, description="Fenêtre en jours"),
+    city: str | None = Query(None, description="Filtrer par ville"),
+    limite_par_enseigne: int = Query(40, ge=1, le=200),
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Ce que la collecte a rapporté ces derniers jours.
+
+    Aucun compte n'est demandé : montrer de vrais prix récents est le meilleur
+    argument pour en créer un.
+
+    Un même produit peut être relevé plusieurs fois dans la fenêtre — à chaque
+    passage de la collecte. On ne garde que le relevé le plus récent par couple
+    produit/magasin, sans quoi la liste répéterait les mêmes articles.
+    """
+    depuis = datetime.now(timezone.utc) - timedelta(days=jours)
+
+    cache_key = f"releves:recents:{jours}:{city or 'all'}:{limite_par_enseigne}"
+    cached = await cache.get(cache_key)
+    if cached:
+        return cached
+
+    dernier_par_couple = (
+        select(
+            Price.product_id,
+            Price.store_id,
+            func.max(Price.recorded_at).label("latest"),
+        )
+        .where(Price.recorded_at >= depuis)
+        .group_by(Price.product_id, Price.store_id)
+        .subquery()
+    )
+
+    stmt = (
+        select(Price, Product, Store)
+        .join(Product, Price.product_id == Product.id)
+        .join(Store, Price.store_id == Store.id)
+        .join(dernier_par_couple, and_(
+            Price.product_id == dernier_par_couple.c.product_id,
+            Price.store_id == dernier_par_couple.c.store_id,
+            Price.recorded_at == dernier_par_couple.c.latest,
+        ))
+        .where(Product.is_active == True, Store.is_active == True)
+        .order_by(Store.name, desc(Price.recorded_at))
+    )
+    if city:
+        stmt = stmt.where(Store.city.ilike(f"%{city}%"))
+
+    rows = (await db.execute(stmt)).all()
+
+    # Regroupement par enseigne, en préservant l'ordre du tri SQL.
+    par_enseigne: dict[int, EnseigneRelevee] = {}
+    total = 0
+    dernier: datetime | None = None
+
+    for price, product, store in rows:
+        groupe = par_enseigne.get(store.id)
+        if groupe is None:
+            groupe = EnseigneRelevee(
+                store_id=store.id,
+                store_name=store.name,
+                store_city=store.city,
+                count=0,
+                produits=[],
+            )
+            par_enseigne[store.id] = groupe
+
+        groupe.count += 1
+        total += 1
+        if dernier is None or price.recorded_at > dernier:
+            dernier = price.recorded_at
+
+        # Le compteur reste exact même quand l'affichage est tronqué : il dit
+        # combien l'enseigne a de relevés, pas combien on en montre.
+        if len(groupe.produits) >= limite_par_enseigne:
+            continue
+
+        regulier = float(price.price)
+        promo = float(price.promo_price) if price.is_promo and price.promo_price else None
+        remise = (
+            round((regulier - promo) / regulier * 100, 1)
+            if promo is not None and regulier > 0 and promo < regulier
+            else None
+        )
+
+        groupe.produits.append(ReleveRecent(
+            product_id=product.id,
+            product_name=product.name,
+            product_image=product.image_url,
+            brand=product.brand,
+            unit_size=product.unit_size,
+            price=regulier,
+            promo_price=promo,
+            discount_pct=remise,
+            recorded_at=price.recorded_at,
+        ))
+
+    # Les enseignes les mieux fournies d'abord : un magasin avec deux relevés
+    # n'a pas à occuper le haut de l'écran.
+    enseignes = sorted(par_enseigne.values(), key=lambda e: e.count, reverse=True)
+
+    response = RelevesRecentsResponse(
+        jours=jours,
+        depuis=depuis,
+        count=total,
+        dernier_releve=dernier,
+        enseignes=enseignes,
+    )
     await cache.set(cache_key, response.model_dump(mode="json"), ttl=TTL_SHORT)
     return response

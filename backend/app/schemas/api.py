@@ -159,6 +159,38 @@ class PromosResponse(BaseModel):
 
 
 # ──────────────────────────────────────────────────────────────────────────────
+# Derniers relevés — ce que la collecte a rapporté récemment
+# ──────────────────────────────────────────────────────────────────────────────
+
+class ReleveRecent(BaseModel):
+    product_id: int
+    product_name: str
+    product_image: str | None
+    brand: str | None
+    unit_size: str | None
+    price: float
+    promo_price: float | None
+    discount_pct: float | None      # null hors promotion
+    recorded_at: datetime
+
+
+class EnseigneRelevee(BaseModel):
+    store_id: int
+    store_name: str
+    store_city: str | None
+    count: int
+    produits: list[ReleveRecent]
+
+
+class RelevesRecentsResponse(BaseModel):
+    jours: int
+    depuis: datetime
+    count: int                      # nombre total de relevés
+    dernier_releve: datetime | None
+    enseignes: list[EnseigneRelevee]
+
+
+# ──────────────────────────────────────────────────────────────────────────────
 # Magasins
 # ──────────────────────────────────────────────────────────────────────────────
 

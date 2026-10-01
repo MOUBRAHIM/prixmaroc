@@ -49,6 +49,7 @@ import ScanCodeBarresScreen from '@screens/Scanner/ScanCodeBarresScreen';
 
 // ── Écrans Comparer ───────────────────────────────────────────────────────────
 import RechercheScreen from '@screens/Comparer/RechercheScreen';
+import DerniersRelevesScreen from '@screens/Comparer/DerniersRelevesScreen';
 import ComparerPrixScreen from '@screens/Comparer/ComparerPrixScreen';
 import HistoriquePrixScreen from '@screens/Comparer/HistoriquePrixScreen';
 
@@ -201,6 +202,9 @@ function ComparerNavigator() {
   return (
     <ComparerStack.Navigator screenOptions={headerOptions}>
       <ComparerStack.Screen name="Recherche" component={RechercheScreen} options={{ title: 'Comparer les prix' }} />
+      {/* Les derniers relevés de la collecte : l'autre façon d'arriver à un prix. */}
+      <ComparerStack.Screen name="DerniersReleves" component={DerniersRelevesScreen}
+        options={{ title: 'Derniers relevés' }} />
       <ComparerStack.Screen name="ProduitDetail" component={ProduitDetailScreen}
         options={({ route }) => ({ title: route.params.productName })} />
       {/* Accessible aussi depuis la recherche : scanner, c'est chercher. */}

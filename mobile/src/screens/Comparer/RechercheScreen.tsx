@@ -20,6 +20,7 @@ import { ProductsAPI } from '@services/api';
 import ProductVisual from '@components/ui/ProductVisual';
 import { C } from '@constants/colors';
 import EtatErreur from '@components/EtatErreur';
+import BasculeComparer from '@components/BasculeComparer';
 import type { ComparerStackParamList, ProductSummary } from '@types/models';
 
 type Props = NativeStackScreenProps<ComparerStackParamList, 'Recherche'>;
@@ -321,6 +322,8 @@ const RechercheScreen: React.FC<Props> = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['bottom']}>
+      <BasculeComparer actif="Recherche" />
+
       {/* Barre de recherche */}
       <View style={styles.searchBar}>
         <View style={styles.searchInputWrap}>
