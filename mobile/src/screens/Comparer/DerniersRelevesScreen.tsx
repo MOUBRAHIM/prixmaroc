@@ -51,6 +51,9 @@ const LigneReleve: React.FC<{
 }> = ({ item, onPress }) => {
   const enPromo = item.promo_price != null;
   const aPayer = enPromo ? item.promo_price! : item.price;
+  // Marque et format seulement : la fraîcheur est annoncée une fois en tête
+  // d'écran, la répéter ici mélangerait deux natures d'information.
+  const detail = [item.brand, item.unit_size].filter(Boolean).join(' · ');
 
   return (
     <TouchableOpacity style={styles.ligne} onPress={onPress} activeOpacity={0.75}>
@@ -58,9 +61,7 @@ const LigneReleve: React.FC<{
 
       <View style={styles.ligneInfo}>
         <Text style={styles.nom} numberOfLines={2}>{item.product_name}</Text>
-        <Text style={styles.detail} numberOfLines={1}>
-          {[item.brand, item.unit_size].filter(Boolean).join(' · ') || libelleFraicheur(item.recorded_at)}
-        </Text>
+        {!!detail && <Text style={styles.detail} numberOfLines={1}>{detail}</Text>}
       </View>
 
       <View style={styles.ligneePrix}>
