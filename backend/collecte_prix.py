@@ -51,6 +51,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.core.config import settings
 from app.services.reponse_claude import texte_de
+from app.services.identite_produit import IndexProduits
 from recentre_catalogue import hors_perimetre_evident
 
 engine = create_async_engine(settings.DATABASE_URL, echo=False, pool_pre_ping=True)
@@ -311,10 +312,30 @@ def valider(donnees: list[dict], enseigne: str, url: str) -> tuple[list[Releve],
     return gardes, rejets
 
 
-async def enregistrer(db: AsyncSession, releves: list[Releve]) -> tuple[int, int]:
+async def charger_index(db: AsyncSession) -> IndexProduits:
+    """Les produits connus, chargés une fois pour toute la collecte."""
+    index = IndexProduits()
+    lignes = (await db.execute(sql(
+        "SELECT id, name, brand, unit_size FROM products WHERE is_active"
+    ))).all()
+    for produit_id, nom, marque, format_ in lignes:
+        index.ajouter(produit_id, nom, marque, format_)
+    return index
+
+
+async def enregistrer(
+    db: AsyncSession, releves: list[Releve], index: IndexProduits,
+) -> tuple[int, int]:
     """
     Écrit les relevés. Un produit inconnu est créé ; un prix est toujours
     AJOUTÉ avec sa date, jamais écrasé — l'historique est la valeur du service.
+
+    Le rapprochement passait par une égalité exacte du nom. Comme le modèle
+    réécrit ce nom à chaque passage — marque tantôt dans le nom, tantôt dans
+    son champ, « (1 kg) » ou rien — un même article naissait plusieurs fois et
+    son historique se brisait en autant de courbes. C'est `IndexProduits` qui
+    tranche désormais, en neutralisant l'écriture sans jamais ignorer la
+    contenance.
     """
     nouveaux = ajoutes = 0
     aujourdhui = date.today()
@@ -326,9 +347,7 @@ async def enregistrer(db: AsyncSession, releves: list[Releve]) -> tuple[int, int
         if magasin is None:
             continue
 
-        produit = (await db.execute(sql(
-            "SELECT id FROM products WHERE lower(name) = lower(:n) LIMIT 1"
-        ), {"n": r.nom})).scalar()
+        produit = index.trouver(r.nom, r.marque, r.format)
 
         if produit is None:
             produit = (await db.execute(sql("""
@@ -340,6 +359,9 @@ async def enregistrer(db: AsyncSession, releves: list[Releve]) -> tuple[int, int
                 "n": r.nom, "m": r.marque, "f": r.format,
                 "s": re.sub(r"[^a-z0-9]+", "-", sans_accents(r.nom)).strip("-")[:200],
             })).scalar()
+            # Deux catalogues de la même collecte peuvent annoncer le même
+            # article : sans cet ajout, le second le recréerait.
+            index.ajouter(produit, r.nom, r.marque, r.format)
             nouveaux += 1
 
         # Un seul relevé par produit, magasin et jour.
@@ -391,6 +413,10 @@ async def collecter(appliquer: bool, limite: int, journal=print) -> dict:
         journal(f"{len(catalogues)} catalogues en cours")
 
         async with Session() as db:
+            # Chargé une fois : le catalogue tient en quelques centaines de
+            # lignes, inutile d'interroger la base à chaque relevé.
+            index = await charger_index(db) if appliquer else IndexProduits()
+
             for url in catalogues:
                 enseigne = enseigne_de(url)
                 try:
@@ -411,7 +437,7 @@ async def collecter(appliquer: bool, limite: int, journal=print) -> dict:
                 bilan["ecartes"] += rejets
 
                 if appliquer and gardes:
-                    n, a = await enregistrer(db, gardes)
+                    n, a = await enregistrer(db, gardes, index)
                     bilan["produits"] += n
                     bilan["prix"] += a
 
