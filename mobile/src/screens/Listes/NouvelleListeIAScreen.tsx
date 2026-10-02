@@ -18,6 +18,7 @@ import { IAAPI, ListsAPI } from '@services/api';
 import { C } from '@constants/colors';
 import { confirmer, prevenir } from '@utils/dialogue';
 import { messageErreur } from '@utils/erreurs';
+import { formaterQuantite } from '@utils/quantites';
 import { libelleFraicheur, niveauFraicheur } from '@utils/fraicheur';
 import type { ListesStackParamList, ListType, GeneratedList, GeneratedListItem } from '@types/models';
 
@@ -97,7 +98,7 @@ const GeneratedItemCard: React.FC<{ item: GeneratedListItem }> = ({ item }) => (
       ) : null}
     </View>
     <View style={styles.itemRight}>
-      <Text style={styles.itemQty}>× {item.quantity}{item.unit ? ` ${item.unit}` : ''}</Text>
+      <Text style={styles.itemQty}>× {formaterQuantite(item.quantity)}{item.unit ? ` ${item.unit}` : ''}</Text>
       <Text style={styles.itemPrice}>
         {item.product_id == null ? '≈ ' : ''}{item.estimated_price_total.toFixed(2)} MAD
       </Text>
@@ -204,7 +205,7 @@ const NouvelleListeIAScreen: React.FC<Props> = ({ navigation }) => {
         // Une quantité avec unité (« 0.5 kg ») se montre toujours : sans elle,
         // « Ail » ne dit pas combien acheter.
         const qty = i.quantity !== 1 || i.unit
-          ? ` × ${i.quantity}${i.unit ? ` ${i.unit}` : ''}` : '';
+          ? ` × ${formaterQuantite(i.quantity)}${i.unit ? ` ${i.unit}` : ''}` : '';
         const promo = i.is_promo ? ' 🏷️' : '';
         // « ≈ » : prix indicatif du souk, pas un prix relevé en magasin.
         const approx = i.product_id == null ? '≈ ' : '';

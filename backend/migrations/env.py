@@ -1,12 +1,21 @@
 import os
 import socket
 from logging.config import fileConfig
+from urllib.parse import urlparse
 
 from sqlalchemy import engine_from_config, event, pool
 
 from alembic import context
 
 from app.models import Base  # noqa: F401
+
+# La variable d'environnement n'est pas toujours posée par le shell : sans
+# cela, « alembic upgrade » lancé à la main ne trouvait aucune base.
+try:
+    from dotenv import load_dotenv
+    load_dotenv(os.path.join(os.path.dirname(__file__), "..", ".env"))
+except ImportError:
+    pass
 
 config = context.config
 
@@ -28,6 +37,29 @@ if database_url:
         database_url = database_url.replace("postgresql://", "postgresql+psycopg://", 1)
     elif database_url.startswith("postgres://"):
         database_url = database_url.replace("postgres://", "postgresql+psycopg://", 1)
+
+# Neon publie des AAAA (IPv6). Là où l'IPv6 ne passe pas, libpq l'essaie
+# quand même en premier et la migration échoue sur « getaddrinfo failed ».
+# `app/db.py` résout donc l'IPv4 lui-même et la passe en `hostaddr`, en
+# gardant le hostname dans `host` pour le SNI ; sans la même précaution ici,
+# les migrations étaient injouables depuis un poste en IPv6 cassé.
+def _forcer_ipv4(url: str) -> str:
+    hote = urlparse(url).hostname or ""
+    if "neon.tech" not in hote or "hostaddr=" in url:
+        return url
+    try:
+        infos = socket.getaddrinfo(hote, urlparse(url).port or 5432,
+                                   socket.AF_INET, socket.SOCK_STREAM)
+    except OSError:
+        return url
+    if not infos:
+        return url
+    ip = infos[0][4][0]
+    return f"{url}{'&' if '?' in url else '?'}hostaddr={ip}"
+
+
+if database_url:
+    database_url = _forcer_ipv4(database_url)
 
 config.set_main_option("sqlalchemy.url", database_url)
 target_metadata = Base.metadata

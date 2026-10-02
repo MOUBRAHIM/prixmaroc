@@ -3,8 +3,11 @@ from pydantic import BaseModel
 
 
 class OcrScanRead(BaseModel):
-    id: int
-    user_id: int
+    # Un scan d'invité n'est pas enregistré : il n'a donc ni identifiant ni
+    # propriétaire. Les exiger faisait échouer la réponse après une lecture
+    # pourtant réussie.
+    id: int | None = None
+    user_id: int | None = None
     store_id: int | None = None
     image_url: str
     raw_text: str | None = None

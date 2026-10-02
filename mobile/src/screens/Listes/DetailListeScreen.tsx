@@ -24,6 +24,7 @@ import { C } from '@constants/colors';
 import EtatErreur from '@components/EtatErreur';
 import { confirmer, prevenir } from '@utils/dialogue';
 import { messageErreur } from '@utils/erreurs';
+import { formaterQuantite, quantiteSuivante } from '@utils/quantites';
 import type { ListesStackParamList, ShoppingList, ShoppingListItem } from '@types/models';
 
 type Props = NativeStackScreenProps<ListesStackParamList, 'DetailListe'>;
@@ -93,7 +94,7 @@ const ListItemRow: React.FC<{
             >
               <Ionicons name="remove" size={14} color="#5A6A61" />
             </TouchableOpacity>
-            <Text style={styles.qtyText}>{item.quantity}</Text>
+            <Text style={styles.qtyText}>{formaterQuantite(item.quantity)}</Text>
             <TouchableOpacity
               style={styles.qtyBtn}
               onPress={() => onQtyChange(1)}
@@ -112,7 +113,7 @@ const ListItemRow: React.FC<{
         ) : (
           item.quantity > 1 && (
             <Text style={[styles.qtyShop, item.is_checked && { color: '#DBD0BF' }]}>
-              × {item.quantity}
+              × {formaterQuantite(item.quantity)}
             </Text>
           )
         )}
@@ -335,7 +336,7 @@ const OptimizeModal: React.FC<{
                   {group.items.map((it, ii) => (
                     <View key={`i-${gi}-${ii}`} style={opt.itemRow}>
                       <Text style={opt.itemName} numberOfLines={1}>
-                        {it.quantity > 1 ? `×${it.quantity} ` : ''}{it.name}
+                        {it.quantity > 1 ? `×${formaterQuantite(it.quantity)} ` : ''}{it.name}
                       </Text>
                       <Text style={opt.itemPrice}>
                         {(it.price * it.quantity).toFixed(2)} MAD
@@ -522,8 +523,8 @@ const DetailListeScreen: React.FC<Props> = ({ route }) => {
   }, [deleteMutation]);
 
   const handleQtyChange = useCallback((item: ShoppingListItem, delta: number) => {
-    const newQty = item.quantity + delta;
-    if (newQty < 1) {
+    const newQty = quantiteSuivante(item.quantity, delta);
+    if (newQty <= 0) {
       handleDelete(item);
       return;
     }

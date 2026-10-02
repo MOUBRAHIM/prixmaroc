@@ -69,9 +69,6 @@ export async function initApiUrl(): Promise<void> {
 
 const api: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
-  // L'hébergement gratuit endort le service ; son réveil prend une
-  // cinquantaine de secondes. À 15 s, la première requête de la journée
-  // échouait toujours.
   // L'hébergement gratuit endort le service après un quart d'heure ; le
   // réveil mesuré est de 54 s. À 60 s de marge, la moindre variation faisait
   // échouer la connexion sur un serveur pourtant sain.
@@ -89,6 +86,15 @@ api.interceptors.request.use(
     const token = await SecureStore.getItemAsync(STORAGE_KEYS.accessToken);
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
+    }
+    // Un envoi de fichier ne doit pas hériter du « application/json » posé
+    // par défaut plus haut : le corps est bien un multipart, mais l'en-tête
+    // annonçait du JSON et le serveur ne trouvait aucun fichier — « Field
+    // required » sur le scan de ticket. En retirant l'en-tête, la plateforme
+    // écrit elle-même « multipart/form-data » avec sa frontière, qu'on ne
+    // peut de toute façon pas deviner à la main.
+    if (typeof FormData !== 'undefined' && config.data instanceof FormData) {
+      delete config.headers?.['Content-Type'];
     }
     return config;
   },
@@ -541,9 +547,9 @@ export const ProfileAPI = {
  * n'en fait rien et y écrit « [object Object] ». Le serveur recevait donc une
  * chaîne au lieu d'une image, et le scan de ticket échouait sur le web.
  *
- * Le Content-Type ne doit pas non plus être fixé à la main dans un
- * navigateur : sans la frontière multipart qu'il génère lui-même, la requête
- * est illisible côté serveur.
+ * Le Content-Type n'est fixé nulle part : l'intercepteur le retire pour tout
+ * corps FormData, et la plateforme écrit le sien avec la frontière multipart
+ * qu'elle seule connaît.
  */
 async function preparerEnvoi(
   uri: string,
@@ -552,11 +558,14 @@ async function preparerEnvoi(
   const form = new FormData();
   if (Platform.OS === 'web') {
     const blob = await (await fetch(uri)).blob();
+    if (blob.size === 0) {
+      throw new Error("L'image est vide. Reprenez la photo.");
+    }
     form.append('file', blob, nom);
-    return { form, headers: {} };
+  } else {
+    form.append('file', { uri, type: 'image/jpeg', name: nom } as unknown as Blob);
   }
-  form.append('file', { uri, type: 'image/jpeg', name: nom } as unknown as Blob);
-  return { form, headers: { 'Content-Type': 'multipart/form-data' } };
+  return { form, headers: {} };
 }
 
 export default api;

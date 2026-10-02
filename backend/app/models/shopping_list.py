@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import String, Integer, ForeignKey, DateTime, Boolean, func, Text
+from sqlalchemy import String, Integer, ForeignKey, DateTime, Boolean, func, Numeric, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
 
@@ -30,7 +30,9 @@ class ShoppingListItem(Base):
     list_id: Mapped[int] = mapped_column(Integer, ForeignKey("shopping_lists.id"), nullable=False, index=True)
     product_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("products.id"), nullable=True)
     custom_name: Mapped[str | None] = mapped_column(String(255))  # when product not in DB
-    quantity: Mapped[int] = mapped_column(Integer, default=1)
+    # Décimale : ce qui se vend au poids se note au poids. « 1,5 kg de viande »
+    # est une quantité ordinaire au souk, qui vend au demi-kilo.
+    quantity: Mapped[float] = mapped_column(Numeric(8, 2), default=1)
     unit: Mapped[str | None] = mapped_column(String(50))
     is_checked: Mapped[bool] = mapped_column(Boolean, default=False)
     note: Mapped[str | None] = mapped_column(Text)

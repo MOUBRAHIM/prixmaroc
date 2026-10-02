@@ -1,4 +1,5 @@
 """Router OCR — upload et analyse de tickets de caisse."""
+import logging
 from datetime import datetime, timezone
 from typing import Optional
 
@@ -18,6 +19,8 @@ from app.services.ocr_service import OcrService
 from app.services import ticket_vision
 from app.utils.deps import get_current_user, get_optional_user
 from app.utils.cache import cache
+
+log = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/ocr", tags=["ocr"])
 
@@ -68,14 +71,22 @@ async def scan_receipt(
         )
 
     # ── Enregistrement en BDD (uniquement si connecté) ────────────────────────
+    # Le commentaire disait déjà « uniquement si connecté », mais la ligne
+    # était écrite dans tous les cas, avec un user_id nul que la colonne
+    # refuse : un invité qui scannait un ticket recevait une erreur 500 au
+    # lieu de sa lecture. L'historique appartient à un compte ; sans compte,
+    # on lit le ticket sans rien conserver.
     scan = OcrScan(
         user_id=current_user.id if current_user else None,
         image_url=file.filename or "upload",
         status=ScanStatus.PROCESSING,
     )
-    db.add(scan)
-    await db.commit()
-    await db.refresh(scan)
+    if current_user:
+        db.add(scan)
+        await db.commit()
+        await db.refresh(scan)
+    else:
+        scan.created_at = datetime.now(timezone.utc)
 
     # ── Lecture du ticket ────────────────────────────────────────────────────
     # Un modèle de vision d'abord : Tesseract rendait « PAIN DE MIE 12,00 » en
@@ -128,11 +139,21 @@ async def scan_receipt(
     except Exception as exc:
         scan.status = ScanStatus.FAILED
         scan.error_message = str(exc)
-        await db.commit()
-        raise HTTPException(status_code=500, detail=f"Erreur OCR : {exc}") from exc
+        if current_user:
+            await db.commit()
+        # Le détail technique reste au journal. Renvoyé tel quel, il donnait
+        # à l'utilisateur « 'NoneType' object has no attribute 'frombuffer' »,
+        # qui ne lui apprend rien et expose l'intérieur du service.
+        log.exception("[ocr] lecture impossible")
+        raise HTTPException(
+            status_code=502,
+            detail="La lecture du ticket a échoué. Reprenez la photo en "
+                   "cadrant bien le ticket, à plat et bien éclairé.",
+        ) from exc
 
-    await db.commit()
-    await db.refresh(scan)
+    if current_user:
+        await db.commit()
+        await db.refresh(scan)
 
     return OcrScanRead.model_validate(scan)
 

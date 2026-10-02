@@ -5,7 +5,9 @@ from pydantic import BaseModel
 class ShoppingListItemBase(BaseModel):
     product_id: int | None = None
     custom_name: str | None = None
-    quantity: int = 1
+    # Décimale : « 1,5 kg de viande ». Exiger un entier faisait échouer
+    # l'enregistrement de toute liste contenant un produit vendu au poids.
+    quantity: float = 1
     unit: str | None = None
     note: str | None = None
 
@@ -15,7 +17,7 @@ class ShoppingListItemCreate(ShoppingListItemBase):
 
 
 class ShoppingListItemUpdate(BaseModel):
-    quantity: int | None = None
+    quantity: float | None = None
     is_checked: bool | None = None
     note: str | None = None
 
