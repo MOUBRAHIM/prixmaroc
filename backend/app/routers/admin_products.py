@@ -126,10 +126,11 @@ async def search_open_food_facts(
             resp.raise_for_status()
             data = resp.json()
     except Exception as exc:
+        logger.warning("[OFF] interrogation impossible : %s", exc)
         raise HTTPException(
             status_code=502,
-            detail=f"Open Food Facts inaccessible : {exc}",
-        )
+            detail="Open Food Facts est injoignable. Réessayez dans un moment.",
+        ) from exc
 
     products = []
     for p in data.get("products", []):
@@ -455,7 +456,12 @@ async def import_products_csv(
         await db.commit()
     except Exception as exc:
         await db.rollback()
-        raise HTTPException(status_code=500, detail=f"Erreur lors de la sauvegarde : {exc}")
+        # Le détail d'une erreur SQL décrit le schéma : il reste au journal.
+        logger.exception("[CSV Import] sauvegarde impossible")
+        raise HTTPException(
+            status_code=500,
+            detail="L'enregistrement a échoué, rien n'a été importé.",
+        ) from exc
 
     logger.info(
         f"[CSV Import] Inséré: {inserted}, Mis à jour: {updated}, "

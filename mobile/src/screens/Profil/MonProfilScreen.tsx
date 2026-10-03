@@ -289,11 +289,14 @@ const MonProfilScreen: React.FC<Props> = ({ navigation }) => {
   // Avatar
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
-  // Stats
+  // Stats — les crochets s'exécutent avant le branchement « Mode Invité »
+  // plus bas, si bien qu'un visiteur sans compte interrogeait quand même
+  // /utilisateurs/me/stats et récoltait un 401 à chaque visite de l'écran.
   const { data: statsData } = useQuery({
     queryKey: ['user-stats'],
     queryFn: ProfileAPI.getStats,
     retry: false,
+    enabled: !isGuest,
   });
 
   useEffect(() => {
