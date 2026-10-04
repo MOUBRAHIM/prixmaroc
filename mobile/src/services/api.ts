@@ -12,6 +12,7 @@ import { Platform } from 'react-native';
 import * as SecureStore from './secureStorage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_BASE_URL, STORAGE_KEYS } from '@constants/index';
+import { contenuPourEnvoi } from '@utils/image';
 import type {
   CheapestResponse,
   DashboardResponse,
@@ -557,11 +558,9 @@ async function preparerEnvoi(
 ): Promise<{ form: FormData; headers: Record<string, string> }> {
   const form = new FormData();
   if (Platform.OS === 'web') {
-    const blob = await (await fetch(uri)).blob();
-    if (blob.size === 0) {
-      throw new Error("L'image est vide. Reprenez la photo.");
-    }
-    form.append('file', blob, nom);
+    // Réduite si besoin : une photo de téléphone brute se faisait couper en
+    // route, et l'échec se présentait comme une panne de serveur.
+    form.append('file', await contenuPourEnvoi(uri), nom);
   } else {
     form.append('file', { uri, type: 'image/jpeg', name: nom } as unknown as Blob);
   }
