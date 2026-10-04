@@ -22,7 +22,7 @@ import json
 import logging
 import re
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, datetime, timezone
 
 import anthropic
 
@@ -76,6 +76,43 @@ class Ticket:
 
 def disponible() -> bool:
     return bool(settings.ANTHROPIC_API_KEY)
+
+
+# Dernier échec du modèle de vision, exposé par /health. Une clé révoquée
+# faisait retomber le service sur Tesseract sans que rien ne le dise : les
+# lectures devenaient mauvaises, et seul un utilisateur pouvait s'en plaindre.
+_dernier_echec: dict[str, str | None] = {"quand": None, "cause": None}
+
+
+def _classer(e: BaseException) -> str:
+    """
+    Une cause lisible, sans recopier le message du fournisseur.
+
+    /health est public : il doit dire ce qui ne va pas et quoi faire, pas
+    reverser le détail d'un service tiers.
+    """
+    nom = type(e).__name__
+    texte = str(e).lower()
+    if "authentication" in texte or nom == "AuthenticationError":
+        return "clé API refusée — en créer une nouvelle et la mettre à jour"
+    if "credit balance" in texte or "quota" in texte:
+        return "crédit API épuisé — recharger le compte Anthropic"
+    if "not_found" in texte or "model" in texte and "404" in texte:
+        return "modèle indisponible pour cette clé"
+    if nom in ("RateLimitError",):
+        return "trop d'appels — limite de débit atteinte"
+    if nom in ("APIConnectionError", "APITimeoutError"):
+        return "service de lecture injoignable"
+    return f"échec de lecture ({nom})"
+
+
+def _noter_echec(e: BaseException) -> None:
+    _dernier_echec["quand"] = datetime.now(timezone.utc).isoformat()
+    _dernier_echec["cause"] = _classer(e)
+
+
+def dernier_echec() -> dict[str, str | None]:
+    return dict(_dernier_echec)
 
 
 def _nombre(valeur: object) -> float | None:
@@ -164,7 +201,13 @@ async def lire(image: bytes, mime_type: str) -> Ticket | None:
             }],
         )
     except Exception as e:
-        log.warning("Lecture Vision indisponible : %s", type(e).__name__)
+        # Le type seul ne suffisait pas : une clé révoquée et une panne
+        # passagère s'écrivaient toutes deux « AuthenticationError » ou
+        # « APIError » dans le journal, et le service retombait en silence
+        # sur Tesseract — dont les lectures sont mauvaises. Des semaines de
+        # tickets illisibles peuvent passer sans que rien ne le signale.
+        _noter_echec(e)
+        log.warning("Lecture Vision indisponible — %s : %s", type(e).__name__, e)
         return None
 
     brut = texte_de(reponse)

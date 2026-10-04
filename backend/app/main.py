@@ -111,9 +111,18 @@ async def health():
     listes sont générées localement. On n'expose que sa présence et sa
     longueur : jamais la valeur, jamais un fragment.
     """
+    from app.services import ticket_vision
+
     cle = (settings.ANTHROPIC_API_KEY or "").strip()
+    # « ia_configuree » ne dit que la présence de la clé. Une clé révoquée
+    # laissait le service retomber sur Tesseract en silence, et seul un
+    # utilisateur finissait par signaler des tickets illisibles. Le dernier
+    # échec du modèle est donc exposé ici — son message, jamais la clé.
+    echec = ticket_vision.dernier_echec()
     return {
         "status": "healthy",
         "ia_configuree": bool(cle),
         "longueur_cle": len(cle),
+        "ia_dernier_echec": echec["cause"],
+        "ia_dernier_echec_le": echec["quand"],
     }
