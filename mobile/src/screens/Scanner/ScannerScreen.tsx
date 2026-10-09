@@ -13,6 +13,7 @@ import { prevenir } from '@utils/dialogue';
 import { messageErreur } from '@utils/erreurs';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CameraView, useCameraPermissions } from 'expo-camera';
+import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { OcrAPI } from '@services/api';
@@ -464,25 +465,28 @@ const ScannerScreen: React.FC = () => {
   const [erreur, setErreur] = useState<string | null>(null);
   const cameraRef = useRef<CameraView>(null);
 
-  const handleCapture = async () => {
-    if (!cameraRef.current || isCapturing) return;
+  /**
+   * Envoie une image au serveur et affiche sa lecture.
+   *
+   * Partagé par la prise de vue et le choix dans la galerie : seule la
+   * provenance de l'image change, tout le reste est identique.
+   */
+  const lireLeTicket = async (obtenirImage: () => Promise<string | null>) => {
+    if (isCapturing) return;
     setIsCapturing(true);
     setScanResult(null);
     setErreur(null);
     setCaptureStep('photo');
 
     try {
-      // Quality 0.85 — receipts have fine text, good quality is critical for OCR
-      const photo = await cameraRef.current.takePictureAsync({ quality: 0.85 });
-      if (!photo?.uri) throw new Error('Impossible de capturer la photo.');
+      const uri = await obtenirImage();
+      if (!uri) return;                    // l'utilisateur a renoncé
 
       setCaptureStep('ocr');
-
-      // 60 s timeout for OCR endpoint
-      const result = await OcrAPI.scan(photo.uri);
+      const result = await OcrAPI.scan(uri);
 
       setCaptureStep('done');
-      // Brief pause so user sees the "done" state
+      // Courte pause pour que l'état « terminé » soit visible.
       await new Promise((r) => setTimeout(r, 600));
       setScanResult(result);
     } catch (err: unknown) {
@@ -492,6 +496,46 @@ const ScannerScreen: React.FC = () => {
       setCaptureStep(null);
     }
   };
+
+  const handleCapture = () =>
+    lireLeTicket(async () => {
+      if (!cameraRef.current) throw new Error("L'appareil photo n'est pas prêt.");
+      // Qualité 0.85 : le texte d'un ticket est fin. L'image est réduite
+      // juste avant l'envoi, pas ici.
+      const photo = await cameraRef.current.takePictureAsync({ quality: 0.85 });
+      if (!photo?.uri) throw new Error('Impossible de capturer la photo.');
+      return photo.uri;
+    });
+
+  /**
+   * Choisir une photo déjà prise.
+   *
+   * La capture en direct était la seule voie. Quand elle échoue — caméra
+   * refusée, navigateur capricieux — l'utilisateur n'avait aucun recours.
+   * Et sur un téléphone, la photo du ticket est souvent déjà dans la
+   * galerie : la demander était un détour.
+   */
+  const handleGalerie = () =>
+    lireLeTicket(async () => {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        throw new Error("Autorisez l'accès aux photos pour choisir un ticket.");
+      }
+      const choix = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 0.9,
+      });
+      return choix.canceled ? null : choix.assets[0]?.uri ?? null;
+    });
+
+  // Le résultat passe avant tout le reste : une lecture venue de la galerie
+  // doit s'afficher même quand la caméra est refusée, sinon l'écran de
+  // permission la masquerait.
+  if (scanResult) {
+    return (
+      <ResultsView scan={scanResult} onReset={() => setScanResult(null)} />
+    );
+  }
 
   // Permission loading
   if (!permission) {
@@ -524,17 +568,31 @@ const ScannerScreen: React.FC = () => {
           >
             <Text style={styles.permissionBtnText}>Autoriser la caméra</Text>
           </TouchableOpacity>
+
+          {/* Caméra refusée ou indisponible : sans cette issue, l'écran était
+              un cul-de-sac. Une photo déjà prise se lit tout aussi bien. */}
+          <TouchableOpacity
+            style={styles.permissionSecondaire}
+            onPress={handleGalerie}
+            disabled={isCapturing}
+            activeOpacity={0.8}
+            accessibilityRole="button"
+          >
+            <Ionicons name="images-outline" size={18} color={C.primary} />
+            <Text style={styles.permissionSecondaireTexte}>
+              Choisir une photo de ticket
+            </Text>
+          </TouchableOpacity>
+
+          {erreur ? <Text style={styles.permissionErreur}>{erreur}</Text> : null}
+          {isCapturing ? (
+            <Text style={styles.permissionAttente}>Lecture du ticket…</Text>
+          ) : null}
         </View>
       </SafeAreaView>
     );
   }
 
-  // Show scan results
-  if (scanResult) {
-    return (
-      <ResultsView scan={scanResult} onReset={() => setScanResult(null)} />
-    );
-  }
 
   // Camera view
   return (
@@ -598,6 +656,17 @@ const ScannerScreen: React.FC = () => {
                   activeOpacity={0.85}
                 >
                   <View style={styles.captureInner} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.galerieBtn}
+                  onPress={handleGalerie}
+                  disabled={isCapturing}
+                  activeOpacity={0.8}
+                  accessibilityRole="button"
+                  accessibilityLabel="Choisir une photo de ticket déjà prise"
+                >
+                  <Ionicons name="images-outline" size={18} color="#FFFFFF" />
+                  <Text style={styles.galerieTexte}>Choisir une photo</Text>
                 </TouchableOpacity>
                 <Text style={styles.scanHintSub}>
                   Astuce: bonne lumière = meilleur résultat
@@ -750,6 +819,39 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     lineHeight: 18,
   },
+  // Issue de secours sur l'écran de permission caméra.
+  permissionSecondaire: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 14,
+    paddingHorizontal: 18,
+    paddingVertical: 11,
+    borderRadius: 999,
+    borderWidth: 1.5,
+    borderColor: C.primary,
+  },
+  permissionSecondaireTexte: { color: C.primary, fontSize: 14, fontWeight: '700' },
+  permissionErreur: {
+    marginTop: 14, color: '#D0402F', fontSize: 13, textAlign: 'center', lineHeight: 18,
+  },
+  permissionAttente: { marginTop: 14, color: '#5A6A61', fontSize: 13 },
+
+  // Second recours à la prise de vue : discret, mais toujours visible.
+  galerieBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 14,
+    paddingHorizontal: 18,
+    paddingVertical: 10,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.35)',
+    backgroundColor: 'rgba(0,0,0,0.25)',
+  },
+  galerieTexte: { color: '#FFFFFF', fontSize: 14, fontWeight: '600' },
+
   scanHintSub: {
     color: 'rgba(255,255,255,0.45)',
     fontSize: 12,
